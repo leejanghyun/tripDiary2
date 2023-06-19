@@ -13,7 +13,7 @@ import { ReactComponent as IconReport3Solid } from '../images/ico_store_solid.sv
 
 export const menus = [
   {
-    label: '광고',
+    label: '광고1',
     type: MenuType.TITLE,
     id: null,
     children: [

@@ -34,9 +34,6 @@ function FrameLayout({
     }
   }
 
-  /**
-   * 광고 생성 버튼 클릭 시
-   */
   const handlAdCreateButtonClick = useCallback(() => {
     router.push(ROUTER.ADVERTISEMENT_CAMPAIGN_MANAGEMENT.CREATE)
   }, [router])
