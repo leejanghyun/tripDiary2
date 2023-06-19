@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../example/ads-front"
+		},
+		{
+			"path": "../example/healerb-front"
+		}
+	],
+	"settings": {}
+}
