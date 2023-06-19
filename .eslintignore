@@ -1,0 +1,6 @@
+.yarn
+env.js
+.pnp.cjs
+node_modules
+.lintstagedrc
+.lintstagedrc.js

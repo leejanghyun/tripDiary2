@@ -4,7 +4,7 @@ module.exports = {
       name: "tripDiary",
       script: "yarn",
       args: "run start",
-      instances: 2,
+      instances: 1,
       autorestart: true,
       watch: false,
       env: {
