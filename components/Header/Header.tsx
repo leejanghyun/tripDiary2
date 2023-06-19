@@ -19,7 +19,7 @@ function Header({ userName, className }: Props) {
   return (
     <Wrapper className={className}>
       <div>
-        Sample
+        Sample Test
         <UtilContent userName={userName} />
       </div>
     </Wrapper>
