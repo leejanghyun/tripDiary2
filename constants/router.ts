@@ -7,21 +7,18 @@ export const getMenuPath = (menuId: MENU_ID | null) => {
     return path
   }
 
-  if (menuId === MENU_ID.PERIOD_STATISTIC) {
-    path = '/report/period/statistic'
-  } else if (menuId === MENU_ID.CAMPAIGN_STATISTIC) {
-    path = '/report/campaign/statistic/'
-  } else if (menuId === MENU_ID.CAMPAIGN_MANAGEMENT) {
-    path = '/ad/campaign/management'
-  } else if (menuId === MENU_ID.MATERIAL_MANAGEMENT) {
-    path = '/ad/material/management'
+  if (menuId === MENU_ID.ADD_FEED) {
+    path = '/add-feed'
+  } else if (menuId === MENU_ID.FEED_LIST) {
+    path = '/feed-list'
   }
 
   return path
 }
 
 export const ROUTER = {
-  MAIN: getMenuPath(MENU_ID.CAMPAIGN_MANAGEMENT),
+  MAIN: getMenuPath(MENU_ID.MAIN),
+  ADD_FEED: getMenuPath(MENU_ID.ADD_FEED),
   LOGIN: '/',
   LOOUT: '/logout',
 }

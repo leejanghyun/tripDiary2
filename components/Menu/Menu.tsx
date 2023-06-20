@@ -5,11 +5,9 @@ import {
 } from 'react'
 
 export const enum MENU_ID {
-  CAMPAIGN_MANAGEMENT = 'campaign-management',
-  MATERIAL_MANAGEMENT = 'material-management',
-  PERIOD_STATISTIC = 'period-statistic',
-  CAMPAIGN_STATISTIC = 'campaign-statistic',
-  AD_STATISTIC = 'ad-statistic',
+  ALARM = 'alarm',
+  FEED_LIST = 'feed-list',
+  ADD_FEED = 'add-feed',
   MAIN = 'main',
 }
 

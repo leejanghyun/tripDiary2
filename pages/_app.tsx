@@ -1,6 +1,6 @@
-import styled from '@emotion/styled'
+import { Global } from '@emotion/react'
 import {
-  COLOR, CustomThemeProvider,
+  CustomThemeProvider,
 } from '@TMOBI-WEB/ads-ui'
 import type { AppContext, AppProps } from 'next/app'
 import App from 'next/app'
@@ -10,9 +10,10 @@ import { QueryClientProvider } from 'react-query'
 
 import GlobalStatus from '@/components/GlobalStatus/GlobalStatus'
 import {
-  CONFIG, COOKIE_KEYS, TARGET,
+  CONFIG, COOKIE_KEYS,
 } from '@/constants'
 import { queryClient } from '@/constants/queryClient'
+import { globalStyles } from '@/styles/global'
 import { encode, isServer } from '@/utils'
 
 type PageComponentProps = {
@@ -32,6 +33,7 @@ export default function ManagersApp({
         origin={origin}
         title={pageName}
       />
+      <Global styles={globalStyles} />
       <QueryClientProvider client={queryClient}>
         <CustomThemeProvider>
           <Component {...pageProps} />
@@ -40,10 +42,6 @@ export default function ManagersApp({
 
       {/** GlobalStatus(Toast, Spinner) 컴포넌트 */}
       <GlobalStatus />
-
-      {(CONFIG.VERSION && [TARGET.DEV, TARGET.DTG, TARGET.STG, TARGET.RTG].includes(CONFIG.TARGET)) ? (
-        <AppVersionViewer target={CONFIG.TARGET}>{CONFIG.VERSION}</AppVersionViewer>
-      ) : null}
     </>
   )
 }
@@ -154,14 +152,3 @@ ManagersApp.getInitialProps = async (appContext: AppContext) => {
     origin: `https://${absoluteUrl(req).host}`,
   }
 }
-
-const AppVersionViewer = styled.div<{ target: TARGET }>`
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  padding: 4px 8px;
-  background-color: ${COLOR.primary.color.tmobi.blue[200]};
-  font-size: 12px;
-  line-height: 18px;
-  z-index: 9999;
-`
