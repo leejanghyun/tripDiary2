@@ -1,45 +1,21 @@
+import { useEffect } from 'react'
+
 import FrameLayout from '../../components/FrameLayout'
-import { getCurrentPosition } from '../../utils/map'
+import { getPosition } from '../../utils/map'
+import { Map } from './components'
 
 function HomePage() {
-  console.log(getCurrentPosition())
+  useEffect(() => {
+    const temp = async () => {
+      console.log(await getPosition())
+    }
+
+    console.log(temp())
+  }, [])
+
   return (
     <FrameLayout>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
-      <div>Test1</div>
+      <Map />
     </FrameLayout>
   )
 }
