@@ -61,7 +61,7 @@ const StyledHeader = styled(Header)`
 `
 
 const StyledFooter = styled(Footer)`
-  height: 50px;
+  height: 200px;
   overflow: auto;
 `
 
