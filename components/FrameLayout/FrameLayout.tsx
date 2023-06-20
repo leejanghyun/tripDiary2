@@ -16,10 +16,11 @@ import { MENU_ID } from '../Menu/Menu'
 
 interface Props {
   variant?: 'menu' | 'empty'
+  isFullSize?: boolean
 }
 
 function FrameLayout({
-  children, variant = 'menu',
+  children, variant = 'menu', isFullSize,
 }: PropsWithChildren<Props>) {
   const router = useRouter()
   const [state, setGlobalState] = useAtom(globalState)
@@ -38,7 +39,10 @@ function FrameLayout({
       <Header
         userName={user}
       />
-      <Main variant={variant}>
+      <Main
+        variant={variant}
+        isFullSize={isFullSize}
+      >
         {children}
       </Main>
       <Footer
@@ -55,8 +59,8 @@ const Layout = styled.div`
   overflow: hidden;
 `
 
-const Main = styled.div<{ variant?: string }>`
-  padding: 20px;
+const Main = styled.div<{ variant?: string, isFullSize?: boolean }>`
+
   overflow: auto;
 
   ${({ variant }) => {
@@ -71,6 +75,13 @@ const Main = styled.div<{ variant?: string }>`
         `
     }
   }}
+
+${({ isFullSize }) => {
+    return css`
+      padding: ${isFullSize ? '0' : '10px'}};
+    `
+  }}
+
 `
 
 export default FrameLayout
