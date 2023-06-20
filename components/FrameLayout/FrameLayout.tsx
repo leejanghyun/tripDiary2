@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
@@ -33,11 +34,11 @@ function FrameLayout({
   }, [state, setGlobalState, router])
 
   return (
-    <Layout variant={variant}>
+    <Layout>
       <StyledHeader
         userName={user}
       />
-      <Main>
+      <Main variant={variant}>
         {children}
       </Main>
       <StyledFooter
@@ -48,7 +49,7 @@ function FrameLayout({
   )
 }
 
-const Layout = styled.div<{ variant?: any }>`
+const Layout = styled.div`
   position: fixed;
   overflow: hidden;
   width: 100%;
@@ -64,9 +65,22 @@ const StyledFooter = styled(Footer)`
   overflow: auto;
 `
 
-const Main = styled.div`
+const Main = styled.div<{ variant?: string }>`
   padding: 20px;
-  height: calc(100vh - 100px);
+  overflow: auto;
+
+  ${({ variant }) => {
+    switch (variant) {
+      case 'empty':
+        return css`
+          height: calc(100vh - 50px);
+        `
+      default:
+        return css`
+          height: calc(100vh - 100px);
+        `
+    }
+  }}
 `
 
 export default FrameLayout
