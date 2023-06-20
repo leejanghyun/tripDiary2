@@ -3,7 +3,7 @@ import FrameLayout from '../../components/FrameLayout'
 function HomePage() {
   return (
     <FrameLayout>
-      ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+      Test
     </FrameLayout>
   )
 }

@@ -3,24 +3,24 @@ import styled from '@emotion/styled'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import {
-  PropsWithChildren, useCallback,
+  PropsWithChildren,
 } from 'react'
 
 import { globalState } from '@/atoms/globalState'
 import { menus } from '@/constants/menus'
-import { getMenuPath, ROUTER } from '@/constants/router'
+import { getMenuPath } from '@/constants/router'
 
+import { Footer } from '../Footer'
 import Header from '../Header'
 import { MENU_ID } from '../Menu/Menu'
-import Sidebar from '../Sidebar/Sidebar'
 import { GridSpaceBetween } from './styled'
 
 interface Props {
-  variant?: 'sidebar' | 'center'
+  variant?: 'menu' | 'empty'
 }
 
 function FrameLayout({
-  children, variant = 'sidebar',
+  children, variant = 'menu',
 }: PropsWithChildren<Props>) {
   const router = useRouter()
   const [state, setGlobalState] = useAtom(globalState)
@@ -34,27 +34,21 @@ function FrameLayout({
     }
   }
 
-  const handlAdCreateButtonClick = useCallback(() => {
-    router.push(ROUTER.ADVERTISEMENT_CAMPAIGN_MANAGEMENT.CREATE)
-  }, [router])
-
   return (
     <Layout variant={variant}>
       <StyledHeader
         userName={user}
       />
-      {/** 사이드 바 */}
-      {variant === 'sidebar' && (
-        <StyledSidebar
-          items={menus}
-          onChangeMenu={handleChangeMenu}
-          onClickAdvertisementCreate={handlAdCreateButtonClick}
-        />
-      )}
       {/** Main */}
       <StyledGrid>
         {children}
       </StyledGrid>
+      {variant === 'menu' && (
+        <StyledFooter
+          items={menus}
+          onChangeMenu={handleChangeMenu}
+        />
+      )}
     </Layout>
   )
 }
@@ -69,17 +63,19 @@ const Layout = styled.div<{ variant?: any }>`
 
   ${({ variant }) => {
     switch (variant) {
-      case 'center': // 가운데 정렬
+      case 'empty': // 가운데 정렬
         return css`
           grid-template-areas:
-          "header "
-          "content";
+            "header "
+            "content";
         `
-      default: // sidebar
+      default:
         return css`
           grid-template-areas:
-          "header  header"
-          "sidebar content";
+            "header  header"
+            "content content"
+            "footer footer"
+          ;
           grid-template-columns: 120px minmax(0, 1fr);
         `
     }
@@ -90,14 +86,14 @@ const StyledHeader = styled(Header)`
   grid-area: header;
 `
 
-const StyledSidebar = styled(Sidebar)`
-  grid-area: sidebar;
+const StyledFooter = styled(Footer)`
   overflow: auto;
 `
 
 const StyledGrid = styled(GridSpaceBetween)`
   overflow: hidden;
   grid-area: content;
+  padding: 20px;
 `
 
 export default FrameLayout

@@ -76,9 +76,8 @@ function GlobalStatus() {
 
   return (
     <>
-      {/** Toast 노출 */}
+      {/** Toast/Spinner 노출 */}
       <Toast />
-      {/** Spinner 노출 */}
       <Loader open={isShowSpinner} />
     </>
   )

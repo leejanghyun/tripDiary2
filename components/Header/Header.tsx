@@ -35,7 +35,7 @@ const Wrapper = styled.header`
     align-items: center;
     justify-content: space-between;
     min-height: 50px;
-    padding: 0 28px;
+    padding: 0 20px;
   }
 `
 
