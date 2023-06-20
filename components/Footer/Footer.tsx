@@ -25,7 +25,6 @@ function Footer({
 
 const Wrapper = styled.div`
   width: 100vw;
-  min-height: 50px;
   background-color: ${COLOR.gray.color.gray[100]};
 `
 

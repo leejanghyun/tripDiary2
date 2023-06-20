@@ -35,13 +35,13 @@ function FrameLayout({
 
   return (
     <Layout>
-      <StyledHeader
+      <Header
         userName={user}
       />
       <Main variant={variant}>
         {children}
       </Main>
-      <StyledFooter
+      <Footer
         items={menus}
         onChangeMenu={handleChangeMenu}
       />
@@ -50,19 +50,8 @@ function FrameLayout({
 }
 
 const Layout = styled.div`
-  position: fixed;
-  overflow: hidden;
   width: 100%;
   height: 100vh;
-`
-
-const StyledHeader = styled(Header)`
-  height: 50px;
-`
-
-const StyledFooter = styled(Footer)`
-  height: 200px;
-  overflow: auto;
 `
 
 const Main = styled.div<{ variant?: string }>`
