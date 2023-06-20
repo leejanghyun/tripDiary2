@@ -9,7 +9,7 @@ type GlobalState = {
 }
 
 const defaultValue = {
-  menuId: null,
+  menuId: MENU_ID.MAIN,
   userId: '',
   username: '',
 }

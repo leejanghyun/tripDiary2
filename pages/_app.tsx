@@ -7,7 +7,6 @@ import App from 'next/app'
 import Head from 'next/head'
 import absoluteUrl from 'next-absolute-url'
 import { QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
 
 import GlobalStatus from '@/components/GlobalStatus/GlobalStatus'
 import {
@@ -27,7 +26,6 @@ export default function ManagersApp({
 }: AppProps & { origin: string }) {
   const pageName = ((pageProps as AppProps['pageProps'] & PageComponentProps).pageName
   || (Component as AppProps['Component'] & PageComponentProps).pageName) || ''
-
   return (
     <>
       <DefaultHead
@@ -35,7 +33,6 @@ export default function ManagersApp({
         title={pageName}
       />
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
         <CustomThemeProvider>
           <Component {...pageProps} />
         </CustomThemeProvider>

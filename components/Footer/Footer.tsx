@@ -24,7 +24,11 @@ function Footer({
 }
 
 const Wrapper = styled.div`
-  width: 100vw;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  height: 50px;
+  width: 100%;
   background-color: ${COLOR.gray.color.gray[100]};
 `
 

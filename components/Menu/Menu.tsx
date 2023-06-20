@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { COLOR } from '@TMOBI-WEB/ads-ui'
 import {
@@ -17,7 +16,6 @@ export const enum MENU_ID {
 export type MenuItem = {
   IconActive?: ReactNode,
   IconInActive?: ReactNode,
-  label: string,
   id: MENU_ID | null,
 }
 
@@ -35,13 +33,12 @@ function Menu({
   isSelected, item, onClick,
 }: Props) {
   const {
-    id: menuId, label, IconActive, IconInActive,
+    id: menuId, IconActive, IconInActive,
   } = item
 
   return (
     <MenuWrapper
       type="button"
-      isActive={isSelected}
       onClick={useCallback(() => onClick(menuId), [menuId, onClick])}
     >
       {isSelected && IconActive && (
@@ -50,27 +47,18 @@ function Menu({
       {!isSelected && IconInActive && (
         <i className="ico-menu">{IconInActive}</i>
       )}
-      <span className="label">{label}</span>
-      {isSelected && <i className="ico-arrow" />}
     </MenuWrapper>
   )
 }
 
 export default memo(Menu)
 
-const MenuWrapper = styled.button<{ isActive: boolean }>`
+const MenuWrapper = styled.button`
   display: flex;
   min-height: 50px;
   padding: 10px 10px 10px 12px;
   align-items: center;
   text-align: left;
-
-  ${(props) => (props.isActive
-    ? css`
-        color: ${COLOR.gray.color.gray[800]};
-        background-color: ${COLOR.gray.color.gray[200]};
-        font-weight: 500;
-      ` : css``)};
 
   &:hover {
     background-color: ${COLOR.gray.color.gray[200]};

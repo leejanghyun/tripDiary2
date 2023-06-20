@@ -27,28 +27,25 @@ const getDefaultConfig = (): CommonRequestConfig => {
   }
 }
 
-const addAccessToken = async (config: CommonRequestConfig): Promise<string> => {
-  const { headers } = config
+// const addAccessToken = async (config: CommonRequestConfig): Promise<string> => {
+//   const { headers } = config
 
-  if (!headers) {
-    return ''
-  }
+//   if (!headers) {
+//     return ''
+//   }
 
-  // const session = await Auth.currentSession()
-  // const accessToken = session?.getAccessToken()?.getJwtToken() || ''
+//   const accessToken = process.env.NEXT_PUBLIC_ACCESS_TOKEN || ''
 
-  const accessToken = process.env.NEXT_PUBLIC_ACCESS_TOKEN || ''
+//   headers.Authorization = `Bearer ${accessToken}`
 
-  headers.Authorization = `Bearer ${accessToken}`
-
-  return accessToken
-}
+//   return accessToken
+// }
 
 const onRequestConfig = async (config: InternalAxiosRequestConfig<CommonRequestConfig>) => {
   const { isAuthRequred = true } = config as CommonRequestConfig || {}
 
   if (isAuthRequred) {
-    await addAccessToken(config as CommonRequestConfig)
+    // await addAccessToken(config as CommonRequestConfig)
   }
 
   const requestEvent = new CustomEvent(AxiosStatus.AxiosRequestPending, { detail: config })
