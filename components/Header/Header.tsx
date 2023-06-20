@@ -7,8 +7,8 @@ import {
 import UtilContent from './UtilContent'
 
 type Props = {
-  userName: string
   className?: string
+  userName: string
 }
 
 /**
