@@ -4,6 +4,7 @@ import {
   useEffect, useMemo, useState,
 } from 'react'
 
+import { getSearchPlace } from '@/api/getSearchPlace'
 import { getGoogleMapApi, getPosition, Location } from '@/utils/map'
 
 const DEFAULT_ZOOM_LEVEL = 10
@@ -16,6 +17,9 @@ function Map() {
   const apiKey = getGoogleMapApi()
 
   const initLocation = async () => {
+    const response = await getSearchPlace()
+    console.log(response)
+
     const location = await getPosition()
 
     setLocation(location)

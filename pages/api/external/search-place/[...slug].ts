@@ -4,15 +4,19 @@ import httpProxyMiddleware from 'next-http-proxy-middleware'
 import { API } from '../../../../constants'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { query } = req
+
+  console.log(1, query)
+
   try {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
     return await httpProxyMiddleware(req, res, {
-      target: 'https://geolocation-db.com',
+      target: 'https://maps.googleapis.com',
       changeOrigin: true,
       pathRewrite: [{
-        patternStr: `^${API.EXTERNAL.IP}/myIp`,
-        replaceStr: '/json',
+        patternStr: `^${API.EXTERNAL.SEARCH_PLACE}/search`,
+        replaceStr: '/maps/api/place/textsearch/json',
       }],
     })
   } catch (err) {

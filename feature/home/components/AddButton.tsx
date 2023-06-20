@@ -19,8 +19,8 @@ function AddButton({ onClick }: AddButtonProps) {
 
 const AddButtonStyles = styled.div`
   position: fixed;
-  bottom: 85px;
-  right: 30px;
+  bottom: 75px;
+  right: 25px;
   background-color: ${COLOR.gray.color.wb[0]};
   opacity: 1;
   display: inline-flex;

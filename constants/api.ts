@@ -10,9 +10,7 @@ export const API = {
   PREFIX_URL: {
   },
   EXTERNAL: {
-    IP: '/api/external/ip',
-    TOPTMAP: '/api/external/toptmap',
-    EXISTS: '/api/external/exists',
+    SEARCH_PLACE: '/api/external/search-place',
   },
   PROXY: '/api/proxy',
 }

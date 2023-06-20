@@ -1,0 +1,17 @@
+// const searchPlaces = async () => {
+//     try {
+//       const response = await axios.get(
+//         `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${GOOGLE_MAPS_API_KEY}`
+//       );
+
+//       const results = response.data.results;
+//       const mappedPlaces = results.map((result: any) => ({
+//         name: result.name,
+//         address: result.formatted_address,
+//       }));
+
+//       setPlaces(mappedPlaces);
+//     } catch (error) {
+//       console.error('Error searching places:', error);
+//     }
+//   };
