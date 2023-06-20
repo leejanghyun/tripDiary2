@@ -3,7 +3,7 @@ import FrameLayout from '../../components/FrameLayout'
 function HomePage() {
   return (
     <FrameLayout>
-      <div>Test</div>
+      <div>Test1</div>
     </FrameLayout>
   )
 }
