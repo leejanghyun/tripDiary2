@@ -61,7 +61,7 @@ const TitleBlock = styled.div`
 const Title = styled.h2`
   margin-right: 8px;
   display: inline-flex;
-  font-size: 20px;
+  font-size: 17px;
   line-height: 30px;
   font-weight: 500;
 `
