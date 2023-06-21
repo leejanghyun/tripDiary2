@@ -7,10 +7,13 @@ import {
 import { getGoogleMapApi, getPosition, Location } from '@/utils/map'
 
 const DEFAULT_ZOOM_LEVEL = 11
+
 const DEFAULT_MAP_OPTIONS = {
   fullscreenControl: false,
   mapTypeId: 'terrain', // ('roadmap', 'satellite', 'hybrid', 'terrain')
   mapTypeControl: false,
+  zoomControl: false,
+  disableDefaultUI: true,
 }
 
 type Props = {

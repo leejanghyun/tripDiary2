@@ -1,7 +1,7 @@
 import { isClient } from '../compare'
 
 export const getGoogleMapApi = (): string | null => {
-  const googleMapApi = process.env.NEXT_PUBLIC_GOOGLE_MAP_API || 'AIzaSyDRpy4jGxB2gWpyaaLS7kzx7kJ71VCnnl4'
+  const googleMapApi = process.env.NEXT_PUBLIC_GOOGLE_MAP_API || null
 
   return googleMapApi
 }

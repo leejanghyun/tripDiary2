@@ -11,17 +11,13 @@ import { useFormContext } from 'react-hook-form'
 type SearchAddressType = {
   address: string;
   lat: number;
-  lon: number;
-  detailName: string;
-  roadAddress: string;
+  lng: number;
 }
 
-/** 컴포넌트 Property {@link AddressSearch} */
-export interface AddressSearchProps {
+export interface Props {
   name: string;
   data?: { addressList: SearchAddressType[]; }
   isLoading?: boolean
-  readOnly?: boolean
   defaultValues?: string
   onSearch: (value: string | number | readonly string[]) => void
   onSearchEnd: (address: SearchAddressType) => void
@@ -29,13 +25,9 @@ export interface AddressSearchProps {
 
 const DISPLAY_LEN = 5
 
-/**
- * AddressSearch 컴포넌트
- * @category  AddressSearch 컴포넌트
- */
 export function AddressSearch({
-  isLoading, defaultValues = '', readOnly, name, data, onSearch, onSearchEnd,
-}: AddressSearchProps) {
+  isLoading, defaultValues = '', name, data, onSearch, onSearchEnd,
+}: Props) {
   const {
     control, trigger, formState, clearErrors, setError,
   } = useFormContext()
@@ -58,10 +50,6 @@ export function AddressSearch({
     setSelectedAddress(defaultValues)
   }, [defaultValues])
 
-  /**
-   * 주소 리스트 아이템 클릭시
-   * @param index 인덱스
-   */
   const handleClickItem = (index: number) => {
     const addressTarget = displayAddressList?.[index]
     const { address } = addressTarget
@@ -73,10 +61,6 @@ export function AddressSearch({
     setOpen(false)
   }
 
-  /**
-   * 검색하기 클릭 시 호출
-   * @param value 주소
-   */
   const handleSearch = useCallback(async (value: string | number | readonly string[]) => {
     clearErrors(name)
 
@@ -97,10 +81,6 @@ export function AddressSearch({
     setKeyword(value as string)
   }, [onSearch, formState, trigger, name, clearErrors])
 
-  /**
-   * 외부 영역 클릭 시 호출
-   * - 선택한 주소가 바뀔때 Error 출력
-   */
   const handleClickOutSide = useCallback(async () => {
     if (text.current !== selectedAddress) {
       setError(name, { message: '정확한 주소를 입력해주세요.' })
@@ -119,9 +99,8 @@ export function AddressSearch({
           control={control}
           name={name}
           type="search"
-          disabled={readOnly}
           label="주소"
-          placeholder="도로명/지번 주소 입력 후 검색"
+          placeholder="주소 입력 후 검색"
           onSearch={handleSearch}
           onInput={(e) => {
             const { target } = { ...e }
@@ -142,12 +121,7 @@ export function AddressSearch({
             }
           }}
           rules={{
-            required: true,
             validate: (value: string) => {
-              if (readOnly) {
-                return true
-              }
-
               if (value?.length < 2) {
                 return '두 글자 이상 검색해 주세요.'
               }
@@ -174,19 +148,15 @@ export function AddressSearch({
         <Content>
           {(AddressLen) ? (
             <ListBlock>
-              {displayAddressList.map(({ address, detailName, roadAddress }, index) => (
+              {displayAddressList.map(({ address }, index) => (
                 <ListItem
-                  key={`addressItem${index}`}
+                  key={`address-list-${index}`}
                   type="button"
                   onClick={() => handleClickItem(index)}
                 >
                   <Address>
                     <strong>지번</strong>
-                    <span>{`${address}${detailName.length ? ` ${detailName}` : ''}`}</span>
-                  </Address>
-                  <Address>
-                    <strong>도로명</strong>
-                    <span className="road">{roadAddress}</span>
+                    <span>{address}</span>
                   </Address>
                 </ListItem>
               ))}
@@ -204,10 +174,6 @@ export function AddressSearch({
               )}
             </EmptyBlock>
           )}
-          <NoticeBlock>
-            아래와 같은 조합으로 입력 시 더 정확한 검색결과를 확인할 수 있습니다.<br />
-            <PrimaryText>도로명+건물번호/건물명(아파트명)</PrimaryText> 또는 <PrimaryText>지역명+지번/건물명(아파트명)</PrimaryText>
-          </NoticeBlock>
         </Content>
       </AddressSearchContent>
     </PopoverRoot>
@@ -218,7 +184,6 @@ export const AddressBlockAnchor = styled(PopoverPrimitive.Anchor)`
   position: relative;
   width: 100%;
   display: block;
-
 `
 
 const AddressSearchContent = styled(PopoverPrimitive.Content)<{ width?: string | null }>`
@@ -277,12 +242,6 @@ const Address = styled.span`
     font-size: ${({ theme }) => theme.font[14].size};
     line-height: ${({ theme }) => theme.font[14].lineHeight};
     color: ${COLOR.gray.color.gray[900]};
-
-    &.road {
-      font-size: ${({ theme }) => theme.font[11].size};
-      line-height: ${({ theme }) => theme.font[11].lineHeight};
-      color: ${COLOR.gray.color.gray[500]};
-    }
   }
 `
 
@@ -307,10 +266,6 @@ const ListBlock = styled.div`
   }
 `
 
-const PrimaryText = styled.em`
-  color: ${COLOR.primary.color.tmobi.blue[500]};
-`
-
 const EmptyBlock = styled.div`
   padding: 24px 0px;
   text-align: center;
@@ -323,32 +278,5 @@ const EmptyBlock = styled.div`
   
   div {
     margin-top: 8px;
-  }
-`
-
-const NoticeBlock = styled.div`
-  padding: 10px 16px 16px 16px;
-  font-size: ${({ theme }) => theme.font[12].size};
-  line-height: ${({ theme }) => theme.font[12].lineHeight};
-  text-align: center;
-  background-color: ${COLOR.gray.color.gray[100]};
-  border-radius: 4px;
-  
-  em:first-of-type {
-    position: relative;
-    padding-left: 8px;
-    
-    &:before {
-      position: absolute;
-      top: 5px;
-      left: 0;
-      content: '';
-      display: inline-flex;
-      width: 3px;
-      height: 3px;
-      background-color: ${COLOR.gray.color.gray[700]};
-      border-radius: 100%;
-      overflow: hidden;
-    }
   }
 `

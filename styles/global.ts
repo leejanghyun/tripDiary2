@@ -8,14 +8,5 @@ export const globalStyles = css`
     a[href^="https://www.google.com/maps"] {
       display: none !important;
     }
-    .gm-bundled-control .gmnoprint {
-      display: block;
-    }
-    .gmnoprint:not(.gm-bundled-control) {
-      display: none;
-    }
-    .gm-svpc {
-      display: none;
-    }
   }
 `

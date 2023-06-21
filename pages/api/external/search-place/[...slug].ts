@@ -4,10 +4,6 @@ import httpProxyMiddleware from 'next-http-proxy-middleware'
 import { API } from '../../../../constants'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { query } = req
-
-  console.log(1, query)
-
   try {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
