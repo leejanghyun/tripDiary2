@@ -1,34 +1,35 @@
 import styled from '@emotion/styled'
 import { COLOR } from '@TMOBI-WEB/ads-ui'
-import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Container } from '@/components/Container'
 import FrameLayout from '@/components/FrameLayout'
 import Map from '@/components/Map/Map'
 import { MENU_ID } from '@/components/Menu'
-import { getPosition, Location } from '@/utils/map'
+import { getPosition } from '@/utils/map'
 
+import { useMount } from '../../hooks/useMount'
 import { AddressSearch } from './components/AddressSearch'
 import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constants/form'
 
 function FeedPage() {
-  const [location, setLocation] = useState<null | Location>(null)
   const defaultValues = getCreateDefaultValue()
   const formMethods = useForm<CreateFeedFormType>({
     defaultValues,
     mode: 'onBlur',
   })
+  const { watch, setValue } = formMethods
+  const location = watch(FORM_FIELD.LOCATION)
 
   const initLocation = async () => {
     const location = await getPosition()
 
-    setLocation(location)
+    setValue(FORM_FIELD.LOCATION, location)
   }
 
-  useEffect(() => {
+  useMount(() => {
     initLocation()
-  }, [])
+  })
 
   return (
     <FrameLayout menuId={MENU_ID.ADD_FEED}>
@@ -40,11 +41,10 @@ function FeedPage() {
         <FormProvider {...formMethods}>
           <AddressSearch
             name={FORM_FIELD.SEARCH_TEXT}
-            onSearchEnd={() => {}}
-            onSearch={() => {}}
           />
           <MapWrapper>
             <Map
+              defaultLocation={location}
               zoom={15}
               markers={location ? [location] : []}
             />

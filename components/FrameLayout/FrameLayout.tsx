@@ -56,10 +56,10 @@ function FrameLayout({
         {children}
       </Main>
       {isShowMenu && (
-      <Footer
-        items={menus}
-        onChangeMenu={handleChangeMenu}
-      />
+        <Footer
+          items={menus}
+          onChangeMenu={handleChangeMenu}
+        />
       )}
     </Layout>
   )

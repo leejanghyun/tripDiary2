@@ -17,6 +17,7 @@ const DEFAULT_MAP_OPTIONS = {
 }
 
 type Props = {
+  defaultLocation?: Location | null
   markers?: Location[]
   width?: string | number
   height?: string | number
@@ -24,7 +25,7 @@ type Props = {
 }
 
 function Map({
-  zoom = DEFAULT_ZOOM_LEVEL, height = '100%', width = '100%', markers = [],
+  defaultLocation = null, zoom = DEFAULT_ZOOM_LEVEL, height = '100%', width = '100%', markers = [],
 }: Props) {
   const [location, setLocation] = useState<null | Location>(null)
   const apiKey = getGoogleMapApi()
@@ -38,6 +39,10 @@ function Map({
   useEffect(() => {
     initLocation()
   }, [])
+
+  useEffect(() => {
+    setLocation(defaultLocation)
+  }, [defaultLocation])
 
   return (
     <LoadScript

@@ -8,32 +8,34 @@ import {
 } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import { getSearchPlace } from '@/api/getSearchPlace'
+
+import { FORM_FIELD } from '../constants/form'
+
 type SearchAddressType = {
   address: string;
+  formattedAddress: string
   lat: number;
   lng: number;
 }
 
 export interface Props {
   name: string;
-  data?: { addressList: SearchAddressType[]; }
   isLoading?: boolean
   defaultValues?: string
-  onSearch: (value: string | number | readonly string[]) => void
-  onSearchEnd: (address: SearchAddressType) => void
 }
 
 const DISPLAY_LEN = 5
 
 export function AddressSearch({
-  isLoading, defaultValues = '', name, data, onSearch, onSearchEnd,
+  isLoading, defaultValues = '', name,
 }: Props) {
   const {
-    control, trigger, formState, clearErrors, setError,
+    control, trigger, formState, clearErrors, setError, setValue,
   } = useFormContext()
   const [isOpen, setOpen] = useState(false)
+  const [addressList, setAddressList] = useState<SearchAddressType[]>([])
   const [selectedAddress, setSelectedAddress] = useState<string>(defaultValues)
-  const { addressList = [] } = { ...data }
   const displayAddressList = useMemo(() => addressList.slice(0, DISPLAY_LEN), [addressList])
   const { length: AddressLen } = displayAddressList
   const text = useRef<string>(defaultValues)
@@ -52,13 +54,14 @@ export function AddressSearch({
 
   const handleClickItem = (index: number) => {
     const addressTarget = displayAddressList?.[index]
-    const { address } = addressTarget
+    const { address, lat, lng } = addressTarget
 
     text.current = address // 선택한 텍스트 저장
 
     setSelectedAddress(address)
-    onSearchEnd(addressTarget)
     setOpen(false)
+    clearErrors(name)
+    setValue(FORM_FIELD.LOCATION, { lat, lng })
   }
 
   const handleSearch = useCallback(async (value: string | number | readonly string[]) => {
@@ -77,9 +80,24 @@ export function AddressSearch({
     }
 
     setOpen(true)
-    onSearch(value)
     setKeyword(value as string)
-  }, [onSearch, formState, trigger, name, clearErrors])
+
+    const res = await getSearchPlace(value as string)
+    const resAddressList = res.map((item) => {
+      const { geometry, name, formatted_address } = item
+      const { location } = geometry || {}
+      const { lat, lng } = location || {}
+
+      return {
+        address: name,
+        formattedAddress: formatted_address,
+        lat,
+        lng,
+      }
+    })
+
+    setAddressList(resAddressList)
+  }, [formState, trigger, name, clearErrors])
 
   const handleClickOutSide = useCallback(async () => {
     if (text.current !== selectedAddress) {
@@ -148,15 +166,19 @@ export function AddressSearch({
         <Content>
           {(AddressLen) ? (
             <ListBlock>
-              {displayAddressList.map(({ address }, index) => (
+              {displayAddressList.map(({ address, formattedAddress }, index) => (
                 <ListItem
                   key={`address-list-${index}`}
                   type="button"
                   onClick={() => handleClickItem(index)}
                 >
                   <Address>
-                    <strong>지번</strong>
+                    <strong>주소</strong>
                     <span>{address}</span>
+                  </Address>
+                  <Address>
+                    <strong>지번</strong>
+                    <span className="road">{formattedAddress}</span>
                   </Address>
                 </ListItem>
               ))}
@@ -242,6 +264,12 @@ const Address = styled.span`
     font-size: ${({ theme }) => theme.font[14].size};
     line-height: ${({ theme }) => theme.font[14].lineHeight};
     color: ${COLOR.gray.color.gray[900]};
+
+    &.road {
+      font-size: ${({ theme }) => theme.font[11].size};
+      line-height: ${({ theme }) => theme.font[11].lineHeight};
+      color: ${COLOR.gray.color.gray[500]};
+    }
   }
 `
 
