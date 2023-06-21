@@ -36,12 +36,12 @@ function FrameLayout({
   })
 
   const handleChangeMenu = useCallback((id: MENU_ID | null) => {
-    console.log(id)
-    if (id) {
-      setGlobalState({ ...state, menuId: id || null })
-
-      router.push(getMenuPath(id))
+    if (!id) {
+      return
     }
+
+    setGlobalState({ ...state, menuId: id || null })
+    router.push(getMenuPath(id))
   }, [state, setGlobalState, router])
 
   return (

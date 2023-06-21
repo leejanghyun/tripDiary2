@@ -17,8 +17,10 @@ type SearchPlaceResult = {
 }
 
 export async function getSearchPlace() {
+  const DEFAULT_RADIUS = 1000
+
   try {
-    const response = await fetch(`${API.EXTERNAL.SEARCH_PLACE}/search?query=africa&key=AIzaSyDRpy4jGxB2gWpyaaLS7kzx7kJ71VCnnl4`, { method: 'GET' })
+    const response = await fetch(`${API.EXTERNAL.SEARCH_PLACE}/search?query=africa&radius=${DEFAULT_RADIUS}&key=AIzaSyDRpy4jGxB2gWpyaaLS7kzx7kJ71VCnnl4`, { method: 'GET' })
     const res = await response.json()
 
     return res

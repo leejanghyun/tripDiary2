@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
+import { Map } from '@/components/Map'
 import { MENU_ID } from '@/components/Menu'
 import { ROUTER } from '@/constants/router'
 
 import FrameLayout from '../../components/FrameLayout'
-import { Map } from './components'
 import AddButton from './components/AddButton'
 
 function HomePage() {

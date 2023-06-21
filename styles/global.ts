@@ -14,5 +14,8 @@ export const globalStyles = css`
     .gmnoprint:not(.gm-bundled-control) {
       display: none;
     }
+    .gm-svpc {
+      display: none;
+    }
   }
 `
