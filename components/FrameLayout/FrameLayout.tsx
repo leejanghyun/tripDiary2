@@ -72,7 +72,6 @@ const Layout = styled.div`
 `
 
 const Main = styled.div<{ variant?: string, isFullSize?: boolean }>`
-
   overflow: auto;
 
   ${({ variant }) => {

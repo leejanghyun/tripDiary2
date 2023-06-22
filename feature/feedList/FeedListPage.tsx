@@ -2,7 +2,7 @@ import { MENU_ID } from '@/components/Menu'
 
 import FrameLayout from '../../components/FrameLayout'
 
-function FeedPage() {
+function FeedListPage() {
   return (
     <FrameLayout menuId={MENU_ID.FEED_LIST}>
       Feed List
@@ -10,4 +10,4 @@ function FeedPage() {
   )
 }
 
-export default FeedPage
+export default FeedListPage

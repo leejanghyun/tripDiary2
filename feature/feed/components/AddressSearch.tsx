@@ -31,37 +31,34 @@ export function AddressSearch({
   isLoading, defaultValues = '', name,
 }: Props) {
   const {
-    control, trigger, formState, clearErrors, setError, setValue,
+    control, trigger, formState, clearErrors, setError, setValue, getValues,
   } = useFormContext()
   const [isOpen, setOpen] = useState(false)
   const [addressList, setAddressList] = useState<SearchAddressType[]>([])
   const [selectedAddress, setSelectedAddress] = useState<string>(defaultValues)
   const displayAddressList = useMemo(() => addressList.slice(0, DISPLAY_LEN), [addressList])
   const { length: AddressLen } = displayAddressList
-  const text = useRef<string>(defaultValues)
   const element = useRef<HTMLDivElement>(null)
   const { current: contentRef } = element
-  const [keyword, setKeyword] = useState('')
+  const { [FORM_FIELD.SEARCH_TEXT]: searchText } = getValues()
 
   /**
    * DefaultValue 변경시 호출
    */
   useEffect(() => {
-    text.current = defaultValues ?? ''
-
+    setValue(FORM_FIELD.SEARCH_TEXT, defaultValues)
     setSelectedAddress(defaultValues)
-  }, [defaultValues])
+  }, [defaultValues, setValue])
 
   const handleClickItem = (index: number) => {
     const addressTarget = displayAddressList?.[index]
     const { address, lat, lng } = addressTarget
 
-    text.current = address // 선택한 텍스트 저장
-
     setSelectedAddress(address)
     setOpen(false)
     clearErrors(name)
-    setValue(FORM_FIELD.LOCATION, { lat, lng })
+    setValue(FORM_FIELD.SEARCH_TEXT, address) // Input 값 갱신
+    setValue(FORM_FIELD.LOCATION, { lat, lng }) // 위치 값 갱신
   }
 
   const handleSearch = useCallback(async (value: string | number | readonly string[]) => {
@@ -80,7 +77,6 @@ export function AddressSearch({
     }
 
     setOpen(true)
-    setKeyword(value as string)
 
     const res = await getSearchPlace(value as string)
     const resAddressList = res.map((item) => {
@@ -100,12 +96,12 @@ export function AddressSearch({
   }, [formState, trigger, name, clearErrors])
 
   const handleClickOutSide = useCallback(async () => {
-    if (text.current !== selectedAddress) {
+    if (searchText !== selectedAddress) {
       setError(name, { message: '정확한 주소를 입력해주세요.' })
     }
 
     setOpen(false)
-  }, [setOpen, name, selectedAddress, setError])
+  }, [setOpen, name, selectedAddress, setError, searchText])
 
   return (
     <PopoverRoot
@@ -120,12 +116,6 @@ export function AddressSearch({
           label="주소"
           placeholder="주소 입력 후 검색"
           onSearch={handleSearch}
-          onInput={(e) => {
-            const { target } = { ...e }
-            const searchText = (target as HTMLInputElement).value
-
-            text.current = searchText
-          }}
           onKeyDown={(e) => {
             const {
               key, keyCode, which, target,
@@ -145,10 +135,6 @@ export function AddressSearch({
               }
 
               if (!selectedAddress && !isOpen) {
-                return '정확한 주소를 입력해주세요.'
-              }
-
-              if (selectedAddress && text.current.trim() !== selectedAddress.trim()) {
                 return '정확한 주소를 입력해주세요.'
               }
 
@@ -187,7 +173,7 @@ export function AddressSearch({
             <EmptyBlock>
               {isLoading ? <strong>해당 주소를 검색중 입니다...</strong> : (
                 <>
-                  <strong>‘{keyword}’에 대한 검색결과가 없습니다.</strong>
+                  <strong>‘{searchText}’에 대한 검색결과가 없습니다.</strong>
                   <div>
                     검색어에 잘못된 철자는 없는지,<br />
                     정확한 주소가 맞는지 한 번 더 확인해주세요.
