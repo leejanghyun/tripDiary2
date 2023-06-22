@@ -117,7 +117,7 @@ function FeedPage() {
 }
 
 const MapWrapper = styled.div`
-  margin: 5px 0 0 0;
+  margin: 10px 0 0 0;
   width: 100%;
   height: 25vh;
   border: 1px solid ${COLOR.primary.color.tmobi.blue[200]};
@@ -125,11 +125,11 @@ const MapWrapper = styled.div`
 `
 
 const Line = styled.div`
-  margin: 5px 0;
+  margin: 10px 0;
 `
 
 const ImageWrapper = styled.div`
-  margin: 5px 0 0 0;
+  margin: 10px 0 0 0;
   border: 1px solid ${COLOR.primary.color.tmobi.blue[300]};
 `
 
@@ -143,7 +143,7 @@ const ImageFileUploadBlock = styled.div<{ hasFile: boolean }>`
   line-height: ${({ theme }) => theme.font[12].lineHeight};
 
   > div {
-    margin: 5px 0;
+    margin: 10px 0;
   }
 `
 
