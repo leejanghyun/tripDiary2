@@ -282,6 +282,8 @@ const ListBlock = styled.div`
 
 const EmptyBlock = styled.div`
   padding: 24px 0px;
+  font-size: ${({ theme }) => theme.font[11].size};
+  line-height: ${({ theme }) => theme.font[11].lineHeight};
   text-align: center;
   color: ${COLOR.gray.color.gray[500]};
 

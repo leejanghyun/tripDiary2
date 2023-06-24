@@ -1,1 +1,1 @@
-export { default as AddButton } from './AddButton'
+export { default as AddFeedButton } from './AddFeedButton'

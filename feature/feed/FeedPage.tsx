@@ -2,7 +2,8 @@ import styled from '@emotion/styled'
 import {
   Button, COLOR, Input, TextArea,
 } from '@TMOBI-WEB/ads-ui'
-import { useCallback } from 'react'
+import { useAtom } from 'jotai'
+import { useCallback, useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { Container } from '@/components/Container'
@@ -12,6 +13,7 @@ import { MENU_ID } from '@/components/Menu'
 import { getPosition } from '@/utils/map'
 
 import { useMount } from '../../hooks/useMount'
+import { feedMetaState } from '../shared/atoms/feedMetaState'
 import { AddressSearch } from './components/AddressSearch'
 import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constants/form'
 
@@ -23,6 +25,7 @@ function FeedPage() {
   })
   const { watch, setValue, control } = formMethods
   const [location, imageFile] = watch([FORM_FIELD.LOCATION, FORM_FIELD.FILE])
+  const [meta, setMeta] = useAtom(feedMetaState)
 
   const initLocation = async () => {
     const location = await getPosition()
@@ -48,6 +51,19 @@ function FeedPage() {
 
     reader.readAsDataURL(file)
   }, [setValue])
+
+  /**
+   * Camera로 이미지 파일 업로드 시
+   */
+  useEffect(() => {
+    if (meta) {
+      handleImageFileUpload(meta)
+    }
+
+    return () => {
+      setMeta(null)
+    }
+  }, [setMeta, meta, handleImageFileUpload])
 
   return (
     <FrameLayout menuId={MENU_ID.ADD_FEED}>
@@ -104,7 +120,7 @@ function FeedPage() {
           <ImageWrapper>
             <img
               width="100%"
-              height="200px"
+              height="auto"
               src={imageFile as string}
               alt="feed"
             />

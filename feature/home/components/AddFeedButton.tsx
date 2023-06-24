@@ -7,7 +7,7 @@ interface AddButtonProps {
   onClick: () => void;
 }
 
-function AddButton({ onClick }: AddButtonProps) {
+function AddFeedButton({ onClick }: AddButtonProps) {
   return (
     <AddButtonStyles
       onClick={onClick}
@@ -33,4 +33,4 @@ const AddButtonStyles = styled.div`
   cursor: pointer;
 `
 
-export default AddButton
+export default AddFeedButton
