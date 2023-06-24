@@ -26,6 +26,7 @@ function HomePage() {
 
   return (
     <FrameLayout
+      title="홈"
       menuId={MENU_ID.MAIN}
       isFullSize
     >

@@ -13,16 +13,17 @@ import { useMount } from '@/hooks/useMount'
 
 import { Footer } from '../Footer'
 import Header from '../Header'
+import { TitleProps } from '../Header/Header'
 import { MENU_ID } from '../Menu/Menu'
 
-interface Props {
+type Props = {
   menuId: MENU_ID
   variant?: 'menu' | 'empty'
   isFullSize?: boolean
-}
+} & TitleProps
 
 function FrameLayout({
-  children, variant = 'menu', isFullSize, menuId,
+  children, variant = 'menu', isFullSize, menuId, title, titleTooltipMessage, descriptionTooltipMessages,
 }: PropsWithChildren<Props>) {
   const isShowMenu = variant === 'menu'
   const router = useRouter()
@@ -47,6 +48,9 @@ function FrameLayout({
   return (
     <Layout>
       <Header
+        title={title}
+        titleTooltipMessage={titleTooltipMessage}
+        descriptionTooltipMessages={descriptionTooltipMessages}
         userName={user}
       />
       <Main

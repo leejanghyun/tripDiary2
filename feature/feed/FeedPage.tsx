@@ -42,6 +42,7 @@ function FeedPage() {
    */
   const handleImageFileUpload = useCallback((file: File) => {
     const reader = new FileReader()
+    console.log(file)
 
     reader.onload = () => {
       const dataUrl = reader.result
@@ -66,12 +67,13 @@ function FeedPage() {
   }, [setMeta, meta, handleImageFileUpload])
 
   return (
-    <FrameLayout menuId={MENU_ID.ADD_FEED}>
-      <Container
-        title="피드 생성"
-        descriptionTooltipMessages={['피드를 생성하시오.']}
-        titleTooltipMessage="피드 생성"
-      >
+    <FrameLayout
+      title="피드 생성"
+      descriptionTooltipMessages={['피드를 생성하시오.']}
+      titleTooltipMessage="피드 생성"
+      menuId={MENU_ID.ADD_FEED}
+    >
+      <Container>
         <FormProvider {...formMethods}>
           <AddressSearch
             name={FORM_FIELD.SEARCH_TEXT}
@@ -110,6 +112,7 @@ function FeedPage() {
               <Button
                 palette="blue-stroke"
                 size="small"
+                uploadImageMultiple
                 onUpload={handleImageFileUpload}
               >
                 {imageFile ? '재선택' : '조회선택' }

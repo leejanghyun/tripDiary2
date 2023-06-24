@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@TMOBI-WEB/ads-ui@^0.0.4":
-  version "0.0.4"
-  resolved "https://npm.pkg.github.com/download/@TMOBI-WEB/ads-ui/0.0.4/e6d8c7f0996ec3f36cec336d3c13b680bae7db1d#e6d8c7f0996ec3f36cec336d3c13b680bae7db1d"
-  integrity sha512-rSIQyEwxqudyTMEppao0h3JCML+20+lFng8gfSkYF5RikQqH9debDO3f1fD+hNRzmwymXQOAvwrolmdqdAYoMg==
+"@TMOBI-WEB/ads-ui@^0.0.5":
+  version "0.0.5"
+  resolved "https://npm.pkg.github.com/download/@TMOBI-WEB/ads-ui/0.0.5/1682bbaeb1651e0d3ec46774c2936493082a6d62#1682bbaeb1651e0d3ec46774c2936493082a6d62"
+  integrity sha512-TBmaeZ/G+jc4o4JB3np8CftSyp2aIMySWo01nuqGej+4If+4DHKTWQlITzQ6PPhdwlwMjfTOYgYRV9Rrs8he9g==
   dependencies:
     "@emotion/babel-plugin" "^11.10.5"
     "@emotion/css" "^11.10.0"

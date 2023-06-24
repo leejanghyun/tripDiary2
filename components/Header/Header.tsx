@@ -1,30 +1,70 @@
 import styled from '@emotion/styled'
-import { COLOR } from '@TMOBI-WEB/ads-ui'
+import { COLOR, Tooltip } from '@TMOBI-WEB/ads-ui'
 import {
-  memo,
+  memo, ReactNode,
 } from 'react'
 
 import UtilContent from './UtilContent'
 
-type Props = {
+export type TitleProps = {
+  title?: string | ReactNode
+  titleTooltipMessage?: string
+  descriptionTooltipMessages?: string[]
+
+}
+
+type HeaderProps = {
   className?: string
   userName: string
-}
+} & TitleProps
 
 /**
  * Header 컴포넌트
  * @category Header 컴포넌트
  */
-function Header({ userName, className }: Props) {
+function Header({
+  userName, className, title, titleTooltipMessage, descriptionTooltipMessages,
+}: HeaderProps) {
   return (
     <Wrapper className={className}>
       <div>
-        Sample Test
+        {(title) && (
+        <article>
+          {title && (
+          <TitleBlock>
+            <Title>
+              {title}
+            </Title>
+            {(titleTooltipMessage || descriptionTooltipMessages) && (
+              <Tooltip
+                side="bottom"
+                align="start"
+                title={titleTooltipMessage}
+                descriptions={descriptionTooltipMessages}
+              />
+            )}
+          </TitleBlock>
+          )}
+        </article>
+        )}
         <UtilContent userName={userName} />
       </div>
     </Wrapper>
   )
 }
+
+const TitleBlock = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const Title = styled.h2`
+  margin-right: 8px;
+  display: inline-flex;
+  font-size: 17px;
+  line-height: 30px;
+  font-weight: 500;
+`
 
 const Wrapper = styled.header`
   background-color: ${COLOR.gray.color.wb[0]};
