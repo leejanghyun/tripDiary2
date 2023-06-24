@@ -61,7 +61,7 @@ function GlobalStatus() {
     const id = 'network'
 
     if (isOffline) {
-      toastError('인터넷 연결 상태를 다시 한번 확인해주세요.', id, { autoClose: false })
+      toastError('인터넷 연결 상태를 확인해주세요.', id, { autoClose: false })
       return
     }
 

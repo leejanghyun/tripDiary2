@@ -6,6 +6,16 @@ function FeedListPage() {
   return (
     <FrameLayout menuId={MENU_ID.FEED_LIST}>
       Feed List
+      <input
+        type="file"
+        accept="image/*"
+        // @ts-ignore
+        capture="camera"
+      />
+      <input
+        type="file"
+        accept="image/*;capture=camera"
+      />
     </FrameLayout>
   )
 }

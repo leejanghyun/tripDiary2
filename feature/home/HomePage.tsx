@@ -21,6 +21,7 @@ function HomePage() {
       isFullSize
     >
       <Map />
+
       <AddButton onClick={moveFeedAdd} />
     </FrameLayout>
   )
