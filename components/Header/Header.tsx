@@ -10,7 +10,7 @@ export type TitleProps = {
   title?: string | ReactNode
   titleTooltipMessage?: string
   descriptionTooltipMessages?: string[]
-
+  left?: ReactNode
 }
 
 type HeaderProps = {
@@ -23,7 +23,9 @@ type HeaderProps = {
  * @category Header 컴포넌트
  */
 function Header({
-  userName, className, title, titleTooltipMessage, descriptionTooltipMessages,
+  userName,
+  left = <UtilContent userName={userName} />,
+  className, title, titleTooltipMessage, descriptionTooltipMessages,
 }: HeaderProps) {
   return (
     <Wrapper className={className}>
@@ -47,7 +49,7 @@ function Header({
           )}
         </article>
         )}
-        <UtilContent userName={userName} />
+        {left}
       </div>
     </Wrapper>
   )

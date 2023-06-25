@@ -29,8 +29,10 @@ const AddButtonStyles = styled.div`
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  border: none;
   cursor: pointer;
+  border-width: 1px;
+  border-style: solid;
+  border-color: ${COLOR.primary.color.tmobi.blue[300]};
 `
 
 export default AddFeedButton

@@ -2,13 +2,13 @@ import styled from '@emotion/styled'
 import { COLOR } from '@TMOBI-WEB/ads-ui'
 import { ChangeEvent, useRef } from 'react'
 
-import { ReactComponent as Camera } from '@/images/ico_camera_img.svg'
+import { ReactComponent as Album } from '@/images/ico_album.svg'
 
-export interface Props {
+interface AlbumButtonProps {
   onUpload: (imageData: FileList) => void;
 }
 
-function CameraButton({ onUpload }: Props) {
+function AlbumButton({ onUpload }: AlbumButtonProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleUploadClick = () => {
@@ -28,17 +28,18 @@ function CameraButton({ onUpload }: Props) {
   }
 
   return (
-    <CameraStyles
+    <AlbumButtonStyles
       onClick={handleUploadClick}
     >
-      <Camera />
+      <Album />
       <InputStyle
         ref={fileInputRef}
         type="file"
+        multiple
         accept="image/*;capture=camera"
         onChange={onUploadImage}
       />
-    </CameraStyles>
+    </AlbumButtonStyles>
   )
 }
 
@@ -46,11 +47,12 @@ const InputStyle = styled.input`
   display: none;
 `
 
-const CameraStyles = styled.div`
+const AlbumButtonStyles = styled.div`
   position: fixed;
-  bottom: 135px;
-  right: 25px;
+  bottom: 75px;
+  right: 20px;
   background-color: ${COLOR.gray.color.wb[0]};
+  opacity: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -63,4 +65,4 @@ const CameraStyles = styled.div`
   border-color: ${COLOR.primary.color.tmobi.blue[300]};
 `
 
-export default CameraButton
+export default AlbumButton

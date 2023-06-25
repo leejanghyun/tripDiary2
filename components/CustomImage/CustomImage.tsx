@@ -1,24 +1,68 @@
-import styled from '@emotion/styled'
 import {
-  memo, useEffect, useRef,
+  memo, useCallback, useEffect, useRef,
 } from 'react'
 
 import ImageError from '@/images/image_default.svg'
 
 type Props = {
   src: string
-  maxWidth?: number
-  maxHeight?: number
+  onDelete?: () => void
 }
+
+const DELETE_BUTTON_POS = 20
 
 /**
  * Image 컴포넌트
  * @component Image 컴포넌트
  */
 function CustomImage({
-  src, maxWidth, maxHeight,
+  src,
+  onDelete,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const drawDeleteCircle = useCallback((ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) => {
+    ctx.beginPath()
+    ctx.arc(x, y, radius, 0, 2 * Math.PI)
+    ctx.fillStyle = '#191919'
+    ctx.fill()
+    ctx.closePath()
+
+    ctx.font = 'bold 10px Arial'
+    ctx.fillStyle = '#F4F4F4'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText('X', x, y)
+
+    const canvas = canvasRef.current
+
+    if (!canvas) {
+      return
+    }
+
+    const canvasWidth = getComputedStyle(canvas as HTMLCanvasElement).width
+    const clickableArea = {
+      x: parseInt(canvasWidth, 10) - DELETE_BUTTON_POS - radius,
+      y: y - radius,
+      width: radius * 2,
+      height: radius * 2,
+    }
+
+    const handleClick = (event: MouseEvent) => {
+      const { offsetX, offsetY } = event
+
+      if (
+        offsetX >= clickableArea.x
+        && offsetX <= clickableArea.x + clickableArea.width
+        && offsetY >= clickableArea.y
+        && offsetY <= clickableArea.y + clickableArea.height
+      ) {
+        onDelete?.()
+      }
+    }
+
+    canvasRef.current?.addEventListener('click', handleClick)
+  }, [onDelete])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -36,24 +80,15 @@ function CustomImage({
         return
       }
 
-      const { naturalWidth, naturalHeight } = img
-      let width = naturalWidth
-      let height = naturalHeight
+      const aspectRatio = img.width / img.height
 
-      if (maxWidth && (naturalWidth > maxWidth)) {
-        width = maxWidth
-      }
+      canvas.height = canvas.width / aspectRatio
 
-      if (maxHeight && (naturalHeight > maxHeight)) {
-        height = maxHeight
-      }
-
-      canvas.width = width
-      canvas.height = height
-
-      ctx.drawImage(img, 0, 0, width, height) // 이미지 그리기
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height) // 이미지 그리기
       ctx.fillStyle = 'rgba(0, 0, 0, 0.04)'
-      ctx.fillRect(0, 0, width, height) // 오버레이
+      ctx.fillRect(0, 0, canvas.width, canvas.height) // 오버레이
+
+      drawDeleteCircle(ctx, canvas.width - DELETE_BUTTON_POS, DELETE_BUTTON_POS, 9)
     }
 
     img.onerror = () => {
@@ -70,18 +105,17 @@ function CustomImage({
           return
         }
         ctx.drawImage(img, 0, 0, DEFAULT_SIZE, DEFAULT_SIZE)
+        drawDeleteCircle(ctx, canvas.width - DELETE_BUTTON_POS, DELETE_BUTTON_POS, 9)
       }
     }
-  }, [src, maxWidth, maxHeight])
+  }, [src, onDelete, drawDeleteCircle])
+
   return (
-    <Canvas
+    <canvas
+      style={{ width: '100%' }}
       ref={canvasRef}
     />
   )
 }
-
-const Canvas = styled.canvas`
-  border: 1px solid rgba(0, 0, 0, 0.08);
-`
 
 export default memo(CustomImage)

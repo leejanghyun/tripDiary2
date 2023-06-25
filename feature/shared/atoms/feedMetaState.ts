@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
 
-type State = File | null
+type State = FileList | null
 
 export const feedMetaState = atom<State>(null)

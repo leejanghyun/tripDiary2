@@ -19,7 +19,7 @@ function HomePage() {
     router.push(ROUTER.ADD_FEED)
   }, [router])
 
-  const handleUpload = useCallback((file: File) => {
+  const handleUpload = useCallback((file: FileList) => {
     setMeta(file)
     router.push(ROUTER.ADD_FEED)
   }, [router, setMeta])
