@@ -117,9 +117,6 @@ function FeedPage() {
     >
       <Container>
         <FormProvider {...formMethods}>
-          <AddressSearch
-            name={FORM_FIELD.SEARCH_TEXT}
-          />
           <MapWrapper>
             <Map
               defaultLocation={location}
@@ -127,6 +124,9 @@ function FeedPage() {
               markers={location ? [location] : []}
             />
           </MapWrapper>
+          <AddressSearch
+            name={FORM_FIELD.SEARCH_TEXT}
+          />
           <Line>
             <Input
               control={control}
@@ -174,7 +174,7 @@ function FeedPage() {
 }
 
 const MapWrapper = styled.div`
-  margin: 10px 0 0 0;
+  margin: 0 0 12px 0;
   width: 100%;
   height: 25vh;
   border: 1px solid ${COLOR.primary.color.tmobi.blue[200]};
@@ -182,14 +182,14 @@ const MapWrapper = styled.div`
 `
 
 const Line = styled.div`
-  margin: 10px 0;
+  margin: 12px 0;
 `
 
 const ImageFileWrapper = styled.div`
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
-  margin: 10px 0;
+  margin: 12px 0;
 `
 
 export default FeedPage
