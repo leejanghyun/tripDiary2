@@ -30,6 +30,8 @@ function LoginPage() {
     router.push('/home')
   }, [router, session])
 
+  alert(process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID)
+
   return (
     <LoginLayout>
       {isLoading ? <Loader open /> : (
