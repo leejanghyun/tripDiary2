@@ -6,4 +6,4 @@ cd /home/ubuntu/deploy/next-app
 yarn install
 pm2 stop tripDiary
 yarn build
-pm2 start yarn --name "tripDiary" -- start
+pm2 start yarn --name "tripDiary" -- start --env production PORT=3000
