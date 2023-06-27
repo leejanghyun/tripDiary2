@@ -4,7 +4,7 @@ const next = require('next')
 const fs = require('fs')
 
 const dev = process.env.NODE_ENV !== 'production'
-const hostname = dev ? 'localhost' : 'ec2-15-164-198-227.ap-northeast-2.compute.amazonaws.com/'
+const hostname = dev ? 'localhost' : 'ec2-15-164-198-227.ap-northeast-2.compute.amazonaws.com'
 const port = 3000
 
 const app = next({ dev, hostname, port })
