@@ -1,8 +1,10 @@
 import {
-  memo, useCallback, useEffect, useRef,
+  memo, useCallback, useRef,
 } from 'react'
 
 import ImageError from '@/images/image_default.svg'
+
+import { useMount } from '../../hooks/useMount'
 
 type Props = {
   src: string
@@ -64,7 +66,7 @@ function CustomImage({
     canvasRef.current?.addEventListener('click', handleClick)
   }, [onDelete])
 
-  useEffect(() => {
+  useMount(() => {
     const canvas = canvasRef.current
 
     if (!canvas) {
@@ -85,7 +87,7 @@ function CustomImage({
       canvas.height = canvas.width / aspectRatio
 
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height) // 이미지 그리기
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.04)'
+      ctx.fillStyle = 'rgba(6, 4, 4, 0.04)'
       ctx.fillRect(0, 0, canvas.width, canvas.height) // 오버레이
 
       drawDeleteCircle(ctx, canvas.width - DELETE_BUTTON_POS, DELETE_BUTTON_POS, 9)
@@ -108,7 +110,7 @@ function CustomImage({
         drawDeleteCircle(ctx, canvas.width - DELETE_BUTTON_POS, DELETE_BUTTON_POS, 9)
       }
     }
-  }, [src, onDelete, drawDeleteCircle])
+  })
 
   return (
     <canvas

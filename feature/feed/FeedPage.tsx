@@ -6,9 +6,9 @@ import {
 } from '@TMOBI-WEB/ads-ui'
 import { useAtom } from 'jotai'
 import {
-  Fragment, useCallback, useEffect,
+  useCallback, useEffect,
 } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 
 import { Container } from '@/components/Container'
 import FrameLayout from '@/components/FrameLayout'
@@ -16,9 +16,10 @@ import Map from '@/components/Map/Map'
 import { MENU_ID } from '@/components/Menu'
 import { feedMetaState } from '@/feature/shared/atoms/feedMetaState'
 import { useMount } from '@/hooks/useMount'
+import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
 import { getPosition } from '@/utils/map'
 
-import CustomImage from '../../components/CustomImage/CustomImage'
+import UploadImage from '../../components/UploadImage/UploadImage'
 import { AddressSearch } from './components/AddressSearch'
 import AlbumButton from './components/AlbumButton'
 import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constants/form'
@@ -32,10 +33,9 @@ function FeedPage() {
   const {
     watch, setValue, control, getValues,
   } = formMethods
-  const [location, imageFileList] = watch([FORM_FIELD.LOCATION, FORM_FIELD.FILE_LIST])
+  const [location] = watch([FORM_FIELD.LOCATION])
   const [meta, setMeta] = useAtom(feedMetaState)
-
-  console.log(getValues())
+  const imageFileList = useWatch({ control, name: FORM_FIELD.FILE_LIST })
 
   const initLocation = async () => {
     const location = await getPosition()
@@ -89,17 +89,23 @@ function FeedPage() {
   }, [setMeta, meta, handleImageFileUpload])
 
   const handleDeletePicture = useCallback((idx: number) => {
-    const imageFileList = getValues(FORM_FIELD.FILE_LIST)
+    const {
+      [FORM_FIELD.FILE_LIST]: imageFileList,
+      [FORM_FIELD.IMG_DESCRIPTION]: imageDescription,
+    } = getValues()
 
     if (!imageFileList) {
       return
     }
 
-    const newArray = [...imageFileList.slice(0, idx), ...imageFileList.slice(idx + 1)]
+    console.log(idx)
 
-    console.log(newArray)
+    const newArray = (imageFileList as string[]).slice(0, idx).concat((imageFileList as string[]).slice(idx + 1))
+    const newDescriptions = (imageDescription as string[]).slice(0, idx)
+      .concat((imageDescription as string[]).slice(idx + 1))
 
     setValue(FORM_FIELD.FILE_LIST, newArray)
+    setValue(FORM_FIELD.IMG_DESCRIPTION, newDescriptions)
   }, [setValue, getValues])
 
   return (
@@ -152,21 +158,21 @@ function FeedPage() {
               name={FORM_FIELD.CONTENT}
               maxLength={200}
               label="내용을 입력하세요."
-              styles={
-                css`
-                  height: 100px;
-                `
-              }
+              styles={css` height: 100px;`}
             />
           </Line>
           <ImageFileWrapper>
             {(imageFileList as string[] || []).map((file, idx) => (
-              <Fragment
+              <CustomImage
                 key={`img-${idx}`}
               >
-                <CustomImage
+                <RemoveButtonStyles
+                  onClick={() => handleDeletePicture(idx)}
+                >
+                  <DeleteItem />
+                </RemoveButtonStyles>
+                <UploadImage
                   src={file}
-                  onDelete={() => handleDeletePicture(idx)}
                 />
                 <Input
                   control={control}
@@ -175,7 +181,7 @@ function FeedPage() {
                   label={`${idx + 1}번 이미지에 대한 설명을 입력하시오.`}
                   isStretch
                 />
-              </Fragment>
+              </CustomImage>
             ))}
           </ImageFileWrapper>
         </FormProvider>
@@ -197,8 +203,28 @@ const Line = styled.div`
   margin: 12px 0;
 `
 
+const CustomImage = styled.div`
+  position: relative;
+  width: 100%;
+`
+
+const RemoveButtonStyles = styled.div`
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  top: 10px;
+  right: 10px;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  border-width: 0px;
+`
+
 const ImageFileWrapper = styled.div`
   display: flex;
+  position: relative;
   gap: 5px;
   flex-wrap: wrap;
   margin: 12px 0;

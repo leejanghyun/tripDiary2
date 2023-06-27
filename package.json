@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node server",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "NODE_ENV=production pm2 start server.js -i 0",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx --cache",
