@@ -39,3 +39,26 @@ export async function getPosition() {
     return null
   }
 }
+
+export async function getPlaceName(location: Location): Promise<string> {
+  return new Promise((resolve) => {
+    if (!window.google || !window.google.maps) {
+      return
+    }
+
+    const geocoder = new window.google.maps.Geocoder()
+    const latLng = new window.google.maps.LatLng(location?.lat, location?.lng)
+
+    geocoder.geocode({ location: latLng }, (results, status) => {
+      if (status === 'OK') {
+        if (results?.[0]) {
+          resolve(results[0].formatted_address)
+        } else {
+          resolve('')
+        }
+      } else {
+        resolve('')
+      }
+    })
+  })
+}

@@ -17,7 +17,7 @@ import { MENU_ID } from '@/components/Menu'
 import { feedMetaState } from '@/feature/shared/atoms/feedMetaState'
 import { useMount } from '@/hooks/useMount'
 import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
-import { getPosition } from '@/utils/map'
+import { getPlaceName, getPosition } from '@/utils/map'
 
 import UploadImage from '../../components/UploadImage/UploadImage'
 import { AddressSearch } from './components/AddressSearch'
@@ -41,6 +41,16 @@ function FeedPage() {
     const location = await getPosition()
 
     setValue(FORM_FIELD.LOCATION, location)
+
+    if (!location) {
+      return
+    }
+
+    const placeName = await getPlaceName(location)
+
+    if (placeName) {
+      setValue(FORM_FIELD.SEARCH_TEXT, placeName)
+    }
   }
 
   useMount(() => {
@@ -97,8 +107,6 @@ function FeedPage() {
     if (!imageFileList) {
       return
     }
-
-    console.log(idx)
 
     const newArray = (imageFileList as string[]).slice(0, idx).concat((imageFileList as string[]).slice(idx + 1))
     const newDescriptions = (imageDescription as string[]).slice(0, idx)
