@@ -7,11 +7,11 @@ import {
 } from 'react'
 
 import { globalState } from '@/atoms/globalState'
+import { Footer } from '@/components/Footer'
 import { menus } from '@/constants/menus'
 import { getMenuPath } from '@/constants/router'
+import useAuth from '@/hooks/useAuth'
 
-import useAuth from '../../hooks/useAuth'
-import { Footer } from '../Footer'
 import Header from '../Header'
 import { TitleProps } from '../Header/Header'
 import { MENU_ID } from '../Menu/Menu'

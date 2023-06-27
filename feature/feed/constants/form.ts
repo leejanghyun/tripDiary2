@@ -1,3 +1,6 @@
+import { addDays } from 'date-fns'
+
+import { resetTime } from '@/utils'
 import { Location } from '@/utils/map'
 
 export const enum FORM_FIELD {
@@ -6,7 +9,11 @@ export const enum FORM_FIELD {
   TITLE = 'TITLE',
   CONTENT = 'CONTENT',
   FILE_LIST = 'FILE_LIST',
+  DATE = 'DATE',
+  IMG_DESCRIPTION = 'IMG_DESCRIPTION',
 }
+
+export const DEFAULT_DATE = [addDays(resetTime(new Date()), 0), addDays(resetTime(new Date()), 0)]
 
 export interface CreateFeedFormType {
   [FORM_FIELD.SEARCH_TEXT]: string
@@ -14,6 +21,8 @@ export interface CreateFeedFormType {
   [FORM_FIELD.TITLE]: string
   [FORM_FIELD.CONTENT]: string
   [FORM_FIELD.FILE_LIST]: string[] | null,
+  [FORM_FIELD.DATE]: Array<Date | null>
+  [FORM_FIELD.IMG_DESCRIPTION]: string[]
 }
 
 export const getCreateDefaultValue = () => {
@@ -23,5 +32,7 @@ export const getCreateDefaultValue = () => {
     [FORM_FIELD.TITLE]: '',
     [FORM_FIELD.CONTENT]: '',
     [FORM_FIELD.FILE_LIST]: null,
+    [FORM_FIELD.DATE]: DEFAULT_DATE,
+    [FORM_FIELD.IMG_DESCRIPTION]: [],
   }
 }

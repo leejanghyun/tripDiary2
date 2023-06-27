@@ -18,6 +18,8 @@ import { queryClient } from '@/constants/queryClient'
 import { globalStyles } from '@/styles/global'
 import { encode, isServer } from '@/utils'
 
+require('dotenv').config()
+
 type PageComponentProps = {
   pageName?: string
   session?: Session

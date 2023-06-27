@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
   Button,
-  COLOR, Input, TextArea,
+  COLOR, DateRangePicker, Input, TextArea,
 } from '@TMOBI-WEB/ads-ui'
 import { useAtom } from 'jotai'
 import {
@@ -34,6 +34,8 @@ function FeedPage() {
   } = formMethods
   const [location, imageFileList] = watch([FORM_FIELD.LOCATION, FORM_FIELD.FILE_LIST])
   const [meta, setMeta] = useAtom(feedMetaState)
+
+  console.log(getValues())
 
   const initLocation = async () => {
     const location = await getPosition()
@@ -117,6 +119,18 @@ function FeedPage() {
     >
       <Container>
         <FormProvider {...formMethods}>
+          <DateRangePicker
+            control={control}
+            name={FORM_FIELD.DATE}
+            rules={{
+              required: true,
+            }}
+          />
+          <Line>
+            <AddressSearch
+              name={FORM_FIELD.SEARCH_TEXT}
+            />
+          </Line>
           <MapWrapper>
             <Map
               defaultLocation={location}
@@ -124,9 +138,7 @@ function FeedPage() {
               markers={location ? [location] : []}
             />
           </MapWrapper>
-          <AddressSearch
-            name={FORM_FIELD.SEARCH_TEXT}
-          />
+
           <Line>
             <Input
               control={control}
@@ -158,9 +170,9 @@ function FeedPage() {
                 />
                 <Input
                   control={control}
-                  name={FORM_FIELD.TITLE}
+                  name={`${FORM_FIELD.IMG_DESCRIPTION}.${idx}`}
                   variant="naked"
-                  label="이미지에 대한 설명을 입력하시오."
+                  label={`${idx + 1}번 이미지에 대한 설명을 입력하시오.`}
                   isStretch
                 />
               </Fragment>

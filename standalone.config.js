@@ -8,11 +8,11 @@ module.exports = {
       autorestart: true,
       watch: false,
       env: {
-        PORT: 443,
+        PORT: 3000,
         NODE_ENV: 'development',
       },
       env_production: {
-        PORT: 443,
+        PORT: 3000,
         NODE_ENV: 'production',
       },
       output: './logs/console.log',
