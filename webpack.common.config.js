@@ -8,6 +8,14 @@ const commonConfig = {
         issuer: /\.[jt]sx?$/,
         use: ['@svgr/webpack', 'url-loader'],
       },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
     ],
   },
   devtool: 'inline-source-map',

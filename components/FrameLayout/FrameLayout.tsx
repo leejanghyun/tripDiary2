@@ -3,14 +3,14 @@ import styled from '@emotion/styled'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import {
-  PropsWithChildren, useCallback,
+  PropsWithChildren, useCallback, useEffect,
 } from 'react'
 
 import { globalState } from '@/atoms/globalState'
 import { menus } from '@/constants/menus'
 import { getMenuPath } from '@/constants/router'
-import { useMount } from '@/hooks/useMount'
 
+import useAuth from '../../hooks/useAuth'
 import { Footer } from '../Footer'
 import Header from '../Header'
 import { TitleProps } from '../Header/Header'
@@ -29,12 +29,15 @@ function FrameLayout({
   const router = useRouter()
   const [state, setGlobalState] = useAtom(globalState)
   const { username: user } = state
+  const { session } = useAuth()
 
-  useMount(() => {
+  useEffect(() => {
+    const { user } = session || {}
+
     setGlobalState({
-      ...state, menuId: menuId || null,
+      ...state, username: user?.email || user?.name || '', menuId: menuId || null,
     })
-  })
+  }, [session, setGlobalState, menuId])
 
   const handleChangeMenu = useCallback((id: MENU_ID | null) => {
     if (!id) {

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { COLOR, DropdownMenu } from '@TMOBI-WEB/ads-ui'
+import { signOut } from 'next-auth/react'
 
 import { ReactComponent as Profile } from '@/images/image_profile.svg'
 
@@ -22,7 +23,9 @@ function UtilContent({ userName }: Props) {
         data={[
           {
             text: '로그아웃',
-            onClick: () => {},
+            onClick: async () => {
+              await signOut({ callbackUrl: '/login' })
+            },
           },
         ]}
         sideOffset={8}

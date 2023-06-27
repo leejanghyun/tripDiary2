@@ -6,6 +6,8 @@ import type { AppContext, AppProps } from 'next/app'
 import App from 'next/app'
 import Head from 'next/head'
 import absoluteUrl from 'next-absolute-url'
+import { Session } from 'next-auth'
+import { SessionProvider } from 'next-auth/react'
 import { QueryClientProvider } from 'react-query'
 
 import GlobalStatus from '@/components/GlobalStatus/GlobalStatus'
@@ -18,6 +20,7 @@ import { encode, isServer } from '@/utils'
 
 type PageComponentProps = {
   pageName?: string
+  session?: Session
 }
 
 export default function ManagersApp({
@@ -27,6 +30,9 @@ export default function ManagersApp({
 }: AppProps & { origin: string }) {
   const pageName = ((pageProps as AppProps['pageProps'] & PageComponentProps).pageName
   || (Component as AppProps['Component'] & PageComponentProps).pageName) || ''
+  const session = ((pageProps as AppProps['pageProps'] & PageComponentProps).session
+  || (Component as AppProps['Component'] & PageComponentProps).session)
+
   return (
     <>
       <DefaultHead
@@ -36,7 +42,9 @@ export default function ManagersApp({
       <Global styles={globalStyles} />
       <QueryClientProvider client={queryClient}>
         <CustomThemeProvider>
-          <Component {...pageProps} />
+          <SessionProvider session={session}>
+            <Component {...pageProps} />
+          </SessionProvider>
         </CustomThemeProvider>
       </QueryClientProvider>
 

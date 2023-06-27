@@ -41,8 +41,6 @@ yarn-error.log*
 !.yarn/sdks
 !.yarn/versions
 
-# local env file
-.env
 
 .eslintcache
 
