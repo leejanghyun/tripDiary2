@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node server",
     "build": "next build",
-    "start": "NODE_ENV=production PORT=3000 pm2 start server.js -i 0",
+    "start": "NODE_ENV=production pm2 start server.js -i 0",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx --cache",
     "precommit": "lint-staged",
     "postinstall": "husky install"

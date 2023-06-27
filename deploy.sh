@@ -4,6 +4,6 @@ sudo apt-get install -y nodejs
 sudo npm install -g pm2
 cd /home/ubuntu/deploy/next-app
 yarn install
-pm2 stop tripDiary
 yarn build
+pm2 delete all
 yarn start
