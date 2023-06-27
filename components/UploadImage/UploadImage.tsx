@@ -18,6 +18,10 @@ function UploadImage({
 
   useEffect(() => {
     setSelectedImage(src)
+
+    return () => {
+      setSelectedImage(null)
+    }
   }, [src])
 
   useEffect(() => {

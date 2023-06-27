@@ -24,6 +24,7 @@ function AlbumButton({ onUpload }: AlbumButtonProps) {
 
     if (file) {
       onUpload(file)
+      event.target.value = ''
     }
   }
 

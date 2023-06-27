@@ -4,13 +4,13 @@ import { resetTime } from '@/utils'
 import { Location } from '@/utils/map'
 
 export const enum FORM_FIELD {
-  SEARCH_TEXT = 'SEARCH_TEXT',
-  LOCATION = 'LOCATION',
-  TITLE = 'TITLE',
-  CONTENT = 'CONTENT',
-  FILE_LIST = 'FILE_LIST',
-  DATE = 'DATE',
-  IMG_DESCRIPTION = 'IMG_DESCRIPTION',
+  SEARCH_TEXT = 'searchText',
+  LOCATION = 'location',
+  TITLE = 'title',
+  CONTENT = 'content',
+  FILE_LIST = 'fileList',
+  DATE = 'date',
+  IMG_DESCRIPTION = 'imageDescription',
 }
 
 export const DEFAULT_DATE = [addDays(resetTime(new Date()), 0), addDays(resetTime(new Date()), 0)]

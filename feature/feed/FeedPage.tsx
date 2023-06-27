@@ -108,11 +108,11 @@ function FeedPage() {
       return
     }
 
-    const newArray = (imageFileList as string[]).slice(0, idx).concat((imageFileList as string[]).slice(idx + 1))
+    const newImageList = (imageFileList as string[]).slice(0, idx).concat((imageFileList as string[]).slice(idx + 1))
     const newDescriptions = (imageDescription as string[]).slice(0, idx)
       .concat((imageDescription as string[]).slice(idx + 1))
 
-    setValue(FORM_FIELD.FILE_LIST, newArray)
+    setValue(FORM_FIELD.FILE_LIST, newImageList)
     setValue(FORM_FIELD.IMG_DESCRIPTION, newDescriptions)
   }, [setValue, getValues])
 
