@@ -9,7 +9,7 @@ export default function useAuth(redirectPath = '/login') {
 
   useEffect(() => {
     if (!isLoading && !session) {
-      router.push(redirectPath)
+      // router.push(redirectPath)
     }
   }, [isLoading, session, router, redirectPath])
 

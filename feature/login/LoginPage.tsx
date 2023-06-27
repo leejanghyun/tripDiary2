@@ -10,16 +10,8 @@ function LoginPage() {
   const router = useRouter()
   const isLoading = status === 'loading'
 
-  const handleGoogleLogin = useCallback(() => {
-    signIn('google')
-  }, [])
-
-  const handleKakaoLogin = useCallback(() => {
-    signIn('kakao')
-  }, [])
-
-  const handleNaverLogin = useCallback(() => {
-    signIn('naver')
+  const handleSNSLogin = useCallback((type: 'google' | 'kakao' | 'naver') => {
+    signIn(type)
   }, [])
 
   useEffect(() => {
@@ -29,8 +21,6 @@ function LoginPage() {
 
     router.push('/home')
   }, [router, session])
-
-  alert(process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID)
 
   return (
     <LoginLayout>
@@ -45,21 +35,21 @@ function LoginPage() {
               alt=""
               width={40}
               height={40}
-              onClick={handleGoogleLogin}
+              onClick={() => handleSNSLogin('google')}
             />
             <Image
               src="/images/ico_kakao.png"
               alt=""
               width={40}
               height={40}
-              onClick={handleKakaoLogin}
+              onClick={() => handleSNSLogin('kakao')}
             />
             <Image
               src="/images/ico_naver.png"
               alt=""
               width={40}
               height={40}
-              onClick={handleNaverLogin}
+              onClick={() => handleSNSLogin('naver')}
             />
           </SNSLogin>
         </Main>
