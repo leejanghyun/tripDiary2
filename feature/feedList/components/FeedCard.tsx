@@ -77,6 +77,7 @@ const TextBlock = styled.div`
   flex-direction: column;
   width: 100%;
   flex-wrap: wrap;
+  gap: 5px;
 
   > div:first-of-type {
     font-size: ${({ theme }) => theme.font[20].size};
