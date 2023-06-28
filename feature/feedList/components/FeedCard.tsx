@@ -1,21 +1,31 @@
 import styled from '@emotion/styled'
 import { COLOR } from '@TMOBI-WEB/ads-ui'
+import { useRouter } from 'next/router'
+import { useCallback } from 'react'
 
 import CustomImage from '@/components/CustomImage'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
 import { Feed } from '@/mocks/feedList'
 import { formatDisplayDateTime } from '@/utils'
 
-type Props = Pick<Feed, 'id' | 'fileList' | 'content' | 'title' | 'date' | 'searchText'>
+type Props = Feed
 
 function FeedCard({
-  id, fileList, content, title, date, searchText,
+  id, fileList, content, title, date, searchText, imageDescription,
 }: Props) {
   const startDate = formatDisplayDateTime(date[0], 'yy년 MM월 dd일')
   const endDate = formatDisplayDateTime(date[0], 'yy년 MM월 dd일')
+  const router = useRouter()
+
+  const handleMove = useCallback(() => {
+    router.push(`/edit/${id}`)
+  }, [router, id])
 
   return (
-    <Wrapper key={id}>
+    <Wrapper
+      key={id}
+      onClick={handleMove}
+    >
       <div>
         <TextBlock>
           <div>{title}</div>
@@ -23,6 +33,7 @@ function FeedCard({
         </TextBlock>
         <ImageWrapper>
           <CustomImage
+            imageDescription={imageDescription}
             images={fileList}
           />
         </ImageWrapper>
@@ -40,9 +51,17 @@ function FeedCard({
   )
 }
 
+const Wrapper = styled.div`
+  padding: 20px;
+  margin: 0 0 10px 0;
+  border-top: 1px solid ${COLOR.gray.color.gray[300]};
+  border-bottom: 1px solid ${COLOR.gray.color.gray[300]};
+  background: ${COLOR.gray.color.wb[0]}
+`
+
 const ImageWrapper = styled.div`
   width: 100%;
-  height: auto;;
+  height: auto;
   margin: 2px 0 10px 0;
   flex-wrap: wrap;
 `
@@ -52,16 +71,9 @@ const FooterWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   color: ${COLOR.gray.color.gray[600]};
-  font-size: ${({ theme }) => theme.font[9].size};
+  font-size: ${({ theme }) => theme.font[10].size};
+  line-height: ${({ theme }) => theme.font[10].lineHeight};
   margin: 0 5px;
-  line-height: ${({ theme }) => theme.font[9].lineHeight};
-`
-
-const Wrapper = styled.div`
-  padding: 10px;
-  margin: 0 0 10px 0;
-  border: 1px solid ${COLOR.gray.color.gray[300]};
-  border-radius: 10px;
 `
 
 const SearchText = styled.div`
@@ -82,6 +94,7 @@ const TextBlock = styled.div`
   > div:first-of-type {
     font-size: ${({ theme }) => theme.font[20].size};
     line-height: ${({ theme }) => theme.font[20].lineHeight};
+    font-weight: 500;
   }
 
   > div:nth-of-type(2) {

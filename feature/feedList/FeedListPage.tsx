@@ -9,23 +9,16 @@ function FeedListPage() {
 
   return (
     <FrameLayout
+      isFullSize
+      background="gray"
       title="피드 리스트"
       menuId={MENU_ID.FEED_LIST}
     >
       {data.map(((feed, idx) => {
-        const {
-          id, title, content, fileList, date, searchText,
-        } = feed
-
         return (
           <FeedCard
             key={idx}
-            searchText={searchText}
-            date={date}
-            id={id}
-            title={title}
-            content={content}
-            fileList={fileList}
+            {...feed}
           />
         )
       }))}

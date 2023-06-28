@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { COLOR } from '@TMOBI-WEB/ads-ui'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import {
@@ -20,10 +21,11 @@ type Props = {
   menuId: MENU_ID
   variant?: 'menu' | 'empty'
   isFullSize?: boolean
+  background?: 'white' | 'gray'
 } & TitleProps
 
 function FrameLayout({
-  children, left, variant = 'menu', isFullSize, menuId, title, titleTooltipMessage, descriptionTooltipMessages,
+  children, left, variant = 'menu', isFullSize, menuId, title, titleTooltipMessage, descriptionTooltipMessages, background,
 }: PropsWithChildren<Props>) {
   const isShowMenu = variant === 'menu'
   const router = useRouter()
@@ -49,7 +51,7 @@ function FrameLayout({
   }, [state, setGlobalState, router])
 
   return (
-    <Layout>
+    <Layout background={background}>
       <Header
         title={title}
         titleTooltipMessage={titleTooltipMessage}
@@ -73,10 +75,23 @@ function FrameLayout({
   )
 }
 
-const Layout = styled.div`
+const Layout = styled.div<{ background?: string }>`
   width: 100%;
   height: 100vh;
   overflow: hidden;
+
+  ${({ background }) => {
+    switch (background) {
+      case 'gray':
+        return css`
+          background: ${COLOR.gray.color.gray[100]}
+        `
+      default:
+        return css`
+          background: ${COLOR.gray.color.wb[0]}
+        `
+    }
+  }}
 `
 
 const Main = styled.div<{ variant?: string, isFullSize?: boolean }>`

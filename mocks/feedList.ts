@@ -11,15 +11,32 @@ export type Feed = {
   title: string,
 }
 
+export const feedEditMock: Feed = {
+  id: 1,
+  content: '다음 사진은 방콕에서 먹었던 사진 입니다.다음 사진은 방콕에서 먹었던 사진 입니다.',
+  date: [new Date(), new Date()],
+  fileList: [
+    'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+    'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+  ],
+  imageDescription: ['이미지1 설명', '이미지2 설명'],
+  location: {
+    lat: 37.22,
+    lng: 126,
+  },
+  searchText: 'searchText',
+  title: 'title',
+}
+
 export const feedListMock: Feed[] = [
   {
     id: 1,
     content: '다음 사진은 방콕에서 먹었던 사진 입니다.다음 사진은 방콕에서 먹었던 사진 입니다.',
     date: [new Date(), new Date()],
     fileList: [
-      'https://www.codeproject.com/script/Membership/Images/octicons_github-lg.png',
+      'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
     ],
-    imageDescription: ['imageDescription'],
+    imageDescription: ['이미지1 설명'],
     location: {
       lat: 37.22,
       lng: 126,
@@ -32,7 +49,7 @@ export const feedListMock: Feed[] = [
     content: '다음 사진은 방콕에서 먹었던 사진 입니다.다음 사진은 방콕에서 먹었던 사진 입니다.',
     date: [new Date(), new Date()],
     fileList: ['https://www.svgrepo.com/show/302636/map-marker.svg'],
-    imageDescription: ['imageDescription'],
+    imageDescription: ['이미지1 설명'],
     location: {
       lat: 37,
       lng: 126.9780,
@@ -52,7 +69,7 @@ export const feedListMock: Feed[] = [
       'https://www.svgrepo.com/show/302636/map-marker.svg',
       'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
     ],
-    imageDescription: ['imageDescription'],
+    imageDescription: ['이미지1 설명', '이미지1 설명', '이미지1 설명', '이미지1 설명', '이미지1 설명'],
     location: {
       lat: 37.22,
       lng: 126,

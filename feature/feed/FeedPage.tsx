@@ -5,6 +5,7 @@ import {
   COLOR, DateRangePicker, Input, TextArea,
 } from '@TMOBI-WEB/ads-ui'
 import { useAtom } from 'jotai'
+import { ParsedUrlQuery } from 'querystring'
 import {
   useCallback, useEffect,
 } from 'react'
@@ -14,28 +15,64 @@ import { Container } from '@/components/Container'
 import FrameLayout from '@/components/FrameLayout'
 import Map from '@/components/Map/Map'
 import { MENU_ID } from '@/components/Menu'
+import UploadImage from '@/components/UploadImage/UploadImage'
 import { feedMetaState } from '@/feature/shared/atoms/feedMetaState'
 import { useMount } from '@/hooks/useMount'
 import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
+import { feedEditMock } from '@/mocks/feedList'
 import { getPlaceName, getPosition } from '@/utils/map'
 
-import UploadImage from '../../components/UploadImage/UploadImage'
 import { AddressSearch } from './components/AddressSearch'
 import AlbumButton from './components/AlbumButton'
 import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constants/form'
 
-function FeedPage() {
+type Props = {
+  query?: ParsedUrlQuery
+}
+
+const feedEditMockData = feedEditMock
+
+function FeedPage({ query }: Props) {
+  const { id } = query || {}
+  const isEdit = Boolean(id)
   const defaultValues = getCreateDefaultValue()
   const formMethods = useForm<CreateFeedFormType>({
     defaultValues,
     mode: 'onBlur',
   })
   const {
-    watch, setValue, control, getValues,
+    watch, setValue, control, getValues, reset,
   } = formMethods
   const [location] = watch([FORM_FIELD.LOCATION])
   const [meta, setMeta] = useAtom(feedMetaState)
   const imageFileList = useWatch({ control, name: FORM_FIELD.FILE_LIST })
+
+  useEffect(() => {
+    if (!isEdit) {
+      return
+    }
+    const {
+      content,
+      date,
+      fileList,
+      imageDescription,
+      location,
+      searchText,
+      title,
+    } = feedEditMockData
+
+    const defaultValues = getCreateDefaultValue()
+    reset({
+      ...defaultValues,
+      [FORM_FIELD.CONTENT]: content,
+      [FORM_FIELD.DATE]: date,
+      [FORM_FIELD.FILE_LIST]: fileList,
+      [FORM_FIELD.IMG_DESCRIPTION]: imageDescription,
+      [FORM_FIELD.LOCATION]: location,
+      [FORM_FIELD.SEARCH_TEXT]: searchText,
+      [FORM_FIELD.TITLE]: title,
+    })
+  }, [isEdit, reset, setValue])
 
   const initLocation = async () => {
     const location = await getPosition()
