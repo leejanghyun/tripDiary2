@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { COLOR } from '@TMOBI-WEB/ads-ui'
 
+import CustomImage from '@/components/CustomImage'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
 import { Feed } from '@/mocks/feedList'
 import { formatDisplayDateTime } from '@/utils'
@@ -24,15 +25,9 @@ function FeedCard({
           </div>
         </TextBlock>
         <ImageWrapper>
-          {fileList.map((file, idx) => {
-            return (
-              <Image
-                alt={`feed-img-${idx}`}
-                key={idx}
-                src={file}
-              />
-            )
-          })}
+          <CustomImage
+            images={fileList}
+          />
         </ImageWrapper>
       </Content>
       <SearchText>
@@ -45,13 +40,6 @@ function FeedCard({
 const ImageWrapper = styled.div`
   width: 105px;
   height: 105px;
-`
-
-const Image = styled.img`
-  width: 100%; 
-  height: 100%;
-  object-fit: scale-down; 
-
 `
 
 const Wrapper = styled.div`
@@ -70,6 +58,8 @@ const SearchText = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
+  font-size: ${({ theme }) => theme.font[12].size};
+  line-height: ${({ theme }) => theme.font[12].lineHeight};
   margin: 10px 0 0px 0;
   padding: 5px 0;
 `
@@ -81,8 +71,8 @@ const TextBlock = styled.div`
   flex-wrap: wrap;
 
   > div:first-of-type {
-    font-size: ${({ theme }) => theme.font[16].size};
-    line-height: ${({ theme }) => theme.font[16].lineHeight};
+    font-size: ${({ theme }) => theme.font[20].size};
+    line-height: ${({ theme }) => theme.font[20].lineHeight};
   }
 
   > div:nth-of-type(2) {

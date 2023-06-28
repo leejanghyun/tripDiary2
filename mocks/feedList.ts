@@ -16,7 +16,9 @@ export const feedListMock: Feed[] = [
     id: 1,
     content: '다음 사진은 방콕에서 먹었던 사진 입니다.다음 사진은 방콕에서 먹었던 사진 입니다.',
     date: [new Date(), new Date()],
-    fileList: ['https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg'],
+    fileList: [
+      'https://www.codeproject.com/script/Membership/Images/octicons_github-lg.png',
+    ],
     imageDescription: ['imageDescription'],
     location: {
       lat: 37.22,
@@ -42,7 +44,11 @@ export const feedListMock: Feed[] = [
     id: 3,
     content: '다음 사진은 방콕에서 먹었던 사진 입니다.다음 사진은 방콕에서 먹었던 사진 입니다.',
     date: [new Date(), new Date()],
-    fileList: ['https://tmaphelp.zendesk.com/hc/article_attachments/15991088668955'],
+    fileList: [
+      'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+      'https://www.svgrepo.com/show/302636/map-marker.svg',
+      'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+    ],
     imageDescription: ['imageDescription'],
     location: {
       lat: 37.22,
@@ -55,7 +61,10 @@ export const feedListMock: Feed[] = [
     id: 4,
     content: '다음 사진은 방콕에서 먹었던 사진 입니다.다음 사진은 방콕에서 먹었던 사진 입니다.',
     date: [new Date(), new Date()],
-    fileList: ['https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg'],
+    fileList: [
+      'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+      'https://www.svgrepo.com/show/302636/map-marker.svg',
+    ],
     imageDescription: ['imageDescription'],
     location: {
       lat: 37,
@@ -81,7 +90,10 @@ export const feedListMock: Feed[] = [
     id: 6,
     content: 'content',
     date: [new Date(), new Date()],
-    fileList: ['https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg'],
+    fileList: [
+      'https://codeproject.freetls.fastly.net/App_Themes/CodeProject/Img/logo250x135.gif',
+      'https://www.codeproject.com/script/Membership/Images/octicons_github-lg.png',
+    ],
     imageDescription: ['imageDescription'],
     location: {
       lat: 37,
@@ -94,7 +106,7 @@ export const feedListMock: Feed[] = [
     id: 7,
     content: 'content',
     date: [new Date(), new Date()],
-    fileList: ['https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg'],
+    fileList: ['https://www.codeproject.com/script/Membership/Images/microsoft-lg.png'],
     imageDescription: ['imageDescription'],
     location: {
       lat: 37.22,

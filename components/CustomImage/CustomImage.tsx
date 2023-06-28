@@ -1,120 +1,143 @@
 import {
-  memo, useCallback, useRef,
+  memo, useEffect, useRef,
 } from 'react'
 
-import ImageError from '@/images/image_default.svg'
-
-import { useMount } from '../../hooks/useMount'
-
 type Props = {
-  src: string
-  onDelete?: () => void
+  images: string[]
 }
 
-const DELETE_BUTTON_POS = 20
+const drawInfo = (width: number, height: number, idx: number, length: number) => {
+  const DEFAULT_POS = {
+    x: 0,
+    y: 0,
+    width,
+    height,
+  }
+
+  if (length === 1) {
+    return DEFAULT_POS
+  }
+
+  if (length === 2) {
+    if (idx === 0) {
+      return {
+        ...DEFAULT_POS,
+        width: width / 2,
+      }
+    }
+    return {
+      ...DEFAULT_POS,
+      x: width / 2,
+      width: width / 2,
+    }
+  }
+
+  if (length === 3) {
+    if (idx === 0) {
+      return {
+        ...DEFAULT_POS,
+        width: width / 2,
+        height: (height / 2),
+      }
+    }
+
+    if (idx === 1) {
+      return {
+        ...DEFAULT_POS,
+        x: width / 2,
+        width: width / 2,
+        height: (height / 2),
+      }
+    }
+
+    return {
+      ...DEFAULT_POS,
+      y: height / 2,
+      height: (height / 2),
+    }
+  }
+
+  if (idx === 0) {
+    return {
+      ...DEFAULT_POS,
+      width: width / 2,
+      height: (height / 2),
+    }
+  }
+
+  if (idx === 1) {
+    return {
+      ...DEFAULT_POS,
+      x: width / 2,
+      width: width / 2,
+      height: (height / 2),
+    }
+  }
+
+  if (idx === 2) {
+    return {
+      ...DEFAULT_POS,
+      y: height / 2,
+      width: width / 2,
+      height: (height / 2),
+    }
+  }
+
+  if (idx === 3) {
+    return {
+      x: width / 2,
+      y: height / 2,
+      width: width / 2,
+      height: (height / 2),
+    }
+  }
+
+  return null
+}
 
 /**
  * Image 컴포넌트
  * @component Image 컴포넌트
  */
 function CustomImage({
-  src,
-  onDelete,
+  images,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const drawDeleteCircle = useCallback((ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) => {
-    ctx.beginPath()
-    ctx.arc(x, y, radius, 0, 2 * Math.PI)
-    ctx.fillStyle = '#191919'
-    ctx.fill()
-    ctx.closePath()
+  useEffect(() => {
+    const canvas = canvasRef.current as HTMLCanvasElement
+    const context = canvas.getContext('2d')
 
-    ctx.font = 'bold 10px Arial'
-    ctx.fillStyle = '#F4F4F4'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('X', x, y)
+    images.forEach((src, index) => {
+      const image = new Image()
+      image.src = src
 
-    const canvas = canvasRef.current
+      const canvas = canvasRef.current as HTMLCanvasElement
+      const { width: canvasWidth, height: canvasHeight } = canvas
 
-    if (!canvas) {
-      return
-    }
-
-    const canvasWidth = getComputedStyle(canvas as HTMLCanvasElement).width
-    const clickableArea = {
-      x: parseInt(canvasWidth, 10) - DELETE_BUTTON_POS - radius,
-      y: y - radius,
-      width: radius * 2,
-      height: radius * 2,
-    }
-
-    const handleClick = (event: MouseEvent) => {
-      const { offsetX, offsetY } = event
-
-      if (
-        offsetX >= clickableArea.x
-        && offsetX <= clickableArea.x + clickableArea.width
-        && offsetY >= clickableArea.y
-        && offsetY <= clickableArea.y + clickableArea.height
-      ) {
-        onDelete?.()
-      }
-    }
-
-    canvasRef.current?.addEventListener('click', handleClick)
-  }, [onDelete])
-
-  useMount(() => {
-    const canvas = canvasRef.current
-
-    if (!canvas) {
-      return
-    }
-
-    const ctx = canvas.getContext('2d')
-    const img = new Image()
-
-    img.src = src
-    img.onload = () => {
-      if (!ctx) {
-        return
-      }
-
-      const aspectRatio = img.width / img.height
-
-      canvas.height = canvas.width / aspectRatio
-
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height) // 이미지 그리기
-      ctx.fillStyle = 'rgba(6, 4, 4, 0.04)'
-      ctx.fillRect(0, 0, canvas.width, canvas.height) // 오버레이
-
-      drawDeleteCircle(ctx, canvas.width - DELETE_BUTTON_POS, DELETE_BUTTON_POS, 9)
-    }
-
-    img.onerror = () => {
-      const DEFAULT_SIZE = 35
-      const img = new Image()
-
-      img.src = ImageError
-
-      canvas.width = DEFAULT_SIZE
-      canvas.height = DEFAULT_SIZE
-
-      img.onload = () => {
-        if (!ctx) {
+      image.onload = () => {
+        if (!context) {
           return
         }
-        ctx.drawImage(img, 0, 0, DEFAULT_SIZE, DEFAULT_SIZE)
-        drawDeleteCircle(ctx, canvas.width - DELETE_BUTTON_POS, DELETE_BUTTON_POS, 9)
+
+        const res = drawInfo(canvasWidth, canvasHeight, index, images.length)
+
+        if (!res) {
+          return
+        }
+
+        const {
+          x, y, width, height,
+        } = res
+
+        context.drawImage(image, x, y, width, height)
       }
-    }
-  })
+    })
+  }, [images])
 
   return (
     <canvas
-      style={{ width: '100%' }}
+      style={{ width: '100%', height: '100%' }}
       ref={canvasRef}
     />
   )
