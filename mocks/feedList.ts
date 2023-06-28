@@ -48,6 +48,9 @@ export const feedListMock: Feed[] = [
       'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
       'https://www.svgrepo.com/show/302636/map-marker.svg',
       'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+      'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+      'https://www.svgrepo.com/show/302636/map-marker.svg',
+      'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
     ],
     imageDescription: ['imageDescription'],
     location: {

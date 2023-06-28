@@ -1,98 +1,10 @@
+import styled from '@emotion/styled'
 import {
-  memo, useEffect, useRef,
+  memo,
 } from 'react'
 
 type Props = {
   images: string[]
-}
-
-const drawInfo = (width: number, height: number, idx: number, length: number) => {
-  const DEFAULT_POS = {
-    x: 0,
-    y: 0,
-    width,
-    height,
-  }
-
-  if (length === 1) {
-    return DEFAULT_POS
-  }
-
-  if (length === 2) {
-    if (idx === 0) {
-      return {
-        ...DEFAULT_POS,
-        width: width / 2,
-      }
-    }
-    return {
-      ...DEFAULT_POS,
-      x: width / 2,
-      width: width / 2,
-    }
-  }
-
-  if (length === 3) {
-    if (idx === 0) {
-      return {
-        ...DEFAULT_POS,
-        width: width / 2,
-        height: (height / 2),
-      }
-    }
-
-    if (idx === 1) {
-      return {
-        ...DEFAULT_POS,
-        x: width / 2,
-        width: width / 2,
-        height: (height / 2),
-      }
-    }
-
-    return {
-      ...DEFAULT_POS,
-      y: height / 2,
-      height: (height / 2),
-    }
-  }
-
-  if (idx === 0) {
-    return {
-      ...DEFAULT_POS,
-      width: width / 2,
-      height: (height / 2),
-    }
-  }
-
-  if (idx === 1) {
-    return {
-      ...DEFAULT_POS,
-      x: width / 2,
-      width: width / 2,
-      height: (height / 2),
-    }
-  }
-
-  if (idx === 2) {
-    return {
-      ...DEFAULT_POS,
-      y: height / 2,
-      width: width / 2,
-      height: (height / 2),
-    }
-  }
-
-  if (idx === 3) {
-    return {
-      x: width / 2,
-      y: height / 2,
-      width: width / 2,
-      height: (height / 2),
-    }
-  }
-
-  return null
 }
 
 /**
@@ -102,45 +14,28 @@ const drawInfo = (width: number, height: number, idx: number, length: number) =>
 function CustomImage({
   images,
 }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current as HTMLCanvasElement
-    const context = canvas.getContext('2d')
-
-    images.forEach((src, index) => {
-      const image = new Image()
-      image.src = src
-
-      const canvas = canvasRef.current as HTMLCanvasElement
-      const { width: canvasWidth, height: canvasHeight } = canvas
-
-      image.onload = () => {
-        if (!context) {
-          return
-        }
-
-        const res = drawInfo(canvasWidth, canvasHeight, index, images.length)
-
-        if (!res) {
-          return
-        }
-
-        const {
-          x, y, width, height,
-        } = res
-
-        context.drawImage(image, x, y, width, height)
-      }
-    })
-  }, [images])
-
   return (
-    <canvas
-      style={{ width: '100%', height: '100%' }}
-      ref={canvasRef}
-    />
+    <ImageWrapper>
+      {images.map((image, index) => (
+        <img
+          key={index}
+          src={image}
+          alt="이미지"
+          style={{ objectFit: 'cover', maxWidth: '80px', height: 'auto' }}
+        />
+      ))}
+    </ImageWrapper>
   )
 }
+
+const ImageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 15px 0;
+  overflow: auto;
+  height: 100%;
+  gap: 10px;
+`
 
 export default memo(CustomImage)

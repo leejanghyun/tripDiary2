@@ -16,30 +16,45 @@ function FeedCard({
 
   return (
     <Wrapper key={id}>
-      <Content>
+      <div>
         <TextBlock>
           <div>{title}</div>
           <div>{content}</div>
-          <div>
-            {startDate === endDate ? startDate : `${startDate} ~ ${endDate}`}
-          </div>
         </TextBlock>
         <ImageWrapper>
           <CustomImage
             images={fileList}
           />
         </ImageWrapper>
-      </Content>
-      <SearchText>
-        <IcoMarker /> {searchText}
-      </SearchText>
+      </div>
+      <FooterWrapper>
+        <SearchText>
+          <IcoMarker /> {searchText}
+        </SearchText>
+        <div>
+          {startDate === endDate ? startDate : `${startDate} ~ ${endDate}`}
+        </div>
+      </FooterWrapper>
+
     </Wrapper>
   )
 }
 
 const ImageWrapper = styled.div`
-  width: 105px;
-  height: 105px;
+  width: 100%;
+  height: auto;;
+  margin: 2px 0 10px 0;
+  flex-wrap: wrap;
+`
+
+const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${COLOR.gray.color.gray[600]};
+  font-size: ${({ theme }) => theme.font[9].size};
+  margin: 0 5px;
+  line-height: ${({ theme }) => theme.font[9].lineHeight};
 `
 
 const Wrapper = styled.div`
@@ -49,25 +64,18 @@ const Wrapper = styled.div`
   border-radius: 10px;
 `
 
-const Content = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
 const SearchText = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 5px;
   align-items: center;
   font-size: ${({ theme }) => theme.font[12].size};
   line-height: ${({ theme }) => theme.font[12].lineHeight};
-  margin: 10px 0 0px 0;
-  padding: 5px 0;
 `
 
 const TextBlock = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%;
   flex-wrap: wrap;
 
   > div:first-of-type {
@@ -86,14 +94,6 @@ const TextBlock = styled.div`
     color: ${COLOR.gray.color.gray[600]};
     font-size: ${({ theme }) => theme.font[12].size};
     line-height: ${({ theme }) => theme.font[12].lineHeight};
-  }
-
-  > div:nth-of-type(3) {
-    display: flex;
-    justify-content: space-between;
-    color: ${COLOR.gray.color.gray[600]};
-    font-size: ${({ theme }) => theme.font[9].size};
-    line-height: ${({ theme }) => theme.font[9].lineHeight};
   }
 `
 
