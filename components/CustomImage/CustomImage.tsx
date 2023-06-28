@@ -27,7 +27,7 @@ function CustomImage({
                 src={image}
                 alt="이미지"
                 style={{
-                  objectFit: 'cover', width: 'auto;', height: '90px',
+                  objectFit: 'cover', width: 'auto', height: '90px',
                 }}
               />
             </div>
