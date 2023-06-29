@@ -4,26 +4,26 @@ import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
 import CustomImage from '@/components/CustomImage'
+import { Feed } from '@/db/scheme/feedScheme'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
-import { Feed } from '@/mocks/feedList'
 import { formatDisplayDateTime } from '@/utils'
 
 type Props = Feed
 
 function FeedCard({
-  id, fileList, content, title, date, searchText, imageDescription,
+  _id, fileList, content, title, date, searchText, imageDescriptions,
 }: Props) {
   const startDate = formatDisplayDateTime(date[0], 'yy년 MM월 dd일')
   const endDate = formatDisplayDateTime(date[0], 'yy년 MM월 dd일')
   const router = useRouter()
 
   const handleMove = useCallback(() => {
-    router.push(`/edit/${id}`)
-  }, [router, id])
+    router.push(`/edit/${_id}`)
+  }, [router, _id])
 
   return (
     <Wrapper
-      key={id}
+      key={_id}
       onClick={handleMove}
     >
       <div>
@@ -33,8 +33,8 @@ function FeedCard({
         </TextBlock>
         <ImageWrapper>
           <CustomImage
-            imageDescription={imageDescription}
-            images={fileList}
+            imageDescriptions={imageDescriptions || []}
+            images={fileList || []}
           />
         </ImageWrapper>
       </div>

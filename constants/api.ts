@@ -13,4 +13,5 @@ export const API = {
     SEARCH_PLACE: '/api/external/search-place',
   },
   PROXY: '/api/proxy',
+  TRIP_DIARY: '/api/trip-diary',
 }

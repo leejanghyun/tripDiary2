@@ -22,16 +22,17 @@ export const enum StatusCode {
 }
 
 export const enum Method {
-  Post = 'post',
-  Get = 'get',
-  Delete = 'delete',
-  Put = 'put',
+  POST = 'POST',
+  GET = 'GET',
+  DELETE = 'DELETE',
+  PUT = 'PUT',
   Patch = 'patch',
 }
 
 /** 응답 코드 값 */
-export enum StatusType {
+export const enum StatusType {
   SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
 }
 
 export const enum EventName {
@@ -46,7 +47,7 @@ export type ErrorResponseDataType = {
 
 export type CommonResponse = {
   status: StatusType;
-  resultMsg: string;
+  resultMsg?: string;
 }
 
 export const enum AxiosStatus {

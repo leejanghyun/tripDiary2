@@ -19,4 +19,5 @@ export const COOKIE_KEYS = {
 export const KEYS = {
   ALL: ['trip'] as const,
   USERKEYS: () => [...KEYS.ALL, 'userKeys'] as const,
+  FEED_LIST: () => [...KEYS.ALL, 'feedList'] as const,
 }

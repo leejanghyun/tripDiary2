@@ -1,11 +1,19 @@
+import { useAtomValue } from 'jotai'
+import { PaginateResult } from 'mongoose'
+
 import { MENU_ID } from '@/components/Menu'
 
 import FrameLayout from '../../components/FrameLayout'
-import { feedListMock } from '../../mocks/feedList'
+import { Feed } from '../../db'
+import { feedListParamsState } from '../shared/atoms/searchParamsState'
+import useFeedList from '../shared/hooks/useFeedList'
 import FeedCard from './components/FeedCard'
 
 function FeedListPage() {
-  const data = feedListMock
+  const feedListParams = useAtomValue(feedListParamsState)
+  const { data } = useFeedList(feedListParams)
+  const { content } = data || {}
+  const { docs } = content as PaginateResult<Feed> || {}
 
   return (
     <FrameLayout
@@ -14,7 +22,7 @@ function FeedListPage() {
       title="피드 리스트"
       menuId={MENU_ID.FEED_LIST}
     >
-      {data.map(((feed, idx) => {
+      {(docs || []).map(((feed, idx) => {
         return (
           <FeedCard
             key={idx}

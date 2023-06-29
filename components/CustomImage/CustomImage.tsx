@@ -7,7 +7,7 @@ import {
 import { Tooltip } from 'react-tooltip'
 
 type Props = {
-  imageDescription: string[]
+  imageDescriptions: string[]
   images: string[]
 }
 
@@ -16,7 +16,7 @@ type Props = {
  * @component Image 컴포넌트
  */
 function CustomImage({
-  imageDescription = [],
+  imageDescriptions = [],
   images = [],
 }: Props) {
   const [showTooltip, setShowTooltip] = useState(false)
@@ -38,12 +38,12 @@ function CustomImage({
         >
           <a
             data-tooltip-id="tooltip"
-            data-tooltip-content={imageDescription[index]}
+            data-tooltip-content={imageDescriptions[index]}
             data-tooltip-place="bottom"
           >
             <img
               src={image}
-              alt={imageDescription[index]}
+              alt={imageDescriptions[index]}
               css={PhotoStyles}
             />
           </a>
