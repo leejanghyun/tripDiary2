@@ -9,7 +9,6 @@ export async function addToFeedList(userId: string, item: Feed): Promise<boolean
       userId,
       feed: item,
     })
-
     await newItem.save()
 
     return true

@@ -25,11 +25,11 @@ import { Feed } from '@/db'
 import { feedMetaState } from '@/feature/shared/atoms/feedMetaState'
 import { useMount } from '@/hooks/useMount'
 import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
-import { feedEditMock } from '@/mocks/feedList'
-import { getPlaceName, getPosition } from '@/utils/map'
+import { getPlaceName, getPosition, Location } from '@/utils/map'
 
 import { postFeed } from '../../api/postFeed'
 import { KEYS } from '../../constants'
+import useMyFeed from '../shared/hooks/useMyFeed'
 import { AddressSearch } from './components/AddressSearch'
 import AlbumButton from './components/AlbumButton'
 import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constants/form'
@@ -37,8 +37,6 @@ import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constan
 type Props = {
   query?: ParsedUrlQuery
 }
-
-const feedEditMockData = feedEditMock
 
 function FeedPage({ query }: Props) {
   const { id } = query || {}
@@ -56,6 +54,9 @@ function FeedPage({ query }: Props) {
   const imageFileList = useWatch({ control, name: FORM_FIELD.FILE_LIST })
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { data } = useMyFeed(id as string)
+  const { content: feed } = data || {}
+  console.log(feed)
 
   const { mutate: submit } = useMutation<boolean, AxiosError, Omit<Feed, '_id'>>(
     (data) => postFeed(data),
@@ -75,9 +76,10 @@ function FeedPage({ query }: Props) {
    * 초기화
    */
   useEffect(() => {
-    if (!isEdit) {
+    if (!isEdit || !feed) {
       return
     }
+
     const {
       content,
       date,
@@ -86,20 +88,23 @@ function FeedPage({ query }: Props) {
       location,
       searchText,
       title,
-    } = feedEditMockData
+    } = feed
 
     const defaultValues = getCreateDefaultValue()
+    const dateObjects = Array.isArray(date) ? date.map((dateString) => new Date(dateString))
+      : [new Date(), new Date()]
+
     reset({
       ...defaultValues,
       [FORM_FIELD.CONTENT]: content,
-      [FORM_FIELD.DATE]: date,
+      [FORM_FIELD.DATE]: dateObjects,
       [FORM_FIELD.FILE_LIST]: fileList,
       [FORM_FIELD.IMG_DESCRIPTION]: imageDescriptions,
       [FORM_FIELD.LOCATION]: location,
       [FORM_FIELD.SEARCH_TEXT]: searchText,
       [FORM_FIELD.TITLE]: title,
     })
-  }, [isEdit, reset, setValue])
+  }, [isEdit, reset, setValue, feed])
 
   const onSubmit: SubmitHandler<CreateFeedFormType> = (data) => {
     const { location } = data
@@ -226,7 +231,7 @@ function FeedPage({ query }: Props) {
               <Map
                 defaultLocation={location}
                 zoom={15}
-                markers={location ? [location] : []}
+                markers={location ? [{ location: location as Location }] : []}
               />
             </MapWrapper>
 

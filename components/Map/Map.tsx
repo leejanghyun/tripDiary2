@@ -1,6 +1,8 @@
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
 import { Loader } from '@TMOBI-WEB/ads-ui'
+import { useRouter } from 'next/router'
 import {
+  useCallback,
   useEffect, useMemo, useState,
 } from 'react'
 
@@ -10,15 +12,21 @@ const DEFAULT_ZOOM_LEVEL = 11
 
 const DEFAULT_MAP_OPTIONS = {
   fullscreenControl: false,
-  mapTypeId: 'terrain', // ('roadmap', 'satellite', 'hybrid', 'terrain')
+  mapTypeId: 'roadmap', // ('roadmap', 'satellite', 'hybrid', 'terrain')
   mapTypeControl: false,
   zoomControl: false,
   disableDefaultUI: true,
 }
 
+type Markers = {
+  location: Location
+  fileList?: string[] | null
+  id?: string
+}
+
 type Props = {
   defaultLocation?: Location | null
-  markers?: Location[]
+  markers: Markers[]
   width?: string | number
   height?: string | number
   zoom?: number
@@ -29,6 +37,7 @@ function Map({
 }: Props) {
   const [location, setLocation] = useState<null | Location>(null)
   const apiKey = getGoogleMapApi()
+  const router = useRouter()
 
   const initLocation = async () => {
     const location = await getPosition()
@@ -43,6 +52,14 @@ function Map({
   useEffect(() => {
     setLocation(defaultLocation)
   }, [defaultLocation])
+
+  const handleMarkerClick = useCallback((id?: string | null) => {
+    if (!id) {
+      return
+    }
+
+    router.push(`/edit/${id}`)
+  }, [router])
 
   return (
     <LoadScript
@@ -60,10 +77,11 @@ function Map({
         }, [width, height])}
         options={DEFAULT_MAP_OPTIONS}
       >
-        {markers.map((marker, index) => (
+        {markers.map((feed, index) => (
           <Marker
+            onClick={() => handleMarkerClick(feed?.id)}
             key={index}
-            position={marker}
+            position={feed?.location}
           />
         ))}
       </GoogleMap>

@@ -13,8 +13,6 @@ export interface Feed {
   searchText?: string | null,
 }
 
-export type FeedDocument = Feed
-
 export const feedScheme = new mongoose.Schema({
   title: {
     type: String,

@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email = 'jangheon.lee012@gmail.com' } = user || {}
 
   if (method !== Method.GET) {
-    res.status(500).json({ status: StatusType.ERROR, error: 'Invalid Method' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Invalid Method' })
     return
   }
 
@@ -27,13 +27,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const feedsResult = await getPaginateFeedList(query, options)
 
     if (!feedsResult) {
-      res.status(500).json({ status: StatusType.ERROR, error: 'Failed to fetch feedList' })
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feedList' })
       return
     }
 
     res.json({ status: StatusType.SUCCESS, content: feedsResult })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, error: 'Failed to fetch feedList' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feedList' })
   }
 }
 

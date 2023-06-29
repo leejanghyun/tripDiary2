@@ -10,9 +10,10 @@ type Response = {
 export async function getFeedList(userId: string): Promise<Response[]> {
   try {
     await dbConnect()
-    const user = await FeedListModel.findOne({ userId })
 
-    return user.feedList
+    const results = await FeedListModel.find({ userId })
+
+    return results.map((item) => item.feed)
   } catch (error) {
     return []
   }

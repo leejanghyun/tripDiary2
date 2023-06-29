@@ -3,15 +3,16 @@ import { getSession } from 'next-auth/react'
 
 import { Method, StatusType } from '@/utils'
 
-import { addToFeedList } from '../../../db/control/addFeedList'
+import { getFeed } from '../../../db/control/getFeed'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { method, body } = req
+  const { method, query } = req
+  const { id } = query || {}
   const sessions = await getSession({ req })
   const { user } = sessions || {}
-  const { email = 'jangheon.lee012@gmail.com' } = user || { email: 'jangheon.lee012@gmail.com' }
+  const { email = 'jangheon.lee012@gmail.com' } = user || {}
 
-  if (method !== Method.POST) {
+  if (method !== Method.GET) {
     res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Invalid Method' })
     return
   }
@@ -22,11 +23,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await addToFeedList(email, body)
+    const result = await getFeed(email as string, id as string)
 
-    res.json({ status: StatusType.SUCCESS, resultMsg: '성공적으로 등록' })
+    if (!result) {
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feedList' })
+      return
+    }
+
+    res.json({ status: StatusType.SUCCESS, content: result })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, resultMsg: '등록 실패' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feedList' })
   }
 }
 

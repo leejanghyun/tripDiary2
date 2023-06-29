@@ -30,14 +30,14 @@ function FrameLayout({
   const isShowMenu = variant === 'menu'
   const router = useRouter()
   const [state, setGlobalState] = useAtom(globalState)
-  const { username: user } = state
+  const { userId: user } = state
   const { session } = useAuth()
 
   useEffect(() => {
     const { user } = session || {}
 
     setGlobalState({
-      ...state, username: user?.email || user?.name || '', menuId: menuId || null,
+      ...state, userId: user?.email || user?.name || '', menuId: menuId || null,
     })
   }, [session, setGlobalState, menuId])
 
