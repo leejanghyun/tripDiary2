@@ -38,10 +38,8 @@ export const feedListMock: Feed[] = [
     fileList: [
       'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQs7WcCMDSTl4_n7XqKYCxEX88k6i6GJ87xtZKATIzTV4OGTT_C6nWUH-c&usqp=CAU',
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5EOdhtYv-4FoCHXJrbr_Q5WaZxD8CzQE5mw&usqp=CAU',
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqZZWRIyHxRCTzh93aDrt7inRRh9tRlKYGWw&usqp=CAU',
     ],
-    imageDescription: ['이미지1 설명'],
+    imageDescription: ['이미지1 설명이무니다.이무니다.이무니다이무니다'],
     location: {
       lat: 37.22,
       lng: 126,
@@ -57,7 +55,6 @@ export const feedListMock: Feed[] = [
       'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQs7WcCMDSTl4_n7XqKYCxEX88k6i6GJ87xtZKATIzTV4OGTT_C6nWUH-c&usqp=CAU',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5EOdhtYv-4FoCHXJrbr_Q5WaZxD8CzQE5mw&usqp=CAU',
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqZZWRIyHxRCTzh93aDrt7inRRh9tRlKYGWw&usqp=CAU',
     ],
     imageDescription: ['이미지1 설명'],
     location: {
@@ -76,8 +73,6 @@ export const feedListMock: Feed[] = [
       'https://www.svgrepo.com/show/302636/map-marker.svg',
       'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
       'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
-      'https://www.svgrepo.com/show/302636/map-marker.svg',
-      'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
     ],
     imageDescription: ['이미지1 설명', '이미지1 설명', '이미지1 설명', '이미지1 설명', '이미지1 설명'],
     location: {
@@ -95,6 +90,8 @@ export const feedListMock: Feed[] = [
       'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQs7WcCMDSTl4_n7XqKYCxEX88k6i6GJ87xtZKATIzTV4OGTT_C6nWUH-c&usqp=CAU',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5EOdhtYv-4FoCHXJrbr_Q5WaZxD8CzQE5mw&usqp=CAU',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqZZWRIyHxRCTzh93aDrt7inRRh9tRlKYGWw&usqp=CAU',
+      'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqZZWRIyHxRCTzh93aDrt7inRRh9tRlKYGWw&usqp=CAU',
     ],
     imageDescription: ['imageDescription'],

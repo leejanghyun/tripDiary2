@@ -1,8 +1,10 @@
-import styled from '@emotion/styled'
-import { COLOR } from '@TMOBI-WEB/ads-ui'
+import { css } from '@emotion/react'
 import {
   memo,
+  MouseEvent,
+  useState,
 } from 'react'
+import { Tooltip } from 'react-tooltip'
 
 type Props = {
   imageDescription: string[]
@@ -15,52 +17,62 @@ type Props = {
  */
 function CustomImage({
   imageDescription = [],
-  images,
+  images = [],
 }: Props) {
+  const [showTooltip, setShowTooltip] = useState(false)
+
+  const handleImageClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    e.preventDefault()
+
+    setShowTooltip(true)
+    setTimeout(() => setShowTooltip(false), 1500)
+  }
   return (
-    <ImageWrapper>
-      {images.map((image, index) => {
-        return (
-          <ImageCard key={index}>
-            <div>
-              <img
-                src={image}
-                alt="이미지"
-                style={{
-                  objectFit: 'cover', width: 'auto', height: '90px',
-                }}
-              />
-            </div>
-            <div>
-              {imageDescription[index]}
-            </div>
-          </ImageCard>
-        )
-      })}
-    </ImageWrapper>
+    <div css={PhotoGridStyles}>
+      {images.map((image, index) => (
+        <button
+          key={index}
+          type="button"
+          onClick={handleImageClick}
+        >
+          <a
+            data-tooltip-id="tooltip"
+            data-tooltip-content={imageDescription[index]}
+            data-tooltip-place="bottom"
+          >
+            <img
+              src={image}
+              alt={imageDescription[index]}
+              css={PhotoStyles}
+            />
+          </a>
+          <Tooltip
+            id="tooltip"
+            place="top"
+            style={{ display: showTooltip ? 'block' : 'none', backgroundColor: '#3d8bff', color: '#FFFFFF' }}
+          >
+            이미지 설명이 없습니다.
+          </Tooltip>
+        </button>
+      ))}
+    </div>
   )
 }
 
-const ImageCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  > div:nth-of-type(2) {
-    font-size: ${({ theme }) => theme.font[12].size};
-    line-height: ${({ theme }) => theme.font[12].lineHeight};
-    color: ${COLOR.gray.color.gray[600]};
-  }
+const PhotoStyles = css`
+  flex-basis: calc(33% - 5px);
+  object-fit: cover;
+  height: 100px;
+  width: 105px;
 `
 
-const ImageWrapper = styled.div`
+const PhotoGridStyles = css`
   display: flex;
-  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
   width: 100%;
-  padding: 15px 0;
-  overflow: auto;
   height: 100%;
-  gap: 10px;
 `
 
 export default memo(CustomImage)

@@ -62,7 +62,7 @@ const Wrapper = styled.div`
 const ImageWrapper = styled.div`
   width: 100%;
   height: auto;
-  margin: 2px 0 10px 0;
+  margin: 10px 0 10px 0;
   flex-wrap: wrap;
 `
 
@@ -92,8 +92,8 @@ const TextBlock = styled.div`
   gap: 5px;
 
   > div:first-of-type {
-    font-size: ${({ theme }) => theme.font[20].size};
-    line-height: ${({ theme }) => theme.font[20].lineHeight};
+    font-size: ${({ theme }) => theme.font[24].size};
+    line-height: ${({ theme }) => theme.font[24].lineHeight};
     font-weight: 500;
   }
 
@@ -106,8 +106,8 @@ const TextBlock = styled.div`
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
     color: ${COLOR.gray.color.gray[600]};
-    font-size: ${({ theme }) => theme.font[12].size};
-    line-height: ${({ theme }) => theme.font[12].lineHeight};
+    font-size: ${({ theme }) => theme.font[14].size};
+    line-height: ${({ theme }) => theme.font[14].lineHeight};
   }
 `
 
