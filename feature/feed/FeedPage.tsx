@@ -56,7 +56,6 @@ function FeedPage({ query }: Props) {
   const queryClient = useQueryClient()
   const { data } = useMyFeed(id as string)
   const { content: feed } = data || {}
-  console.log(feed)
 
   const { mutate: submit } = useMutation<boolean, AxiosError, Omit<Feed, '_id'>>(
     (data) => postFeed(data),

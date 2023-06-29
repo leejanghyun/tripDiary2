@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req
   const sessions = await getSession({ req })
   const { user } = sessions || {}
-  const { email = 'jangheon.lee012@gmail.com' } = user || {}
+  const { email = 'jangheon.lee012@gmail.com' } = user || { email: 'jangheon.lee012@gmail.com' }
 
   if (method !== Method.GET) {
     res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Invalid Method' })
