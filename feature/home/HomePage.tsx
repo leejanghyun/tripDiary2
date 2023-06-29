@@ -24,6 +24,8 @@ function HomePage() {
     router.push(ROUTER.ADD_FEED)
   }, [router, setMeta])
 
+  alert(process.env.NEXT_PUBLIC_MONGODB_URI)
+
   return (
     <FrameLayout
       title="홈"
