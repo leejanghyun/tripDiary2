@@ -211,7 +211,7 @@ function FeedPage({ query }: Props) {
             >
               등록
             </Button>
-        )}
+          )}
         >
           <Container>
             <DateRangePicker

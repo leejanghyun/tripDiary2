@@ -1,4 +1,4 @@
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
@@ -7,7 +7,6 @@ import { MENU_ID } from '@/components/Menu'
 import { ROUTER } from '@/constants/router'
 
 import { GetMyFeedsResponse } from '../../api/getMyFeeds'
-import { globalState } from '../../atoms/globalState'
 import FrameLayout from '../../components/FrameLayout'
 import { feedMetaState } from '../shared/atoms/feedMetaState'
 import useMyFeeds from '../shared/hooks/useMyFeeds'
@@ -16,13 +15,10 @@ import CameraButton from './components/CameraButton'
 
 function HomePage() {
   const router = useRouter()
-  const global = useAtomValue(globalState)
   const setMeta = useSetAtom(feedMetaState)
 
-  const { data } = useMyFeeds(Boolean(global.userId))
+  const { data } = useMyFeeds()
   const { content } = data as GetMyFeedsResponse || {}
-
-  console.log(content)
 
   const markers = (content || []).map((feed) => {
     const { _id, location, fileList } = feed || {}

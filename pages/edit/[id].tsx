@@ -5,10 +5,11 @@ import FeedPage from '@/feature/feed/FeedPage'
 
 const pageInitialized = async ({ query, req }: GetServerSidePropsContext) => {
   const sessions = await getSession({ req })
-  const { user } = sessions || { email: 'jangheon.lee012@gmail.com' }
+  const { user } = sessions || {}
+  const { email } = user || { email: 'jangheon.lee012@gmail.com' }
   const { id } = query
 
-  if (!id || !user) {
+  if (!id || !email) {
     return {
       redirect: { permanent: false, destination: '/home' },
     }
