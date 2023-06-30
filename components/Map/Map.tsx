@@ -1,10 +1,13 @@
 import styled from '@emotion/styled'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
+import {
+  GoogleMap, InfoWindow,
+  LoadScript, Marker,
+} from '@react-google-maps/api'
 import { Loader } from '@TMOBI-WEB/ads-ui'
 import { useRouter } from 'next/router'
 import {
   useCallback,
-  useEffect, useMemo, useState,
+  useEffect, useMemo, useRef, useState,
 } from 'react'
 
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
@@ -46,31 +49,36 @@ type Props = {
 function Map({
   defaultLocation = null, zoom = DEFAULT_ZOOM_LEVEL, height = '100%', width = '100%', markers = [], feeds,
 }: Props) {
-  const [location, setLocation] = useState<null | Location>(null)
+  const [currentLocation, setCurrentLocation] = useState<null | Location>(null)
   const apiKey = getGoogleMapApi()
   const router = useRouter()
-  const [isShowFeedInfoBox, setShowFeedInfoBox] = useState<boolean>(false)
   const [selectedFeed, setSelectedFeed] = useState<Feed | null>(null)
   const {
-    title, content: feedContent, _id, date, searchText, fileList,
+    title, content: feedContent, _id, date, searchText, fileList, location,
   } = selectedFeed || {}
   const startDate = formatDisplayDateTime(new Date(date ? date[0] : ''), 'yy년 MM월 dd일')
   const endDate = formatDisplayDateTime(new Date(date ? date[1] : ''), 'yy년 MM월 dd일')
+  const [selectedMarker, setSelectedMarker] = useState(null)
+  const { lat, lng } = location || {}
+  const infoWindowLocation = { lat: lat || currentLocation?.lat, lng: lng || currentLocation?.lng }
+  const isValidWindowLocation = Boolean(infoWindowLocation?.lat && infoWindowLocation?.lng)
+  const mapRef = useRef<google.maps.Map | null>(null)
+  const [mapWidth, setWidth] = useState<number>(100)
 
-  const handleClickMarker = useCallback((id: string) => {
+  const handleClickMarker = useCallback((marker: any, id: string) => {
     const target = (feeds || []).find((feed) => feed._id === id)
 
     if (!target) {
       return
     }
 
+    setSelectedMarker(marker)
     setSelectedFeed(target)
-    setShowFeedInfoBox(true)
   }, [feeds])
 
-  const handleClickOutside = useCallback(() => {
-    setShowFeedInfoBox(false)
-  }, [])
+  const handleCloseInfoWindow = () => {
+    setSelectedMarker(null)
+  }
 
   const handleMoveFeed = useCallback(() => {
     router.push(`/edit/${_id}`)
@@ -79,7 +87,7 @@ function Map({
   const initLocation = async () => {
     const location = await getPosition()
 
-    setLocation(location)
+    setCurrentLocation(location)
   }
 
   useEffect(() => {
@@ -87,41 +95,38 @@ function Map({
   }, [])
 
   useEffect(() => {
-    setLocation(defaultLocation)
+    setCurrentLocation(defaultLocation)
   }, [defaultLocation])
+
+  const handleMapLoad = (map: google.maps.Map) => {
+    mapRef.current = map
+
+    setWidth(map.getDiv().offsetWidth - 50)
+  }
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      if (mapRef.current) {
+        setWidth(mapRef.current.getDiv().offsetWidth - 50)
+      }
+    }
+
+    window.addEventListener('resize', handleWindowResize)
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize)
+    }
+  }, [])
 
   return (
     <LoadScript
       googleMapsApiKey={apiKey as string}
       loadingElement={<Loader open />}
     >
-      {isShowFeedInfoBox && (
-      <FeedInfoBox
-        onClick={handleMoveFeed}
-      >
-        <div>{title}</div>
-        <div>{feedContent}</div>
-        <ImageWrapper>
-          <CustomImage
-            width={55}
-            height={55}
-            imageDescriptions={[]}
-            images={fileList || []}
-          />
-        </ImageWrapper>
-        <div>
-          {startDate === endDate ? startDate : `${startDate}/${endDate}`}
-        </div>
-        <div>
-          <SearchText>
-            <IcoMarker /> <div>{searchText}</div>
-          </SearchText>
-        </div>
-      </FeedInfoBox>
-      )}
       <GoogleMap
-        onClick={handleClickOutside}
-        center={location as Location}
+        onLoad={handleMapLoad}
+        onClick={() => setSelectedMarker(null)}
+        center={currentLocation as Location}
         zoom={zoom}
         mapContainerStyle={useMemo(() => {
           return {
@@ -137,27 +142,59 @@ function Map({
 
           return (
             <Marker
-              onClick={() => handleClickMarker(id as string)}
+              onClick={(a) => handleClickMarker(a, id as string)}
               key={index}
               position={feed?.location}
               {...(hadFileList && {
                 icon: {
-                  url: fileList?.[0] as string,
+                  url: `${fileList?.[0] as string}#custom_marker`,
                   scaledSize: ICON_SIZE,
+                  origin: new google.maps.Point(0, 0),
+                  anchor: new google.maps.Point(0, 0),
                 },
               })}
             />
           )
         })}
+        {selectedMarker && isValidWindowLocation && (
+          <InfoWindow
+            position={infoWindowLocation as Location}
+            onCloseClick={handleCloseInfoWindow}
+            options={{ minWidth: mapWidth }}
+          >
+            <FeedInfoBox
+              onClick={handleMoveFeed}
+            >
+              <div>{title}</div>
+              <div>{feedContent}</div>
+              <ImageWrapper>
+                <CustomImage
+                  width={55}
+                  height={55}
+                  imageDescriptions={[]}
+                  images={fileList || []}
+                />
+              </ImageWrapper>
+              <div>
+                {startDate === endDate ? startDate : `${startDate}/${endDate}`}
+              </div>
+              <div>
+                <SearchText>
+                  <IcoMarker /> <div>{searchText}</div>
+                </SearchText>
+              </div>
+            </FeedInfoBox>
+          </InfoWindow>
+        )}
       </GoogleMap>
-
     </LoadScript>
   )
 }
 
 const FeedInfoBox = styled.div`
-  position: absolute;
   display: flex;
+  position: relative;
+  top: -100px;
   flex-direction: column;
   padding: 10px;
   margin: 0 auto;
@@ -165,7 +202,7 @@ const FeedInfoBox = styled.div`
   right: 0;
   top: 10%;
   z-index: 10;
-  width: 95%;
+  width: 100%;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 5px;
 

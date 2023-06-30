@@ -73,8 +73,8 @@ const FooterWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;;
   color: ${COLOR.gray.color.gray[600]};
-  font-size: ${({ theme }) => theme.font[10].size};
-  line-height: ${({ theme }) => theme.font[10].lineHeight};
+  font-size: ${({ theme }) => theme.font[12].size};
+  line-height: ${({ theme }) => theme.font[12].lineHeight};
   width: 100%;
   gap: 5px;
 `

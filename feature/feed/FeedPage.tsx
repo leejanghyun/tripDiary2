@@ -63,7 +63,7 @@ function FeedPage({ query }: Props) {
       onSuccess: () => {
         queryClient.refetchQueries([...KEYS.FEED_LIST()])
         toastSuccess(`피드를 성공적으로 ${isEdit ? '수정' : '등록'}했습니다.`)
-        router.back()
+        router.push('/feed-list')
       },
       onError: () => {
         toastError(`피드  ${isEdit ? '수정' : '등록'}에 실패 하셨습니다.`)
