@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 
+import { getPaginateFeedList } from '@/db/control/getPaginateFeedList'
+import { FEEDLIST_SORT_TYPE } from '@/feature/feedList/constants/form'
 import { Method, StatusType } from '@/utils'
-
-import { getPaginateFeedList } from '../../../db/control/getPaginateFeedList'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req
@@ -16,13 +16,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  const { page = 1, limit = 10 } = query || {}
+  const { sort, page = 1, limit = 10 } = query || {}
 
   try {
     const options = {
       page: parseInt(page as string, 10),
       limit: parseInt(limit as string, 10),
-      sort: { createdAt: 'asc' }, // 내림차순 정렬
+      sort: sort as FEEDLIST_SORT_TYPE,
     }
     const query = { userId: email }
     const feedsResult = await getPaginateFeedList(query, options)

@@ -25,7 +25,7 @@ type Props = {
 } & TitleProps
 
 function FrameLayout({
-  children, left, variant = 'menu', isFullSize, menuId, title, titleTooltipMessage, descriptionTooltipMessages, background,
+  children, left, right, variant = 'menu', isFullSize, menuId, title, titleTooltipMessage, descriptionTooltipMessages, background,
 }: PropsWithChildren<Props>) {
   const isShowMenu = variant === 'menu'
   const router = useRouter()
@@ -58,6 +58,7 @@ function FrameLayout({
         descriptionTooltipMessages={descriptionTooltipMessages}
         userName={user}
         left={left}
+        right={right}
       />
       <Main
         variant={variant}

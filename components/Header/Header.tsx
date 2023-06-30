@@ -11,6 +11,7 @@ export type TitleProps = {
   titleTooltipMessage?: string
   descriptionTooltipMessages?: string[]
   left?: ReactNode
+  right?: ReactNode
 }
 
 type HeaderProps = {
@@ -24,13 +25,15 @@ type HeaderProps = {
  */
 function Header({
   userName,
-  left = <UtilContent userName={userName} />,
+  left = '',
+  right = <UtilContent userName={userName} />,
   className, title, titleTooltipMessage, descriptionTooltipMessages,
 }: HeaderProps) {
   return (
     <Wrapper className={className}>
       <div>
-        {(title) && (
+        {left
+        || (title && (
         <article>
           {title && (
           <TitleBlock>
@@ -48,8 +51,8 @@ function Header({
           </TitleBlock>
           )}
         </article>
-        )}
-        {left}
+        ))}
+        {right}
       </div>
     </Wrapper>
   )

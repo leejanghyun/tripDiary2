@@ -103,8 +103,8 @@ function Map({
         <div>{feedContent}</div>
         <ImageWrapper>
           <CustomImage
-            width={45}
-            height={45}
+            width={55}
+            height={55}
             imageDescriptions={[]}
             images={fileList || []}
           />
@@ -186,13 +186,13 @@ const FeedInfoBox = styled.div`
   }
 
   > div:nth-of-type(4) { // 날짜
-    font-size: ${({ theme }) => theme.font[10].size};
-    line-height: ${({ theme }) => theme.font[10].lineHeight};
+    font-size: ${({ theme }) => theme.font[12].size};
+    line-height: ${({ theme }) => theme.font[12].lineHeight};
   }
 
   > div:nth-of-type(5) { // 위치
-    font-size: ${({ theme }) => theme.font[10].size};
-    line-height: ${({ theme }) => theme.font[10].lineHeight};
+    font-size: ${({ theme }) => theme.font[12].size};
+    line-height: ${({ theme }) => theme.font[12].lineHeight};
   }
 `
 
@@ -200,7 +200,7 @@ const ImageWrapper = styled.div`
   width: 100%;
   height: auto;
   display: flex;
-  margin: 5px 0;
+  margin: 10px 0;
   flex-wrap: wrap;
 `
 

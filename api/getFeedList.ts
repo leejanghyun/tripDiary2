@@ -4,6 +4,7 @@ import { API } from '@/constants'
 import { Method, request } from '@/utils'
 
 import { Feed } from '../db/scheme/feedScheme'
+import { FEEDLIST_SORT_TYPE } from '../feature/feedList/constants/form'
 
 export type GetFeedListResponse = {
   status: string,
@@ -14,6 +15,7 @@ export type GetFeedListResponse = {
 export type GetFeedListRequest = {
   page: number,
   limit: number,
+  sort?: FEEDLIST_SORT_TYPE | null
 }
 
 export function getFeedList(params?: GetFeedListRequest) {

@@ -226,8 +226,8 @@ function FeedPage({ query }: Props) {
           descriptionTooltipMessages={['피드를 생성하시오.']}
           titleTooltipMessage="피드 생성"
           menuId={MENU_ID.ADD_FEED}
-          left={(
-            <LeftSide>
+          right={(
+            <RightSide>
               {isEdit && (
               <Button
                 palette="red-stroke"
@@ -247,7 +247,7 @@ function FeedPage({ query }: Props) {
               >
                 {isEdit ? '수정' : '등록'}
               </Button>
-            </LeftSide>
+            </RightSide>
           )}
         >
           <Container>
@@ -332,7 +332,7 @@ function FeedPage({ query }: Props) {
   )
 }
 
-const LeftSide = styled.div`
+const RightSide = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;

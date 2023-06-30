@@ -21,8 +21,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  console.log(body, email)
-
   try {
     await addToFeedList(email, body)
 

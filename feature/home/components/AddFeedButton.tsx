@@ -32,7 +32,7 @@ const AddButtonStyles = styled.div`
   cursor: pointer;
   border-width: 1px;
   border-style: solid;
-  border-color: ${COLOR.primary.color.tmobi.blue[300]};
+  border-color: ${COLOR.primary.color.tmobi.blue[400]};
 `
 
 export default AddFeedButton

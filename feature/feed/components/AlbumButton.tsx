@@ -40,7 +40,7 @@ function AlbumButton({ isMaxUploaded, onUpload }: AlbumButtonProps) {
       isMaxUploaded={isMaxUploaded}
       onClick={handleUploadClick}
     >
-      <Album fill={isMaxUploaded ? COLOR.gray.color.gray[400] : COLOR.primary.color.tmobi.blue[600]} />
+      <Album fill={isMaxUploaded ? COLOR.gray.color.gray[400] : COLOR.primary.color.tmobi.blue[400]} />
       <InputStyle
         disabled={isMaxUploaded}
         ref={fileInputRef}
@@ -74,7 +74,7 @@ const AlbumButtonStyles = styled.div<{ isMaxUploaded?: boolean }>`
   border-style: solid;
 
   border-color: ${({ isMaxUploaded = false }) => (isMaxUploaded
-    ? `${COLOR.gray.color.gray[400]}` : `${COLOR.primary.color.tmobi.blue[600]}`)};
+    ? `${COLOR.gray.color.gray[400]}` : `${COLOR.primary.color.tmobi.blue[400]}`)};
 `
 
 export default AlbumButton
