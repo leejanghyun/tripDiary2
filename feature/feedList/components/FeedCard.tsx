@@ -13,8 +13,8 @@ type Props = Feed
 function FeedCard({
   _id, fileList, content, title, date, searchText, imageDescriptions,
 }: Props) {
-  const startDate = formatDisplayDateTime(date[0], 'yy년 MM월 dd일')
-  const endDate = formatDisplayDateTime(date[0], 'yy년 MM월 dd일')
+  const startDate = formatDisplayDateTime(new Date(date[0]), 'yy년 MM월 dd일')
+  const endDate = formatDisplayDateTime(new Date(date[1]), 'yy년 MM월 dd일')
   const router = useRouter()
 
   const handleMove = useCallback(() => {
@@ -39,11 +39,13 @@ function FeedCard({
         </ImageWrapper>
       </div>
       <FooterWrapper>
-        <SearchText>
-          <IcoMarker /> {searchText}
-        </SearchText>
         <div>
-          {startDate === endDate ? startDate : `${startDate} ~ ${endDate}`}
+          {startDate === endDate ? startDate : `${startDate}/${endDate}`}
+        </div>
+        <div>
+          <SearchText>
+            <IcoMarker /> <div>{searchText}</div>
+          </SearchText>
         </div>
       </FooterWrapper>
 
@@ -68,20 +70,28 @@ const ImageWrapper = styled.div`
 
 const FooterWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;;
   color: ${COLOR.gray.color.gray[600]};
   font-size: ${({ theme }) => theme.font[10].size};
   line-height: ${({ theme }) => theme.font[10].lineHeight};
-  margin: 0 5px;
+  width: 100%;
+  gap: 5px;
 `
 
 const SearchText = styled.div`
   display: flex;
   gap: 5px;
   align-items: center;
-  font-size: ${({ theme }) => theme.font[12].size};
-  line-height: ${({ theme }) => theme.font[12].lineHeight};
+  position: relative;
+  left: -3px;
+
+  > div {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `
 
 const TextBlock = styled.div`
@@ -89,12 +99,16 @@ const TextBlock = styled.div`
   flex-direction: column;
   width: 100%;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 10px;
 
   > div:first-of-type {
     font-size: ${({ theme }) => theme.font[24].size};
     line-height: ${({ theme }) => theme.font[24].lineHeight};
     font-weight: 500;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   > div:nth-of-type(2) {

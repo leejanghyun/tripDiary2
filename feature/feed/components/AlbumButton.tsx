@@ -1,23 +1,30 @@
 import styled from '@emotion/styled'
-import { COLOR } from '@TMOBI-WEB/ads-ui'
-import { ChangeEvent, useRef } from 'react'
+import { COLOR, toastError } from '@TMOBI-WEB/ads-ui'
+import { ChangeEvent, useCallback, useRef } from 'react'
 
 import { ReactComponent as Album } from '@/images/ico_album.svg'
 
+export const MAX_UPLOAD_SIZE = 6
+
 interface AlbumButtonProps {
+  isMaxUploaded: boolean
   onUpload: (imageData: FileList) => void;
 }
 
-function AlbumButton({ onUpload }: AlbumButtonProps) {
+function AlbumButton({ isMaxUploaded, onUpload }: AlbumButtonProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleUploadClick = () => {
+  const handleUploadClick = useCallback(() => {
+    if (isMaxUploaded) {
+      toastError(`이미지 업로드는 최대${MAX_UPLOAD_SIZE}장만 가능합니다.`)
+    }
+
     if (!fileInputRef.current) {
       return
     }
 
     fileInputRef.current.click()
-  }
+  }, [isMaxUploaded])
 
   const onUploadImage = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files
@@ -30,10 +37,12 @@ function AlbumButton({ onUpload }: AlbumButtonProps) {
 
   return (
     <AlbumButtonStyles
+      isMaxUploaded={isMaxUploaded}
       onClick={handleUploadClick}
     >
-      <Album />
+      <Album fill={isMaxUploaded ? COLOR.gray.color.gray[400] : COLOR.primary.color.tmobi.blue[600]} />
       <InputStyle
+        disabled={isMaxUploaded}
         ref={fileInputRef}
         type="file"
         multiple
@@ -48,7 +57,7 @@ const InputStyle = styled.input`
   display: none;
 `
 
-const AlbumButtonStyles = styled.div`
+const AlbumButtonStyles = styled.div<{ isMaxUploaded?: boolean }>`
   position: fixed;
   bottom: 75px;
   right: 20px;
@@ -63,7 +72,9 @@ const AlbumButtonStyles = styled.div`
   cursor: pointer;
   border-width: 1px;
   border-style: solid;
-  border-color: ${COLOR.primary.color.tmobi.blue[300]};
+
+  border-color: ${({ isMaxUploaded = false }) => (isMaxUploaded
+    ? `${COLOR.gray.color.gray[400]}` : `${COLOR.primary.color.tmobi.blue[600]}`)};
 `
 
 export default AlbumButton

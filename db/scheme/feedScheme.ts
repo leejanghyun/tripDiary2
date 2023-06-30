@@ -34,13 +34,12 @@ export const feedScheme = new mongoose.Schema({
   },
   imageDescriptions: {
     type: Array<String>,
-    maxlength: [200, '피드 내용의 최대 입력 길이는 200자입니다.'],
+    maxlength: [100, '피드 내용의 최대 입력 길이는 100자입니다.'],
     required: false,
   },
   fileList: {
     type: Array<String>,
     required: [false, '피드 내용을 입력해주세요.'],
-    maxlength: [200, '피드 내용의 최대 입력 길이는 200자입니다.'],
   },
   location: {
     type: {

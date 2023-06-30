@@ -22,6 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const options = {
       page: parseInt(page as string, 10),
       limit: parseInt(limit as string, 10),
+      sort: { createdAt: 'asc' }, // 내림차순 정렬
     }
     const query = { userId: email }
     const feedsResult = await getPaginateFeedList(query, options)

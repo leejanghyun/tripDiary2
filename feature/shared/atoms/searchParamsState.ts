@@ -2,4 +2,7 @@ import { atom } from 'jotai'
 
 import { GetFeedListRequest } from '@/api/getFeedList'
 
-export const feedListParamsState = atom<GetFeedListRequest>({ page: 1, limit: 1000 })
+const DEFAULT_PAGE = 1
+const DEFAULT_SIZE = 10
+
+export const feedListParamsState = atom<GetFeedListRequest>({ page: DEFAULT_PAGE, limit: DEFAULT_SIZE })

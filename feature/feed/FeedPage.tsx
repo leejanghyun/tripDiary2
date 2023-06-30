@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
   Button,
-  COLOR, DateRangePicker, Input, TextArea, toastError, toastSuccess,
+  COLOR, DateRangePicker, IcoImage, Input, TextArea, toastError, toastSuccess,
 } from '@TMOBI-WEB/ads-ui'
 import { AxiosError } from 'axios'
 import { useAtom } from 'jotai'
@@ -27,11 +27,13 @@ import { useMount } from '@/hooks/useMount'
 import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
 import { getPlaceName, getPosition, Location } from '@/utils/map'
 
+import { deleteFeed } from '../../api/deleteFeed'
 import { postFeed } from '../../api/postFeed'
+import { putFeed } from '../../api/putFeed'
 import { KEYS } from '../../constants'
 import useMyFeed from '../shared/hooks/useMyFeed'
 import { AddressSearch } from './components/AddressSearch'
-import AlbumButton from './components/AlbumButton'
+import AlbumButton, { MAX_UPLOAD_SIZE } from './components/AlbumButton'
 import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constants/form'
 
 type Props = {
@@ -57,16 +59,29 @@ function FeedPage({ query }: Props) {
   const { data } = useMyFeed(id as string)
   const { content: feed } = data || {}
 
-  const { mutate: submit } = useMutation<boolean, AxiosError, Omit<Feed, '_id'>>(
-    (data) => postFeed(data),
+  const { mutate: submitFeed, isLoading } = useMutation<boolean, AxiosError, Omit<Feed, '_id'> | Feed>(
+    (data) => (isEdit ? putFeed(data as Feed) : postFeed(data)),
     {
       onSuccess: () => {
         queryClient.refetchQueries([...KEYS.FEED_LIST()])
-        toastSuccess('피드를 성공적으로 등록했습니다.')
+        toastSuccess(`피드를 성공적으로 ${isEdit ? '수정' : '등록'}했습니다.`)
         router.push('/feed-list')
       },
       onError: () => {
-        toastSuccess('피드 등록에 실패 하셨습니다.')
+        toastError(`피드  ${isEdit ? '수정' : '등록'}에 실패 하셨습니다.`)
+      },
+    },
+  )
+
+  const { mutate: deleteUserFeed } = useMutation<boolean, AxiosError, string>(
+    (id: string) => (deleteFeed(id)),
+    {
+      onSuccess: () => {
+        toastSuccess('피드를 삭제 했습니다.')
+        router.push('/feed-list')
+      },
+      onError: () => {
+        toastError('피드 삭제에 실패 하셨습니다.')
       },
     },
   )
@@ -113,7 +128,12 @@ function FeedPage({ query }: Props) {
       return
     }
 
-    submit({ ...data, location })
+    if (isEdit) {
+      submitFeed({ ...data, location, _id: id as string })
+      return
+    }
+
+    submitFeed({ ...data, location })
   }
 
   const initLocation = async () => {
@@ -157,7 +177,12 @@ function FeedPage({ query }: Props) {
    * 소재 이미지 파일 업로드 시
    */
   const handleImageFileUpload = useCallback((file: FileList) => {
-    const { length } = file
+    let { length } = file
+
+    if (length > MAX_UPLOAD_SIZE) {
+      toastError(`이미지 업로드는 최대${MAX_UPLOAD_SIZE}장만 가능합니다.`)
+      length = MAX_UPLOAD_SIZE
+    }
 
     for (let i = 0; i < length; i += 1) {
       uploadFile(file[i])
@@ -204,13 +229,27 @@ function FeedPage({ query }: Props) {
           titleTooltipMessage="피드 생성"
           menuId={MENU_ID.ADD_FEED}
           left={(
-            <Button
-              type="submit"
-              size="small"
-              palette="blue-stroke"
-            >
-              등록
-            </Button>
+            <LeftSide>
+              {isEdit && (
+              <Button
+                palette="red-stroke"
+                type="button"
+                size="small"
+                onClick={() => { deleteUserFeed(id as string) }}
+              >
+                삭제
+              </Button>
+              )}
+
+              <Button
+                type="submit"
+                size="small"
+                disabled={isLoading}
+                palette={`${isEdit ? 'white-stroke' : 'blue-stroke'}`}
+              >
+                {isEdit ? '수정' : '등록'}
+              </Button>
+            </LeftSide>
           )}
         >
           <Container>
@@ -239,6 +278,10 @@ function FeedPage({ query }: Props) {
                 control={control}
                 name={FORM_FIELD.TITLE}
                 label="제목을 입력하세요."
+                maxLength={50}
+                rules={{
+                  required: true,
+                }}
               />
             </Line>
             <Line>
@@ -247,9 +290,15 @@ function FeedPage({ query }: Props) {
                 name={FORM_FIELD.CONTENT}
                 maxLength={200}
                 label="내용을 입력하세요."
-                styles={css` height: 100px;`}
               />
             </Line>
+            <NotiInfoBlock>
+              <IcoImage
+                type="noti"
+                visibleText={`이미지 업로드는 최대${MAX_UPLOAD_SIZE}장만 가능합니다.`}
+                styles={NotiIcon}
+              />
+            </NotiInfoBlock>
             <ImageFileWrapper>
               {(imageFileList as string[] || []).map((file, idx) => (
                 <CustomImage
@@ -267,19 +316,29 @@ function FeedPage({ query }: Props) {
                     control={control}
                     name={`${FORM_FIELD.IMG_DESCRIPTION}.${idx}`}
                     variant="naked"
+                    maxLength={100}
                     label={`${idx + 1}번 이미지에 대한 설명을 입력하시오.`}
                     isStretch
                   />
                 </CustomImage>
               ))}
             </ImageFileWrapper>
-            <AlbumButton onUpload={handleImageFileUpload} />
+            <AlbumButton
+              isMaxUploaded={Boolean((imageFileList || []).length > MAX_UPLOAD_SIZE - 1)}
+              onUpload={handleImageFileUpload}
+            />
           </Container>
         </FrameLayout>
       </form>
     </FormProvider>
   )
 }
+
+const LeftSide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`
 
 const MapWrapper = styled.div`
   margin: 0 0 12px 0;
@@ -291,6 +350,15 @@ const MapWrapper = styled.div`
 
 const Line = styled.div`
   margin: 12px 0;
+`
+
+const NotiIcon = css`
+  color: ${COLOR.gray.color.gray[600]};
+  font-weight: 300;
+`
+
+const NotiInfoBlock = styled.div`
+  padding: 1px 0 9px 0px;
 `
 
 const CustomImage = styled.div`

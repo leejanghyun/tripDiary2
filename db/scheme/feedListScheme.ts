@@ -3,15 +3,18 @@ import mongoosePaginate from 'mongoose-paginate-v2'
 
 import { Feed, feedScheme } from './feedScheme'
 
-export const feedListScheme = new mongoose.Schema<{ feed: Omit<Feed, '_id'>, userId: string }>({
-  feed: {
-    type: feedScheme,
+export const feedListScheme = new mongoose.Schema<{ feed: Omit<Feed, '_id'>, userId: string }>(
+  {
+    feed: {
+      type: feedScheme,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
   },
-  userId: {
-    type: String,
-    required: true,
-  },
-})
+  { timestamps: true },
+)
 
 feedListScheme.plugin(mongoosePaginate)
 
