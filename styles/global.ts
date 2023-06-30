@@ -11,7 +11,7 @@ export const globalStyles = css`
     }
 
     img[src$="#custom_marker"]{
-      border: 1px solid ${COLOR.primary.color.tmobi.blue[400]} !important;
+      border: 1px solid ${COLOR.primary.color.tmobi.blue[200]} !important;
       border-radius: 20%;
     }
   }
