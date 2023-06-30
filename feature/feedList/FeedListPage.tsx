@@ -44,8 +44,10 @@ function FeedListPage({ query }: Props) {
     [FORM_FIELD.SORT]: sort,
     [FORM_FIELD.FILTER]: filter,
   } = watch()
-  console.log(filter)
-  const { data, isLoading } = useFeedList({ page, limit: size, sort })
+  const { data, isLoading } = useFeedList({
+    page, limit: size, sort, filter: filter.join(','),
+  })
+
   const { content } = data || {}
   const { docs, hasNextPage } = content as PaginateResult<Feed> || {}
   const isEmpty = (!docs || (docs || []).length === 0)
@@ -54,10 +56,6 @@ function FeedListPage({ query }: Props) {
   const handleClickMore = useCallback(() => {
     setValue(FORM_FIELD.PAGE, page + 1)
   }, [setValue, page])
-
-  useEffect(() => {
-    setFeeds([])
-  }, [sort])
 
   /**
    * 전체 피드 카드 리스트
@@ -80,13 +78,17 @@ function FeedListPage({ query }: Props) {
         isFullSize
         background="gray"
         title="피드 리스트"
+        headerPadding={5}
         menuId={MENU_ID.FEED_LIST}
         right={(
           <FilterSelect
-            label="필터"
             name={FORM_FIELD.FILTER}
             options={filterOptions}
             query={query}
+            onChangeFilter={() => {
+              setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
+              setFeeds([])
+            }}
           />
         )}
         left={(
@@ -107,6 +109,7 @@ function FeedListPage({ query }: Props) {
                 }
 
                 setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
+                setFeeds([])
               },
             }}
           />

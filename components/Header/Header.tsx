@@ -17,6 +17,7 @@ export type TitleProps = {
 type HeaderProps = {
   className?: string
   userName: string
+  padding?: number
 } & TitleProps
 
 /**
@@ -26,11 +27,15 @@ type HeaderProps = {
 function Header({
   userName,
   left = '',
+  padding = 20,
   right = <UtilContent userName={userName} />,
   className, title, titleTooltipMessage, descriptionTooltipMessages,
 }: HeaderProps) {
   return (
-    <Wrapper className={className}>
+    <Wrapper
+      className={className}
+      padding={padding}
+    >
       <div>
         {left
         || (title && (
@@ -71,7 +76,7 @@ const Title = styled.h2`
   font-weight: 500;
 `
 
-const Wrapper = styled.header`
+const Wrapper = styled.header<{ padding?: number }>`
   background-color: ${COLOR.gray.color.wb[0]};
   border-bottom: 1px solid ${COLOR.gray.color.gray[200]};
 
@@ -80,7 +85,7 @@ const Wrapper = styled.header`
     align-items: center;
     justify-content: space-between;
     min-height: 50px;
-    padding: 0 20px;
+    padding: ${({ padding = 20 }) => `0 ${padding}px;`}
   }
 `
 

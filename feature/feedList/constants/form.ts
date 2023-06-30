@@ -32,7 +32,7 @@ export interface FeedListFormType {
   [FORM_FIELD.SORT]: FEEDLIST_SORT_TYPE | null
   [FORM_FIELD.PAGE]: number
   [FORM_FIELD.LIMIT]: number
-  [FORM_FIELD.FILTER]: string[]
+  [FORM_FIELD.FILTER]: FEEDLIST_FILTER_TYPE[]
 }
 
 export const getDefaultValue = () => {

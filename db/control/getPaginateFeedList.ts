@@ -1,6 +1,6 @@
 import mongoose, { PaginateModel, PaginateResult } from 'mongoose'
 
-import { FEEDLIST_SORT_TYPE } from '@/feature/feedList/constants/form'
+import { FEEDLIST_FILTER_TYPE, FEEDLIST_SORT_TYPE } from '@/feature/feedList/constants/form'
 
 import dbConnect from '../dbConnect'
 import { Feed, FeedListModel } from '../scheme'
@@ -9,6 +9,7 @@ type Options = {
   page: number;
   limit: number;
   sort?: FEEDLIST_SORT_TYPE
+  filter?: FEEDLIST_FILTER_TYPE[]
 }
 export type FeedSchemeType = {
   _id: mongoose.Types.ObjectId
@@ -28,18 +29,34 @@ const getSortType = (sortType?: FEEDLIST_SORT_TYPE | null) => {
   return { sort: { createdAt: 1 } }
 }
 
-export async function getPaginateFeedList(query: object, options: Options): Promise<PaginateResult<Feed> | null> {
+const getFilter = (userId: string, filter?: FEEDLIST_FILTER_TYPE[] | null) => {
+  const res = {
+    userId,
+  }
+
+  if (filter?.includes(FEEDLIST_FILTER_TYPE.MY)) {
+    return res
+  }
+
+  return undefined
+}
+
+export async function getPaginateFeedList(userId: string, options: Options): Promise<PaginateResult<Feed> | null> {
   try {
     await dbConnect()
 
-    const { sort, limit, page } = options || {}
+    const {
+      sort, limit, page, filter,
+    } = options || {}
+
     const optionTypes = {
       page,
       limit,
       ...(sort && getSortType(sort as FEEDLIST_SORT_TYPE)),
     }
 
-    const paginationResult = await (FeedListModel as PaginateModel<FeedSchemeType>).paginate(query, { ...optionTypes })
+    const paginationResult = await (FeedListModel as PaginateModel<FeedSchemeType>)
+      .paginate(getFilter(userId, filter), { ...optionTypes })
 
     const { docs } = paginationResult
 

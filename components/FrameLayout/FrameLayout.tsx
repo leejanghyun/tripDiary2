@@ -22,10 +22,13 @@ type Props = {
   variant?: 'menu' | 'empty'
   isFullSize?: boolean
   background?: 'white' | 'gray'
+  headerPadding?: number
 } & TitleProps
 
 function FrameLayout({
-  children, left, right, variant = 'menu', isFullSize, menuId, title, titleTooltipMessage, descriptionTooltipMessages, background,
+  children, left, right, variant = 'menu',
+  headerPadding,
+  isFullSize, menuId, title, titleTooltipMessage, descriptionTooltipMessages, background,
 }: PropsWithChildren<Props>) {
   const isShowMenu = variant === 'menu'
   const router = useRouter()
@@ -58,6 +61,7 @@ function FrameLayout({
         descriptionTooltipMessages={descriptionTooltipMessages}
         userName={user}
         left={left}
+        padding={headerPadding}
         right={right}
       />
       <Main

@@ -12,24 +12,24 @@ import { useFormContext } from 'react-hook-form'
 
 import useTreeCheckbox, { DataNode } from '@/hooks/ui/useTreeCheckbox'
 import useQueryStringController from '@/hooks/useQueryStringController'
-import { ReactComponent as IconArrowDowm } from '@/images/ico_16_arrow_down.svg'
-import { ReactComponent as IconArrowUp } from '@/images/ico_16_arrow_up.svg'
+import { ReactComponent as IconsFilter } from '@/images/ico_filter.svg'
 
 type Props = {
   query: ParsedUrlQuery
   name: string
-  label: string
   options: DataNode[]
+  onChangeFilter: () => void
 }
 
 function FilterSelect({
-  label, query, name, options,
+  query, name, options, onChangeFilter,
 }: Props) {
   const { updateQuery, removeQuery } = useQueryStringController()
   const { setValue, watch } = useFormContext()
   const { length: optionsLen } = options || []
   const filterList = watch(name)
   const [isOpen, setOpen] = useState(false)
+  const hasFilter = Boolean(filterList?.length < optionsLen)
 
   const getSelectedItems = useCallback(() => {
     const { [name]: items } = query || {}
@@ -94,16 +94,11 @@ function FilterSelect({
   return (
     <PopoverRoot>
       <TriggerButton
-        data-filtered={Boolean(filterList?.length < optionsLen)}
+        data-filtered={hasFilter}
         onClick={() => setOpen(!isOpen)}
       >
         <FilterSelectPopOverWrapper isOpen={isOpen}>
-          <div>
-            {label}
-          </div>
-          <div>
-            {isOpen ? <IconArrowUp /> : <IconArrowDowm /> }
-          </div>
+          <IconsFilter fill={hasFilter ? COLOR.gray.color.gray[900] : COLOR.primary.color.tmobi.blue[600]} />
         </FilterSelectPopOverWrapper>
       </TriggerButton>
       <Content
@@ -138,6 +133,7 @@ function FilterSelect({
                   updateUrlQuery(newFilters)
                   setValue(name as string, newFilters)
                   handleClick(item, checked)
+                  onChangeFilter?.()
                 }}
               />
             </CheckBoxBlock>
@@ -154,9 +150,7 @@ const FilterSelectPopOverWrapper = styled.div<{ isOpen?: boolean }>`
   align-items: center;
   padding: 11px 16px;
   gap: 20px;
-  width: 100px;
   height: 40px;
-  border: 1px solid ${COLOR.gray.color.gray[200]};
   border-radius: 8px;
 
   &:hover {
