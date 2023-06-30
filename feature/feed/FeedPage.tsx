@@ -137,11 +137,11 @@ function FeedPage({ query }: Props) {
   const initLocation = async () => {
     const location = await getPosition()
 
-    setValue(FORM_FIELD.LOCATION, location)
-
     if (!location) {
       return
     }
+
+    setValue(FORM_FIELD.LOCATION, location)
 
     const placeName = await getPlaceName(location)
 
@@ -151,7 +151,9 @@ function FeedPage({ query }: Props) {
   }
 
   useMount(() => {
-    initLocation()
+    if (!isEdit) {
+      initLocation()
+    }
   })
 
   const uploadFile = useCallback((file: File) => {
