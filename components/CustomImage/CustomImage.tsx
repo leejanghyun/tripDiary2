@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import {
   memo,
   MouseEvent,
@@ -9,6 +10,8 @@ import { Tooltip } from 'react-tooltip'
 type Props = {
   imageDescriptions: string[]
   images: string[]
+  width?: number
+  height?: number
 }
 
 /**
@@ -18,6 +21,8 @@ type Props = {
 function CustomImage({
   imageDescriptions = [],
   images = [],
+  width = 105,
+  height = 100,
 }: Props) {
   const [showTooltip, setShowTooltip] = useState(false)
 
@@ -41,10 +46,11 @@ function CustomImage({
             data-tooltip-content={imageDescriptions[index]}
             data-tooltip-place="bottom"
           >
-            <img
+            <PhotoImage
               src={image}
               alt={imageDescriptions[index]}
-              css={PhotoStyles}
+              width={width}
+              height={height}
             />
           </a>
           <Tooltip
@@ -60,11 +66,12 @@ function CustomImage({
   )
 }
 
-const PhotoStyles = css`
+const PhotoImage = styled.img<{ width?: number, height?: number }>`
   flex-basis: calc(33% - 5px);
   object-fit: cover;
-  height: 100px;
-  width: 105px;
+
+  width: ${({ width = 105 }) => `${width}px;`}
+  height: ${({ height = 100 }) => `${height}px;`}
 `
 
 const PhotoGridStyles = css`

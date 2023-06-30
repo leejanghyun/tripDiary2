@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Button, COLOR } from '@TMOBI-WEB/ads-ui'
 import { useAtom } from 'jotai'
 import { PaginateResult } from 'mongoose'
+import Link from 'next/link'
 import {
   useCallback, useEffect, useState,
 } from 'react'
@@ -10,6 +11,7 @@ import FrameLayout from '@/components/FrameLayout'
 import { MENU_ID } from '@/components/Menu'
 import { Feed } from '@/db'
 import { ReactComponent as IconEmptyBox } from '@/images/ico_empty_box.svg'
+import { ReactComponent as AddButton } from '@/images/ico_plus_gray.svg'
 
 import { feedListParamsState } from '../shared/atoms/searchParamsState'
 import useFeedList from '../shared/hooks/useFeedList'
@@ -59,10 +61,14 @@ function FeedListPage() {
         {isLoading ? 'Loading...' : (
           <>
             <IconEmptyBox />
-            등록된 피드가 없음
+            <div>등록된 피드가 없음</div>
+            <Link href="/add-feed">
+              <AddFeedButton>
+                <AddButton />피드 등록 이동
+              </AddFeedButton>
+            </Link>
           </>
         )}
-
       </EmptyBox>
       )}
       {feeds.map(((feed, idx) => {
@@ -99,11 +105,22 @@ const EmptyBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: ${COLOR.gray.color.gray[900]};
-  font-size: ${({ theme }) => theme.font[16].size};
-  line-height: ${({ theme }) => theme.font[16].lineHeight};
+  color: ${COLOR.gray.color.gray[400]};
+  font-size: ${({ theme }) => theme.font[18].size};
+  line-height: ${({ theme }) => theme.font[18].lineHeight};
   width: 100%;
   height: 100%;
+`
+
+const AddFeedButton = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  gap: 5px;
+  justify-content: center;
+  font-size: ${({ theme }) => theme.font[14].size};
+  line-height: ${({ theme }) => theme.font[14].lineHeight};
+  color: ${COLOR.gray.color.gray[900]};
 `
 
 const ButtonWrapper = styled.div`

@@ -1,6 +1,5 @@
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
 import { Loader } from '@TMOBI-WEB/ads-ui'
-import { useRouter } from 'next/router'
 import {
   useCallback,
   useEffect, useMemo, useState,
@@ -9,6 +8,10 @@ import {
 import { getGoogleMapApi, getPosition, Location } from '@/utils/map'
 
 const DEFAULT_ZOOM_LEVEL = 11
+const ICON_SIZE = {
+  width: 40,
+  height: 40,
+} as google.maps.Size
 
 const DEFAULT_MAP_OPTIONS = {
   fullscreenControl: false,
@@ -30,14 +33,15 @@ type Props = {
   width?: string | number
   height?: string | number
   zoom?: number
+  onClickMarker?: (id: string) => void
+  onClickOutside?: () => void
 }
 
 function Map({
-  defaultLocation = null, zoom = DEFAULT_ZOOM_LEVEL, height = '100%', width = '100%', markers = [],
+  defaultLocation = null, zoom = DEFAULT_ZOOM_LEVEL, height = '100%', width = '100%', markers = [], onClickMarker, onClickOutside,
 }: Props) {
   const [location, setLocation] = useState<null | Location>(null)
   const apiKey = getGoogleMapApi()
-  const router = useRouter()
 
   const initLocation = async () => {
     const location = await getPosition()
@@ -53,13 +57,13 @@ function Map({
     setLocation(defaultLocation)
   }, [defaultLocation])
 
-  const handleMarkerClick = useCallback((id?: string | null) => {
+  const handleMarkerClick = useCallback((id: string) => {
     if (!id) {
       return
     }
 
-    router.push(`/edit/${id}`)
-  }, [router])
+    onClickMarker?.(id)
+  }, [onClickMarker])
 
   return (
     <LoadScript
@@ -67,6 +71,7 @@ function Map({
       loadingElement={<Loader open />}
     >
       <GoogleMap
+        onClick={onClickOutside}
         center={location as Location}
         zoom={zoom}
         mapContainerStyle={useMemo(() => {
@@ -77,13 +82,24 @@ function Map({
         }, [width, height])}
         options={DEFAULT_MAP_OPTIONS}
       >
-        {markers.map((feed, index) => (
-          <Marker
-            onClick={() => handleMarkerClick(feed?.id)}
-            key={index}
-            position={feed?.location}
-          />
-        ))}
+        {markers.map((feed, index) => {
+          const { fileList, id } = feed
+          const hadFileList = Boolean(fileList && fileList.length > 0)
+
+          return (
+            <Marker
+              onClick={() => handleMarkerClick(id as string)}
+              key={index}
+              position={feed?.location}
+              {...(hadFileList && {
+                icon: {
+                  url: fileList?.[0] as string,
+                  scaledSize: ICON_SIZE,
+                },
+              })}
+            />
+          )
+        })}
       </GoogleMap>
     </LoadScript>
   )

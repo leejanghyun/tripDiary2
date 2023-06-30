@@ -16,21 +16,19 @@ import {
 } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
+import { deleteFeed, postFeed, putFeed } from '@/api/'
 import { Container } from '@/components/Container'
 import FrameLayout from '@/components/FrameLayout'
-import Map from '@/components/Map/Map'
+import { Map } from '@/components/Map'
 import { MENU_ID } from '@/components/Menu'
-import UploadImage from '@/components/UploadImage/UploadImage'
+import { UploadImage } from '@/components/UploadImage'
+import { KEYS } from '@/constants'
 import { Feed } from '@/db'
 import { feedMetaState } from '@/feature/shared/atoms/feedMetaState'
 import { useMount } from '@/hooks/useMount'
 import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
 import { getPlaceName, getPosition, Location } from '@/utils/map'
 
-import { deleteFeed } from '../../api/deleteFeed'
-import { postFeed } from '../../api/postFeed'
-import { putFeed } from '../../api/putFeed'
-import { KEYS } from '../../constants'
 import useMyFeed from '../shared/hooks/useMyFeed'
 import { AddressSearch } from './components/AddressSearch'
 import AlbumButton, { MAX_UPLOAD_SIZE } from './components/AlbumButton'
@@ -65,7 +63,7 @@ function FeedPage({ query }: Props) {
       onSuccess: () => {
         queryClient.refetchQueries([...KEYS.FEED_LIST()])
         toastSuccess(`피드를 성공적으로 ${isEdit ? '수정' : '등록'}했습니다.`)
-        router.push('/feed-list')
+        router.back()
       },
       onError: () => {
         toastError(`피드  ${isEdit ? '수정' : '등록'}에 실패 하셨습니다.`)
@@ -78,7 +76,7 @@ function FeedPage({ query }: Props) {
     {
       onSuccess: () => {
         toastSuccess('피드를 삭제 했습니다.')
-        router.push('/feed-list')
+        router.back()
       },
       onError: () => {
         toastError('피드 삭제에 실패 하셨습니다.')

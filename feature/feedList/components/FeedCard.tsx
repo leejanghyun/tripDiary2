@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
 import CustomImage from '@/components/CustomImage'
-import { Feed } from '@/db/scheme/feedScheme'
+import { Feed } from '@/db/scheme/'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
 import { formatDisplayDateTime } from '@/utils'
 
