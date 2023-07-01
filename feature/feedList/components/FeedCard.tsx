@@ -1,18 +1,14 @@
 import styled from '@emotion/styled'
 import {
-  COLOR, DropdownMenu, toastError, toastSuccess,
+  COLOR, DropdownMenu,
 } from '@TMOBI-WEB/ads-ui'
-import { AxiosError } from 'axios'
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useMutation, useQueryClient } from 'react-query'
 
-import { deleteFeed } from '@/api'
 import { globalState } from '@/atoms/globalState'
 import CustomImage from '@/components/CustomImage'
 import { DEFAULT_TOTAL_STARS, StarRating } from '@/components/StarRating'
-import { KEYS } from '@/constants'
 import { Feed } from '@/db/scheme/'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
 import { ReactComponent as IconShare } from '@/images/ico_share.svg'
@@ -20,32 +16,21 @@ import { ReactComponent as IconMore } from '@/images/ico_three_dot.svg'
 import { ReactComponent as IcoYoutube } from '@/images/icon_youtube.svg'
 import { formatDisplayDateTime } from '@/utils'
 
-type Props = Feed
+interface Props extends Feed {
+  onDelete: (id: string) => void
+}
 
 function FeedCard({
   _id, fileList, content, title, date, searchText, imageDescriptions, createdBy, stars,
   hashTags = [],
+  onDelete,
 }: Props) {
-  const queryClient = useQueryClient()
   const startDate = formatDisplayDateTime(new Date(date[0]), 'yy년 MM월 dd일')
   const endDate = formatDisplayDateTime(new Date(date[1]), 'yy년 MM월 dd일')
   const router = useRouter()
   const global = useAtomValue(globalState)
   const { userId } = global || {}
   const isMyFeed = userId === createdBy
-
-  const { mutate: deleteUserFeed } = useMutation<boolean, AxiosError, string>(
-    (id: string) => (deleteFeed(id)),
-    {
-      onSuccess: () => {
-        toastSuccess('피드를 삭제 했습니다.')
-        queryClient.refetchQueries([...KEYS.FEED_LIST()])
-      },
-      onError: () => {
-        toastError('피드 삭제에 실패 하셨습니다.')
-      },
-    },
-  )
 
   return (
     <Wrapper
@@ -68,14 +53,14 @@ function FeedCard({
                 data={[
                   {
                     text: '편집',
-                    onClick: async () => {
+                    onClick: () => {
                       router.push(`/edit/${_id}`)
                     },
                   },
                   {
                     text: '삭제',
-                    onClick: async () => {
-                      deleteUserFeed(_id)
+                    onClick: () => {
+                      onDelete(_id)
                     },
                   },
                 ]}

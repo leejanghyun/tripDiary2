@@ -1,8 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
-  Button, COLOR, DropdownMenu, Input,
+  Button, COLOR, DropdownMenu, Input, toastError, toastSuccess,
 } from '@TMOBI-WEB/ads-ui'
+import { AxiosError } from 'axios'
 import { PaginateResult } from 'mongoose'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
@@ -10,9 +11,12 @@ import {
   useCallback, useEffect, useMemo, useState,
 } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useMutation, useQueryClient } from 'react-query'
 
+import { deleteFeed } from '@/api'
 import FrameLayout from '@/components/FrameLayout'
 import { MENU_ID } from '@/components/Menu'
+import { KEYS } from '@/constants'
 import { Feed } from '@/db'
 import useQueryStringController from '@/hooks/useQueryStringController'
 import { ReactComponent as IconEmptyBox } from '@/images/ico_empty_box.svg'
@@ -25,12 +29,21 @@ import useFeedList from '../shared/hooks/useFeedList'
 import FeedCard from './components/FeedCard'
 import {
   DEFAULT_PAGE,
+  FEEDLIST_FILTER_TYPE,
   FEEDLIST_SORT_TYPE,
   FeedListFormType, filterOptions, FORM_FIELD, getDefaultValue, sizeOptions,
 } from './constants/form'
 
 interface Props {
   query: ParsedUrlQuery
+}
+
+export type SearchParams = {
+  page: number,
+  limit: number
+  sort?: FEEDLIST_SORT_TYPE
+  filter?: FEEDLIST_FILTER_TYPE
+  searchText?: string
 }
 
 function FeedListPage({ query }: Props) {
@@ -49,15 +62,32 @@ function FeedListPage({ query }: Props) {
     [FORM_FIELD.SORT]: sort,
     [FORM_FIELD.FILTER]: filter,
   } = watch()
+
   const isDesc = typeof sort === 'string' && sort.split('_')[1] === 'desc'
   const [keyword, setKeyword] = useState((query?.searchText as string) || '')
-  const { data, isLoading } = useFeedList({
+  const searchParams = {
     page, limit: size, sort, filter: filter.join(','), searchText: keyword,
-  })
+  } as SearchParams
+  const { data, isLoading } = useFeedList(searchParams)
   const { content } = data || {}
   const { docs, hasNextPage } = content as PaginateResult<Feed> || {}
   const isEmpty = (!docs || (docs || []).length === 0)
   const [feeds, setFeeds] = useState<Feed[]>([])
+  const queryClient = useQueryClient()
+
+  const { mutate: deleteUserFeed } = useMutation<boolean, AxiosError, string>(
+    (id: string) => (deleteFeed(id)),
+    {
+      onSuccess: () => {
+        toastSuccess('피드를 삭제 했습니다.')
+        queryClient.refetchQueries([KEYS.FEED_LIST()])
+        setFeeds([])
+      },
+      onError: () => {
+        toastError('피드 삭제에 실패 하셨습니다.')
+      },
+    },
+  )
 
   const handleClickMore = useCallback(() => {
     setValue(FORM_FIELD.PAGE, page + 1)
@@ -199,6 +229,7 @@ function FeedListPage({ query }: Props) {
         {feeds.map(((feed, idx) => {
           return (
             <FeedCard
+              onDelete={deleteUserFeed}
               key={idx}
               {...feed}
             />

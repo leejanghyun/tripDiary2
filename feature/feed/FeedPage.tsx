@@ -63,7 +63,7 @@ function FeedPage({ query }: Props) {
     (data) => (isEdit ? putFeed(data as Feed) : postFeed(data)),
     {
       onSuccess: () => {
-        queryClient.refetchQueries([...KEYS.FEED_LIST()])
+        queryClient.refetchQueries([KEYS.FEED_LIST()])
         toastSuccess(`피드를 성공적으로 ${isEdit ? '수정' : '등록'}했습니다.`)
         router.push('/feed-list')
       },
