@@ -100,7 +100,6 @@ function Map({
   })
 
   useEffect(() => {
-    console.log('22', defaultLocation)
     setCurrentLocation(defaultLocation)
   }, [defaultLocation])
 

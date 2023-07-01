@@ -20,7 +20,7 @@ import { KEYS } from '@/constants'
 import { Feed } from '@/db'
 import useQueryStringController from '@/hooks/useQueryStringController'
 import { ReactComponent as IconEmptyBox } from '@/images/ico_empty_box.svg'
-import { ReactComponent as AddButton } from '@/images/ico_plus_gray.svg'
+import { ReactComponent as AddButton } from '@/images/ico_item_add.svg'
 import { ReactComponent as SortAscButton } from '@/images/icon_sort_asc.svg'
 import { ReactComponent as SortDescButton } from '@/images/icon_sort_desc.svg'
 
@@ -75,6 +75,9 @@ function FeedListPage({ query }: Props) {
   const [feeds, setFeeds] = useState<Feed[]>([])
   const queryClient = useQueryClient()
   const isDefaultSort = sort === FEEDLIST_SORT_TYPE.CREATED_AT_DESC
+  const isDefaultSearchParams = useMemo(() => {
+    return !keyword && isDefaultSort && (!filter || filter?.length === 0)
+  }, [keyword, isDefaultSort, filter])
 
   const { mutate: deleteUserFeed } = useMutation<boolean, AxiosError, string>(
     (id: string) => (deleteFeed(id)),
@@ -147,8 +150,6 @@ function FeedListPage({ query }: Props) {
     setValue(FORM_FIELD.SORT, value)
     setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
   }
-
-  console.log(isDefaultSort)
 
   return (
     <FormProvider {...formMethods}>
@@ -227,7 +228,7 @@ function FeedListPage({ query }: Props) {
           {isLoading ? '로딩중...' : (
             <>
               <IconEmptyBox />
-              <div>등록된 피드가 없음</div>
+              <div>{isDefaultSearchParams ? '등록된 피드가 없음' : '검색된 피드가 없음'}</div>
               <Link href="/add-feed">
                 <AddFeedButton>
                   <AddButton />피드 등록 이동
@@ -273,7 +274,7 @@ const EmptyBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: ${COLOR.gray.color.gray[400]};
+  color: ${COLOR.gray.color.gray[500]};
   font-size: ${({ theme }) => theme.font[18].size};
   line-height: ${({ theme }) => theme.font[18].lineHeight};
   width: 100%;
@@ -291,10 +292,10 @@ const AddFeedButton = styled.div`
   display: flex;
   align-items: center;
   margin-top: 5px;
-  gap: 5px;
+  gap: 3px;
   justify-content: center;
-  font-size: ${({ theme }) => theme.font[14].size};
-  line-height: ${({ theme }) => theme.font[14].lineHeight};
+  font-size: ${({ theme }) => theme.font[18].size};
+  line-height: ${({ theme }) => theme.font[18].lineHeight};
   color: ${COLOR.gray.color.gray[900]};
 `
 

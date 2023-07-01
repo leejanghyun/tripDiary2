@@ -66,11 +66,6 @@ export async function getPaginateFeedList(userId: string, options: Options): Pro
       sort, limit, page, filter, searchText,
     } = options || {}
 
-    console.log('query', ({
-      ...getFilter(userId, filter),
-      ...getSearchKeyword(searchText || ''),
-    }))
-
     const optionTypes = {
       page,
       limit,
