@@ -87,7 +87,7 @@ const SearchText = styled.div`
   left: -3px;
 
   > div {
-    max-width: 200px;
+    max-width: 280px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
