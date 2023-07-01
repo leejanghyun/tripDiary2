@@ -51,7 +51,12 @@ function FeedPage({ query }: Props) {
   const {
     watch, setValue, control, getValues, reset, handleSubmit,
   } = formMethods
-  const [hashTags, stars, location] = watch([FORM_FIELD.HAS_TAGS, FORM_FIELD.STARS, FORM_FIELD.LOCATION])
+  const [searchText, hashTags, stars, location] = watch([
+    FORM_FIELD.SEARCH_TEXT,
+    FORM_FIELD.HAS_TAGS,
+    FORM_FIELD.STARS,
+    FORM_FIELD.LOCATION,
+  ])
   const [meta, setMeta] = useAtom(feedMetaState)
   const imageFileList = useWatch({ control, name: FORM_FIELD.FILE_LIST })
   const router = useRouter()
@@ -245,6 +250,7 @@ function FeedPage({ query }: Props) {
           <Container>
             <FirstLine>
               <StarRating
+                size={35}
                 initialRating={stars}
                 onChange={handleStars}
               />
@@ -258,10 +264,12 @@ function FeedPage({ query }: Props) {
               }}
             />
             <AddressSearch
+              defaultValues={searchText}
               name={FORM_FIELD.SEARCH_TEXT}
             />
             <MapWrapper>
               <Map
+                disableAutoLocation={isEdit}
                 defaultLocation={location}
                 zoom={15}
                 markers={location ? [{ location: location as Location }] : []}

@@ -10,11 +10,12 @@ import {
   useEffect, useMemo, useRef, useState,
 } from 'react'
 
+import { Feed } from '@/db'
+import { useMount } from '@/hooks/useMount'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
 import { formatDisplayDateTime } from '@/utils'
 import { getGoogleMapApi, getPosition, Location } from '@/utils/map'
 
-import { Feed } from '../../db'
 import CustomImage from '../CustomImage'
 
 const DEFAULT_ZOOM_LEVEL = 11
@@ -44,9 +45,11 @@ type Props = {
   width?: string | number
   height?: string | number
   zoom?: number
+  disableAutoLocation?: boolean
 }
 
 function Map({
+  disableAutoLocation = false,
   defaultLocation = null, zoom = DEFAULT_ZOOM_LEVEL, height = '100%', width = '100%', markers = [], feeds,
 }: Props) {
   const [currentLocation, setCurrentLocation] = useState<null | Location>(null)
@@ -90,11 +93,14 @@ function Map({
     setCurrentLocation(location)
   }
 
-  useEffect(() => {
-    initLocation()
-  }, [])
+  useMount(() => {
+    if (!disableAutoLocation) {
+      initLocation()
+    }
+  })
 
   useEffect(() => {
+    console.log('22', defaultLocation)
     setCurrentLocation(defaultLocation)
   }, [defaultLocation])
 

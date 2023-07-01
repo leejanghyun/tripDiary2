@@ -3,8 +3,10 @@ import {
   COLOR, DropdownMenu,
 } from '@TMOBI-WEB/ads-ui'
 import { useAtomValue } from 'jotai'
+import _ from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useCallback } from 'react'
 
 import { globalState } from '@/atoms/globalState'
 import CustomImage from '@/components/CustomImage'
@@ -21,7 +23,7 @@ interface Props extends Feed {
 }
 
 function FeedCard({
-  _id, fileList, content, title, date, searchText, imageDescriptions, createdBy, stars,
+  _id, fileList, content, title, date, searchText, imageDescriptions, createdBy, stars, location,
   hashTags = [],
   onDelete,
 }: Props) {
@@ -31,6 +33,14 @@ function FeedCard({
   const global = useAtomValue(globalState)
   const { userId } = global || {}
   const isMyFeed = userId === createdBy
+
+  const handleLocationClick = useCallback(() => {
+    const { lat, lng } = location || {}
+
+    if (_.isNumber(lat) && _.isNumber(lng)) {
+      router.push(`/home?lat=${lat}&lng=${lng}`)
+    }
+  }, [router, location])
 
   return (
     <Wrapper
@@ -81,9 +91,11 @@ function FeedCard({
         </ImageWrapper>
       </div>
       <SubInfoWrapper>
-        <SearchText>
+        <LocationText
+          onClick={handleLocationClick}
+        >
           <IcoMarker /><div>{searchText}</div>
-        </SearchText>
+        </LocationText>
         <div>
           {startDate === endDate ? `${startDate}` : `${startDate}/${endDate}`}
         </div>
@@ -92,6 +104,7 @@ function FeedCard({
         <div>
           <div>
             <StarRating
+              disabled
               gap={4}
               initialRating={stars}
               size={15}
@@ -142,7 +155,7 @@ const Wrapper = styled.div`
 const ImageWrapper = styled.div`
   width: 100%;
   height: auto;
-  margin: 5px 0 5px 0;
+  margin: 5px 0 10px 0;
   flex-wrap: wrap;
 `
 
@@ -213,7 +226,7 @@ const SubInfoWrapper = styled.div`
   }
 `
 
-const SearchText = styled.div`
+const LocationText = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -249,7 +262,7 @@ const TextBlock = styled.div`
         width: 200px;
       }
       @media screen and (min-width: 400px) {
-        width: 400px;
+        width: 300px;
       }
 
       white-space: nowrap;

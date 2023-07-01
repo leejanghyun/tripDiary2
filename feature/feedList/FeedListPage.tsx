@@ -74,14 +74,15 @@ function FeedListPage({ query }: Props) {
   const isEmpty = (!docs || (docs || []).length === 0)
   const [feeds, setFeeds] = useState<Feed[]>([])
   const queryClient = useQueryClient()
+  const isDefaultSort = sort === FEEDLIST_SORT_TYPE.CREATED_AT_DESC
 
   const { mutate: deleteUserFeed } = useMutation<boolean, AxiosError, string>(
     (id: string) => (deleteFeed(id)),
     {
       onSuccess: () => {
         toastSuccess('피드를 삭제 했습니다.')
-        queryClient.refetchQueries([KEYS.FEED_LIST()])
         setFeeds([])
+        queryClient.refetchQueries([KEYS.FEED_LIST(), searchParams])
       },
       onError: () => {
         toastError('피드 삭제에 실패 하셨습니다.')
@@ -147,6 +148,8 @@ function FeedListPage({ query }: Props) {
     setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
   }
 
+  console.log(isDefaultSort)
+
   return (
     <FormProvider {...formMethods}>
       <FrameLayout
@@ -162,7 +165,15 @@ function FeedListPage({ query }: Props) {
                 <button
                   type="button"
                 >
-                  {isDesc ? <SortDescButton /> : <SortAscButton />}
+                  {isDesc ? (
+                    <SortDescButton
+                      fill={isDefaultSort ? COLOR.gray.color.gray[900] : COLOR.primary.color.tmobi.blue[600]}
+                    />
+                  ) : (
+                    <SortAscButton
+                      fill={COLOR.primary.color.tmobi.blue[600]}
+                    />
+                  )}
                 </button>
                 )}
               data={sizeOptions.map((option) => {
@@ -272,7 +283,7 @@ const EmptyBox = styled.div`
 const RightSide = styled.div`
   display: flex;
   padding-right: 10px;
-  gap: 5px;
+  gap: 8px;
   align-items: center;
 `
 

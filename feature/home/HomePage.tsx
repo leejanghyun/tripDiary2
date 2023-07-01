@@ -1,6 +1,10 @@
 import { useSetAtom } from 'jotai'
+import _ from 'lodash-es'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { ParsedUrlQuery } from 'querystring'
+import {
+  useCallback, useEffect, useMemo, useState,
+} from 'react'
 
 import { GetMyFeedsResponse } from '@/api'
 import FrameLayout from '@/components/FrameLayout'
@@ -9,15 +13,33 @@ import { MENU_ID } from '@/components/Menu'
 import { ROUTER } from '@/constants/router'
 import { feedMetaState } from '@/feature/shared/atoms/feedMetaState'
 import useMyFeeds from '@/feature/shared/hooks/useMyFeeds'
+import { Location } from '@/utils/map'
 
 import AddButton from './components/AddFeedButton'
 import CameraButton from './components/CameraButton'
 
-function HomePage() {
+interface Props {
+  query: ParsedUrlQuery
+}
+
+function HomePage({ query }: Props) {
   const router = useRouter()
   const setMeta = useSetAtom(feedMetaState)
   const { data } = useMyFeeds()
   const { content } = data as GetMyFeedsResponse || {}
+  const { lat, lng } = query || {}
+  const [defaultLocation, setDefaultLocation] = useState<Location | null>(null)
+
+  useEffect(() => {
+    if (typeof lat === 'string' && typeof lng === 'string') {
+      const numberLat = parseFloat(lat as string)
+      const numberLng = parseFloat(lng as string)
+
+      if (_.isNumber(numberLat) && _.isNumber(numberLng)) {
+        setDefaultLocation({ lat: numberLat, lng: numberLng })
+      }
+    }
+  }, [lat, lng])
 
   /** 지도 마커 */
   const markers = useMemo(() => {
@@ -44,6 +66,7 @@ function HomePage() {
       isFullSize
     >
       <Map
+        defaultLocation={defaultLocation}
         feeds={content}
         markers={markers}
       />

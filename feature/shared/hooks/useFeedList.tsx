@@ -5,7 +5,7 @@ import { KEYS } from '@/constants/'
 
 function useFeedList(params: GetFeedListRequest | null | undefined) {
   return useQuery<GetFeedListResponse>(
-    [KEYS.FEED_LIST()],
+    [KEYS.FEED_LIST(), params],
     () => getFeedList(params as GetFeedListRequest),
     {
       enabled: !!(params),
