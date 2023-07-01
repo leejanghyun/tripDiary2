@@ -17,8 +17,9 @@ import { formatDisplayDateTime } from '@/utils'
 import { getGoogleMapApi, getPosition, Location } from '@/utils/map'
 
 import CustomImage from '../CustomImage'
+import OverlayText from './OverlayText'
 
-const DEFAULT_ZOOM_LEVEL = 11
+export const DEFAULT_ZOOM_LEVEL = 11
 const ICON_SIZE = {
   width: 40,
   height: 40,
@@ -30,6 +31,8 @@ const DEFAULT_MAP_OPTIONS = {
   mapTypeControl: false,
   zoomControl: false,
   disableDefaultUI: true,
+  panControl: false,
+  scaleControl: true,
 }
 
 type Markers = {
@@ -132,7 +135,7 @@ function Map({
         onLoad={handleMapLoad}
         onClick={() => setSelectedMarker(null)}
         center={currentLocation as Location}
-        zoom={zoom}
+        zoom={zoom || 0}
         mapContainerStyle={useMemo(() => {
           return {
             width: typeof width === 'string' ? width : `${width}px`,
@@ -141,13 +144,14 @@ function Map({
         }, [width, height])}
         options={DEFAULT_MAP_OPTIONS}
       >
+        <OverlayText />
         {markers.map((feed, index) => {
           const { fileList, id } = feed
           const hadFileList = Boolean(fileList && fileList.length > 0)
 
           return (
             <Marker
-              onClick={(a) => handleClickMarker(a, id as string)}
+              onClick={(marker) => handleClickMarker(marker, id as string)}
               key={index}
               position={feed?.location}
               {...(hadFileList && {

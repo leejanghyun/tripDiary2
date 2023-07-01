@@ -15,12 +15,15 @@ import { feedMetaState } from '@/feature/shared/atoms/feedMetaState'
 import useMyFeeds from '@/feature/shared/hooks/useMyFeeds'
 import { Location } from '@/utils/map'
 
+import { DEFAULT_ZOOM_LEVEL } from '../../components/Map/Map'
 import AddButton from './components/AddFeedButton'
 import CameraButton from './components/CameraButton'
 
 interface Props {
   query: ParsedUrlQuery
 }
+
+const DEFAULT_ENLARGE_ZOOM_LEVEL = 15
 
 function HomePage({ query }: Props) {
   const router = useRouter()
@@ -66,6 +69,7 @@ function HomePage({ query }: Props) {
       isFullSize
     >
       <Map
+        zoom={defaultLocation ? DEFAULT_ENLARGE_ZOOM_LEVEL : DEFAULT_ZOOM_LEVEL}
         defaultLocation={defaultLocation}
         feeds={content}
         markers={markers}
