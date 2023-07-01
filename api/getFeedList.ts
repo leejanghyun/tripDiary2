@@ -17,6 +17,7 @@ export type GetFeedListRequest = {
   limit: number,
   sort?: FEEDLIST_SORT_TYPE | null
   filter?: string | null
+  searchText?: string | null
 }
 
 export function getFeedList(params?: GetFeedListRequest) {

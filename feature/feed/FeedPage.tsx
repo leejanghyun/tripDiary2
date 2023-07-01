@@ -16,11 +16,12 @@ import {
 } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
-import { deleteFeed, postFeed, putFeed } from '@/api/'
+import { postFeed, putFeed } from '@/api/'
 import { Container } from '@/components/Container'
 import FrameLayout from '@/components/FrameLayout'
 import { Map } from '@/components/Map'
 import { MENU_ID } from '@/components/Menu'
+import StarRating from '@/components/StarRating/StarRating'
 import { UploadImage } from '@/components/UploadImage'
 import { KEYS } from '@/constants'
 import { Feed } from '@/db'
@@ -32,6 +33,7 @@ import { getPlaceName, getPosition, Location } from '@/utils/map'
 import useMyFeed from '../shared/hooks/useMyFeed'
 import { AddressSearch } from './components/AddressSearch'
 import AlbumButton, { MAX_UPLOAD_SIZE } from './components/AlbumButton'
+import HashtagInput from './components/HashTag'
 import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constants/form'
 
 type Props = {
@@ -49,7 +51,7 @@ function FeedPage({ query }: Props) {
   const {
     watch, setValue, control, getValues, reset, handleSubmit,
   } = formMethods
-  const [location] = watch([FORM_FIELD.LOCATION])
+  const [hashTags, stars, location] = watch([FORM_FIELD.HAS_TAGS, FORM_FIELD.STARS, FORM_FIELD.LOCATION])
   const [meta, setMeta] = useAtom(feedMetaState)
   const imageFileList = useWatch({ control, name: FORM_FIELD.FILE_LIST })
   const router = useRouter()
@@ -71,19 +73,6 @@ function FeedPage({ query }: Props) {
     },
   )
 
-  const { mutate: deleteUserFeed } = useMutation<boolean, AxiosError, string>(
-    (id: string) => (deleteFeed(id)),
-    {
-      onSuccess: () => {
-        toastSuccess('피드를 삭제 했습니다.')
-        router.back()
-      },
-      onError: () => {
-        toastError('피드 삭제에 실패 하셨습니다.')
-      },
-    },
-  )
-
   /**
    * 초기화
    */
@@ -100,6 +89,8 @@ function FeedPage({ query }: Props) {
       location,
       searchText,
       title,
+      stars,
+      hashTags,
     } = feed
 
     const defaultValues = getCreateDefaultValue()
@@ -115,6 +106,8 @@ function FeedPage({ query }: Props) {
       [FORM_FIELD.LOCATION]: location,
       [FORM_FIELD.SEARCH_TEXT]: searchText,
       [FORM_FIELD.TITLE]: title,
+      [FORM_FIELD.HAS_TAGS]: hashTags,
+      [FORM_FIELD.STARS]: stars,
     })
   }, [isEdit, reset, setValue, feed])
 
@@ -189,6 +182,14 @@ function FeedPage({ query }: Props) {
     }
   }, [uploadFile])
 
+  const handleHashTags = useCallback((values: string[]) => {
+    setValue(FORM_FIELD.HAS_TAGS, values)
+  }, [setValue])
+
+  const handleStars = useCallback((value: number) => {
+    setValue(FORM_FIELD.STARS, value)
+  }, [setValue])
+
   /**
    * Camera로 이미지 파일 업로드 시
    */
@@ -230,17 +231,6 @@ function FeedPage({ query }: Props) {
           menuId={MENU_ID.ADD_FEED}
           right={(
             <RightSide>
-              {isEdit && (
-              <Button
-                palette="red-stroke"
-                type="button"
-                size="small"
-                onClick={() => { deleteUserFeed(id as string) }}
-              >
-                삭제
-              </Button>
-              )}
-
               <Button
                 type="submit"
                 size="small"
@@ -253,6 +243,13 @@ function FeedPage({ query }: Props) {
           )}
         >
           <Container>
+            <FirstLine>
+              <StarRating
+                initialRating={stars}
+                onChange={handleStars}
+              />
+              <div>평가하려면 별표 탭하기</div>
+            </FirstLine>
             <DateRangePicker
               control={control}
               name={FORM_FIELD.DATE}
@@ -260,11 +257,9 @@ function FeedPage({ query }: Props) {
                 required: true,
               }}
             />
-            <Line>
-              <AddressSearch
-                name={FORM_FIELD.SEARCH_TEXT}
-              />
-            </Line>
+            <AddressSearch
+              name={FORM_FIELD.SEARCH_TEXT}
+            />
             <MapWrapper>
               <Map
                 defaultLocation={location}
@@ -272,7 +267,6 @@ function FeedPage({ query }: Props) {
                 markers={location ? [{ location: location as Location }] : []}
               />
             </MapWrapper>
-
             <Line>
               <Input
                 control={control}
@@ -292,6 +286,10 @@ function FeedPage({ query }: Props) {
                 label="내용을 입력하세요."
               />
             </Line>
+            <HashtagInput
+              defaultValue={hashTags}
+              onChange={handleHashTags}
+            />
             <NotiInfoBlock>
               <IcoImage
                 type="noti"
@@ -343,13 +341,26 @@ const RightSide = styled.div`
 const MapWrapper = styled.div`
   margin: 0 0 12px 0;
   width: 100%;
-  height: 25vh;
+  height: 20vh;
   border: 1px solid ${COLOR.primary.color.tmobi.blue[200]};
   border-radius: 10px;
 `
 
-const Line = styled.div`
-  margin: 12px 0;
+const FirstLine = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0 12px;
+
+  > div:nth-of-type(2) {
+    color: ${COLOR.gray.color.gray[900]};
+    font-size: ${({ theme }) => theme.font[14].size};
+    line-height: ${({ theme }) => theme.font[14].lineHeight};
+  }
+`
+
+const Line = styled.div<{ margin?: number }>`
+  margin: ${({ margin = 12 }) => `${margin}px 0;`};
 `
 
 const NotiIcon = css`

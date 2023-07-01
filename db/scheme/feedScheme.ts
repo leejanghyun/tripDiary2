@@ -11,6 +11,9 @@ export interface Feed {
   fileList?: string[] | null,
   imageDescriptions?: string[] | null,
   searchText?: string | null,
+  createdBy?: string
+  hashTags?: string[] | null
+  stars: number
 }
 
 export const feedScheme = new mongoose.Schema({
@@ -47,5 +50,17 @@ export const feedScheme = new mongoose.Schema({
       lng: Number,
     },
     required: false,
+  },
+  createdBy: {
+    type: String,
+    required: true,
+  },
+  hashTags: {
+    type: Array<String>,
+    required: false,
+  },
+  stars: {
+    type: Number,
+    required: true,
   },
 })

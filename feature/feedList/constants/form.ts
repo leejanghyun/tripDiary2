@@ -1,3 +1,6 @@
+import { cloneDeep } from 'lodash-es'
+import { ParsedUrlQuery } from 'querystring'
+
 import { DataNode } from '@/hooks/ui/useTreeCheckbox'
 
 export const DEFAULT_PAGE = 1
@@ -8,6 +11,7 @@ export const enum FORM_FIELD {
   PAGE = 'page',
   LIMIT = 'limit',
   FILTER = 'filter',
+  SEARCH_TEXT = 'searchText',
 }
 
 export const enum FEEDLIST_SORT_TYPE {
@@ -33,13 +37,45 @@ export interface FeedListFormType {
   [FORM_FIELD.PAGE]: number
   [FORM_FIELD.LIMIT]: number
   [FORM_FIELD.FILTER]: FEEDLIST_FILTER_TYPE[]
+  [FORM_FIELD.SEARCH_TEXT]: string
 }
 
-export const getDefaultValue = () => {
-  return {
+export const getDefaultValue = (query?: ParsedUrlQuery) => {
+  const defaultValue = {
     [FORM_FIELD.SORT]: FEEDLIST_SORT_TYPE.CREATED_AT_DESC,
     [FORM_FIELD.PAGE]: DEFAULT_PAGE,
     [FORM_FIELD.LIMIT]: DEFAULT_SIZE,
     [FORM_FIELD.FILTER]: [],
+    [FORM_FIELD.SEARCH_TEXT]: '',
   }
+
+  if (!query) {
+    return defaultValue
+  }
+
+  const newDefaultValue = cloneDeep(defaultValue)
+  const {
+    [FORM_FIELD.SEARCH_TEXT]: querySearchText,
+    [FORM_FIELD.LIMIT]: queryLimit,
+    [FORM_FIELD.PAGE]: queryPage,
+    [FORM_FIELD.SORT]: querySort,
+  } = query
+
+  if (querySearchText) {
+    newDefaultValue[FORM_FIELD.SEARCH_TEXT] = querySearchText as string
+  }
+
+  if (queryLimit) {
+    newDefaultValue[FORM_FIELD.LIMIT] = parseInt(queryLimit as string, 10) as number
+  }
+
+  if (queryPage) {
+    newDefaultValue[FORM_FIELD.PAGE] = parseInt(queryPage as string, 10) as number
+  }
+
+  if (querySort) {
+    newDefaultValue[FORM_FIELD.SORT] = querySort as FEEDLIST_SORT_TYPE
+  }
+
+  return newDefaultValue
 }

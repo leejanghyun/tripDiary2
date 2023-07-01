@@ -40,7 +40,7 @@ function FrameLayout({
     const { user } = session || {}
 
     setGlobalState({
-      ...state, userId: user?.email || user?.name || '', menuId: menuId || null,
+      ...state, userId: user?.email || user?.name || 'jangheon.lee012@gmail.com', menuId: menuId || null,
     })
   }, [session, setGlobalState, menuId])
 

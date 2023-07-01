@@ -22,17 +22,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const {
-    sort, page = 1, limit = 10, filter,
+    sort, page = 1, limit = 10, filter, searchText = '',
   } = query || {}
 
   try {
+    const validFilter = typeof filter === 'string'
+      ? (filter?.split(',') as FEEDLIST_FILTER_TYPE[]).filter((item: string) => item !== '')
+      : undefined
     const options = {
       page: parseInt(page as string, 10),
       limit: parseInt(limit as string, 10),
       sort: sort as FEEDLIST_SORT_TYPE,
-      filter: typeof filter === 'string' ? filter?.split(',') as FEEDLIST_FILTER_TYPE[] : undefined,
+      filter: validFilter,
+      searchText: searchText as string,
     }
-
     const feedsResult = await getPaginateFeedList(email, options)
 
     if (!feedsResult) {

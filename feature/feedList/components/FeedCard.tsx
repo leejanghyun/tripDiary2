@@ -1,34 +1,91 @@
 import styled from '@emotion/styled'
-import { COLOR } from '@TMOBI-WEB/ads-ui'
+import {
+  COLOR, DropdownMenu, toastError, toastSuccess,
+} from '@TMOBI-WEB/ads-ui'
+import { AxiosError } from 'axios'
+import { useAtomValue } from 'jotai'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useCallback } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
 
+import { deleteFeed } from '@/api'
+import { globalState } from '@/atoms/globalState'
 import CustomImage from '@/components/CustomImage'
+import { DEFAULT_TOTAL_STARS, StarRating } from '@/components/StarRating'
+import { KEYS } from '@/constants'
 import { Feed } from '@/db/scheme/'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
+import { ReactComponent as IconShare } from '@/images/ico_share.svg'
+import { ReactComponent as IconMore } from '@/images/ico_three_dot.svg'
+import { ReactComponent as IcoYoutube } from '@/images/icon_youtube.svg'
 import { formatDisplayDateTime } from '@/utils'
 
 type Props = Feed
 
 function FeedCard({
-  _id, fileList, content, title, date, searchText, imageDescriptions,
+  _id, fileList, content, title, date, searchText, imageDescriptions, createdBy, stars,
+  hashTags = [],
 }: Props) {
+  const queryClient = useQueryClient()
   const startDate = formatDisplayDateTime(new Date(date[0]), 'yy년 MM월 dd일')
   const endDate = formatDisplayDateTime(new Date(date[1]), 'yy년 MM월 dd일')
   const router = useRouter()
+  const global = useAtomValue(globalState)
+  const { userId } = global || {}
+  const isMyFeed = userId === createdBy
 
-  const handleMove = useCallback(() => {
-    router.push(`/edit/${_id}`)
-  }, [router, _id])
+  const { mutate: deleteUserFeed } = useMutation<boolean, AxiosError, string>(
+    (id: string) => (deleteFeed(id)),
+    {
+      onSuccess: () => {
+        toastSuccess('피드를 삭제 했습니다.')
+        queryClient.refetchQueries([...KEYS.FEED_LIST()])
+      },
+      onError: () => {
+        toastError('피드 삭제에 실패 하셨습니다.')
+      },
+    },
+  )
 
   return (
     <Wrapper
       key={_id}
-      onClick={handleMove}
     >
       <div>
         <TextBlock>
-          <div>{title}</div>
+          <div>
+            <div>{title}</div>
+            {isMyFeed && (
+            <div>
+              <DropdownMenu
+                trigger={(
+                  <button
+                    type="button"
+                  >
+                    <IconMore />
+                  </button>
+                )}
+                data={[
+                  {
+                    text: '편집',
+                    onClick: async () => {
+                      router.push(`/edit/${_id}`)
+                    },
+                  },
+                  {
+                    text: '삭제',
+                    onClick: async () => {
+                      deleteUserFeed(_id)
+                    },
+                  },
+                ]}
+                sideOffset={8}
+                side="bottom"
+                align="end"
+              />
+            </div>
+            )}
+          </div>
           <div>{content}</div>
         </TextBlock>
         <ImageWrapper>
@@ -38,23 +95,59 @@ function FeedCard({
           />
         </ImageWrapper>
       </div>
+      <SubInfoWrapper>
+        <SearchText>
+          <IcoMarker /><div>{searchText}</div>
+        </SearchText>
+        <div>
+          {startDate === endDate ? `${startDate}` : `${startDate}/${endDate}`}
+        </div>
+      </SubInfoWrapper>
       <FooterWrapper>
         <div>
-          {startDate === endDate ? startDate : `${startDate}/${endDate}`}
+          <div>
+            <StarRating
+              gap={4}
+              initialRating={stars}
+              size={15}
+            />
+            {stars || 0} / {DEFAULT_TOTAL_STARS}
+          </div>
+          <div>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${searchText}`}
+            >
+              <IconShare />
+            </a>
+            <a
+              href={`https://www.youtube.com/results?search_query=${searchText}`}
+            >
+              <IcoYoutube />
+            </a>
+          </div>
         </div>
         <div>
-          <SearchText>
-            <IcoMarker /> <div>{searchText}</div>
-          </SearchText>
+          {hashTags?.map((item, idx) => {
+            return (
+              <div key={idx}>
+                <Link
+                  href={`https://www.youtube.com/results?search_query=${item}`}
+                >
+                  <div>
+                    #{item}
+                  </div>
+                </Link>
+              </div>
+            )
+          })}
         </div>
       </FooterWrapper>
-
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  padding: 20px;
+  padding: 15px 20px 8px;
   margin: 0 0 10px 0;
   border-top: 1px solid ${COLOR.gray.color.gray[300]};
   border-bottom: 1px solid ${COLOR.gray.color.gray[300]};
@@ -64,30 +157,85 @@ const Wrapper = styled.div`
 const ImageWrapper = styled.div`
   width: 100%;
   height: auto;
-  margin: 10px 0 10px 0;
+  margin: 5px 0 5px 0;
   flex-wrap: wrap;
 `
 
 const FooterWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;;
+  gap: 2px;
+
+  > div:first-of-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+
+    > div:first-of-type { // 별점
+      display: flex;
+      align-items: center;
+      position: relative;
+      gap: 4px;
+      padding-left: 3px;
+      font-size: ${({ theme }) => theme.font[12].size};
+      line-height: ${({ theme }) => theme.font[12].lineHeight};
+    }
+
+    > div:nth-of-type(2) { // 유튜브, 공유
+      display: flex;
+      position: relative;
+      top: 3px;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+
+  > div:nth-of-type(2) { // 해시 태그 Wrapper
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-wrap: wrap;
+    font-size: ${({ theme }) => theme.font[12].size};
+    line-height: ${({ theme }) => theme.font[12].lineHeight};
+    color: ${COLOR.primary.color.tmobi.blue[600]};
+
+    > div {// 해시 태그
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      background-color: ${COLOR.primary.color.tmobi.blue[100]};
+      border-radius: 10px;
+      padding: 3px 6px;
+    }
+  }
+`
+
+const SubInfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
   color: ${COLOR.gray.color.gray[600]};
   font-size: ${({ theme }) => theme.font[12].size};
   line-height: ${({ theme }) => theme.font[12].lineHeight};
-  width: 100%;
-  gap: 5px;
+  margin-bottom: 5px;
+
+  > div:nth-of-type(2) {
+    width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
 `
 
 const SearchText = styled.div`
   display: flex;
-  gap: 5px;
   align-items: center;
-  position: relative;
-  left: -3px;
+  gap: 5px;
+  width: 50%;
 
   > div {
-    max-width: 280px;
+    width: 90%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -105,10 +253,24 @@ const TextBlock = styled.div`
     font-size: ${({ theme }) => theme.font[24].size};
     line-height: ${({ theme }) => theme.font[24].lineHeight};
     font-weight: 500;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: flex;
+    justify-content: space-between;
+
+    > div:first-of-type {
+      @media screen and (max-width: 375px) {
+        width: 280px;
+      }
+      @media screen and (max-width: 280px) {
+        width: 200px;
+      }
+      @media screen and (min-width: 400px) {
+        width: 400px;
+      }
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   > div:nth-of-type(2) {

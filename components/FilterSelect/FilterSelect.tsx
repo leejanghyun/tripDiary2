@@ -148,15 +148,9 @@ const FilterSelectPopOverWrapper = styled.div<{ isOpen?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 11px 16px;
+  padding: 0 4px;
   gap: 20px;
-  height: 40px;
   border-radius: 8px;
-
-  &:hover {
-    border-color: ${COLOR.primary.color.tmobi.blue[400]};
-    background: #f5f9ff;
-  } 
 
   > div:first-of-type { // label 명
     color: ${COLOR.gray.color.gray[500]};

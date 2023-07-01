@@ -1,3 +1,5 @@
+import { MAX_HASH_TAG_LEN } from '@/feature/feed/components/HashTag'
+
 import dbConnect from '../dbConnect'
 import { Feed, FeedListModel } from '../scheme'
 import { FeedSchemeType } from './getPaginateFeedList'
@@ -27,7 +29,20 @@ export async function updateFeed(userId: string, updatedData: Feed): Promise<boo
       return false
     }
 
-    targetFeed.feed = updatedData
+    let adjusthashTags: string[] = []
+    const { hashTags } = updatedData
+    const isInvalidHashTags = Array.isArray(hashTags) && hashTags?.length > MAX_HASH_TAG_LEN
+
+    if (isInvalidHashTags) {
+      adjusthashTags = hashTags.slice(0, MAX_HASH_TAG_LEN)
+    }
+
+    targetFeed.feed = {
+      ...updatedData,
+      createdBy: userId,
+      hashTags: isInvalidHashTags ? adjusthashTags : updatedData.hashTags || null,
+    }
+
     await new FeedListModel(targetFeed).save()
 
     return true

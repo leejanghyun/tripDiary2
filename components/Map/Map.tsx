@@ -149,8 +149,6 @@ function Map({
                 icon: {
                   url: `${fileList?.[0] as string}#custom_marker`,
                   scaledSize: ICON_SIZE,
-                  origin: new google.maps.Point(0, 0),
-                  anchor: new google.maps.Point(0, 0),
                 },
               })}
             />

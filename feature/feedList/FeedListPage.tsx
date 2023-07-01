@@ -1,10 +1,13 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Button, COLOR, Select } from '@TMOBI-WEB/ads-ui'
+import {
+  Button, COLOR, DropdownMenu, Input,
+} from '@TMOBI-WEB/ads-ui'
 import { PaginateResult } from 'mongoose'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import {
-  useCallback, useEffect, useState,
+  useCallback, useEffect, useMemo, useState,
 } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -14,6 +17,8 @@ import { Feed } from '@/db'
 import useQueryStringController from '@/hooks/useQueryStringController'
 import { ReactComponent as IconEmptyBox } from '@/images/ico_empty_box.svg'
 import { ReactComponent as AddButton } from '@/images/ico_plus_gray.svg'
+import { ReactComponent as SortAscButton } from '@/images/icon_sort_asc.svg'
+import { ReactComponent as SortDescButton } from '@/images/icon_sort_desc.svg'
 
 import FilterSelect from '../../components/FilterSelect/FilterSelect'
 import useFeedList from '../shared/hooks/useFeedList'
@@ -30,7 +35,7 @@ interface Props {
 
 function FeedListPage({ query }: Props) {
   const { updateQuery, removeQuery } = useQueryStringController()
-  const defaultValues = getDefaultValue()
+  const defaultValues = getDefaultValue(query)
   const formMethods = useForm<FeedListFormType>({
     defaultValues,
     mode: 'onBlur',
@@ -44,10 +49,11 @@ function FeedListPage({ query }: Props) {
     [FORM_FIELD.SORT]: sort,
     [FORM_FIELD.FILTER]: filter,
   } = watch()
+  const isDesc = typeof sort === 'string' && sort.split('_')[1] === 'desc'
+  const [keyword, setKeyword] = useState((query?.searchText as string) || '')
   const { data, isLoading } = useFeedList({
-    page, limit: size, sort, filter: filter.join(','),
+    page, limit: size, sort, filter: filter.join(','), searchText: keyword,
   })
-
   const { content } = data || {}
   const { docs, hasNextPage } = content as PaginateResult<Feed> || {}
   const isEmpty = (!docs || (docs || []).length === 0)
@@ -72,6 +78,45 @@ function FeedListPage({ query }: Props) {
     setFeeds((prevItems) => [...prevItems, ...res])
   }, [docs])
 
+  /**
+   * 검색창 입력 시 호출
+   */
+  const handleSearch = useCallback(
+    (value: string) => {
+      const { length: hasString } = value
+      if (keyword === value) {
+        return
+      }
+
+      if (!hasString) {
+        removeQuery([FORM_FIELD.SEARCH_TEXT, FORM_FIELD.PAGE])
+      } else {
+        updateQuery({ [FORM_FIELD.SEARCH_TEXT]: value }, FORM_FIELD.PAGE)
+        setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
+      }
+
+      setFeeds([])
+      setKeyword(value)
+    },
+    [removeQuery, updateQuery, setValue, keyword],
+  )
+
+  const handleSortClick = (value: FEEDLIST_SORT_TYPE) => {
+    if (value === sort) {
+      return
+    }
+
+    if (value === FEEDLIST_SORT_TYPE.CREATED_AT_DESC) {
+      removeQuery([FORM_FIELD.SORT])
+    } else {
+      updateQuery({ [FORM_FIELD.SORT]: value }, FORM_FIELD.PAGE)
+    }
+
+    setFeeds([])
+    setValue(FORM_FIELD.SORT, value)
+    setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
+  }
+
   return (
     <FormProvider {...formMethods}>
       <FrameLayout
@@ -81,39 +126,60 @@ function FeedListPage({ query }: Props) {
         headerPadding={5}
         menuId={MENU_ID.FEED_LIST}
         right={(
-          <FilterSelect
-            name={FORM_FIELD.FILTER}
-            options={filterOptions}
-            query={query}
-            onChangeFilter={() => {
-              setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
-              setFeeds([])
-            }}
-          />
-        )}
-        left={(
-          <Select
-            control={control}
-            name={FORM_FIELD.SORT}
-            boxSize="medium"
-            type="naked"
-            options={sizeOptions}
-            rules={{
-              onChange: ({ target }) => {
-                const { value }: { value: string } = target
-
-                if (value === FEEDLIST_SORT_TYPE.CREATED_AT_DESC) {
-                  removeQuery([FORM_FIELD.SORT])
-                } else {
-                  updateQuery({ [FORM_FIELD.SORT]: value }, FORM_FIELD.PAGE)
+          <RightSide>
+            <DropdownMenu
+              trigger={(
+                <button
+                  type="button"
+                >
+                  {isDesc ? <SortDescButton /> : <SortAscButton />}
+                </button>
+                )}
+              data={sizeOptions.map((option) => {
+                const { text, value } = option
+                return {
+                  text,
+                  onClick: () => { handleSortClick(value) },
                 }
-
+              })}
+              sideOffset={8}
+              side="bottom"
+              align="end"
+            />
+            <FilterSelect
+              name={FORM_FIELD.FILTER}
+              options={filterOptions}
+              query={query}
+              onChangeFilter={() => {
                 setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
                 setFeeds([])
-              },
+              }}
+            />
+          </RightSide>
+        )}
+        left={(
+          <Input
+            control={control}
+            type="search"
+            placeholder="검색어"
+            name={FORM_FIELD.SEARCH_TEXT}
+            labelInline
+            textAlign="left"
+            variant="naked"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
+                e.preventDefault()
+                handleSearch(e.currentTarget.value)
+              }
             }}
+            onSearch={(value) => handleSearch(value as string)}
+            styles={useMemo(() => css`
+              height: 10px;
+              width: 150px;
+              font-weight: 250 !important;
+          `, [])}
           />
-      )}
+        )}
       >
         {isEmpty && (
         <EmptyBox>
@@ -170,6 +236,13 @@ const EmptyBox = styled.div`
   line-height: ${({ theme }) => theme.font[18].lineHeight};
   width: 100%;
   height: 100%;
+`
+
+const RightSide = styled.div`
+  display: flex;
+  padding-right: 10px;
+  gap: 5px;
+  align-items: center;
 `
 
 const AddFeedButton = styled.div`

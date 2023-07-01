@@ -150,7 +150,7 @@ export function AddressSearch({
         onPointerDownOutside={handleClickOutSide}
       >
         <Content>
-          {(AddressLen) ? (
+          {AddressLen ? (
             <ListBlock>
               {displayAddressList.map(({ address, formattedAddress }, index) => (
                 <ListItem
@@ -175,8 +175,7 @@ export function AddressSearch({
                 <>
                   <strong>‘{searchText}’에 대한 검색결과가 없습니다.</strong>
                   <div>
-                    검색어에 잘못된 철자는 없는지,<br />
-                    정확한 주소가 맞는지 한 번 더 확인해주세요.
+                    정확한 주소가 맞는지 확인해주세요.
                   </div>
                 </>
               )}
@@ -192,12 +191,13 @@ export const AddressBlockAnchor = styled(PopoverPrimitive.Anchor)`
   position: relative;
   width: 100%;
   display: block;
+  margin: 12px 0;
 `
 
 const AddressSearchContent = styled(PopoverPrimitive.Content)<{ width?: string | null }>`
-  z-index: ${({ theme }) => theme.zIndex.popover};
-  margin-top: 8px;
   display: block;
+  margin-top: 8px;
+  z-index: ${({ theme }) => theme.zIndex.popover};
   box-shadow: ${({ theme }) => theme.boxShadow[340]};
   border-radius: 8px;
 
@@ -282,8 +282,8 @@ const ListBlock = styled.div`
 
 const EmptyBlock = styled.div`
   padding: 24px 0px;
-  font-size: ${({ theme }) => theme.font[11].size};
-  line-height: ${({ theme }) => theme.font[11].lineHeight};
+  font-size: ${({ theme }) => theme.font[14].size};
+  line-height: ${({ theme }) => theme.font[14].lineHeight};
   text-align: center;
   color: ${COLOR.gray.color.gray[500]};
 

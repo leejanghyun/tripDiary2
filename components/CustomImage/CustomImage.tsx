@@ -70,8 +70,8 @@ const PhotoImage = styled.img<{ width?: number, height?: number }>`
   flex-basis: calc(33% - 5px);
   object-fit: cover;
 
-  width: ${({ width = 105 }) => `${width}px;`}
-  height: ${({ height = 100 }) => `${height}px;`}
+  width: ${({ width = 105 }) => `${width}px;`};
+  height: ${({ height = 100 }) => `${height}px;`};
 `
 
 const PhotoGridStyles = css`

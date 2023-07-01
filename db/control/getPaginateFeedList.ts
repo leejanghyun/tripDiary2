@@ -9,6 +9,7 @@ type Options = {
   page: number;
   limit: number;
   sort?: FEEDLIST_SORT_TYPE
+  searchText?: string
   filter?: FEEDLIST_FILTER_TYPE[]
 }
 export type FeedSchemeType = {
@@ -41,13 +42,34 @@ const getFilter = (userId: string, filter?: FEEDLIST_FILTER_TYPE[] | null) => {
   return undefined
 }
 
+const getSearchKeyword = (keyword: string) => {
+  if (!keyword) {
+    return {}
+  }
+
+  const res = {
+    $or: [
+      { 'feed.title': { $regex: keyword, $options: 'i' } }, // title 필드에서 검색
+      { 'feed.content': { $regex: keyword, $options: 'i' } }, // content 필드에서 검색
+      { 'feed.hashTags': { $in: [keyword] } }, // hashTags 배열에서 검색
+    ],
+  }
+
+  return res
+}
+
 export async function getPaginateFeedList(userId: string, options: Options): Promise<PaginateResult<Feed> | null> {
   try {
     await dbConnect()
 
     const {
-      sort, limit, page, filter,
+      sort, limit, page, filter, searchText,
     } = options || {}
+
+    console.log('query', ({
+      ...getFilter(userId, filter),
+      ...getSearchKeyword(searchText || ''),
+    }))
 
     const optionTypes = {
       page,
@@ -56,7 +78,10 @@ export async function getPaginateFeedList(userId: string, options: Options): Pro
     }
 
     const paginationResult = await (FeedListModel as PaginateModel<FeedSchemeType>)
-      .paginate(getFilter(userId, filter), { ...optionTypes })
+      .paginate({
+        ...getFilter(userId, filter),
+        ...getSearchKeyword(searchText || ''),
+      }, { ...optionTypes })
 
     const { docs } = paginationResult
 
