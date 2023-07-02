@@ -3,7 +3,8 @@ import {
   GoogleMap, InfoWindow,
   LoadScript, Marker,
 } from '@react-google-maps/api'
-import { Loader } from '@TMOBI-WEB/ads-ui'
+import { COLOR, Loader } from '@TMOBI-WEB/ads-ui'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import {
   useCallback,
@@ -11,12 +12,14 @@ import {
 } from 'react'
 
 import { Feed } from '@/db'
+import { getFeedKindTag } from '@/feature/feed/constants/form'
 import { useMount } from '@/hooks/useMount'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
 import { formatDisplayDateTime } from '@/utils'
 import { getGoogleMapApi, getPosition, Location } from '@/utils/map'
 
 import CustomImage from '../CustomImage'
+import { DEFAULT_TOTAL_STARS, StarRating } from '../StarRating'
 import OverlayText from './OverlayText'
 
 export const DEFAULT_ZOOM_LEVEL = 11
@@ -49,24 +52,31 @@ type Props = {
   height?: string | number
   zoom?: number
   disableAutoLocation?: boolean
+  isShowTitle?: boolean
 }
 
 function Map({
   disableAutoLocation = false,
-  defaultLocation = null, zoom = DEFAULT_ZOOM_LEVEL, height = '100%', width = '100%', markers = [], feeds,
+  isShowTitle = false,
+  defaultLocation = null, zoom = DEFAULT_ZOOM_LEVEL, height = '100%', width = '100%', markers = [],
+  feeds,
 }: Props) {
   const [currentLocation, setCurrentLocation] = useState<null | Location>(null)
   const apiKey = getGoogleMapApi()
   const router = useRouter()
   const [selectedFeed, setSelectedFeed] = useState<Feed | null>(null)
   const {
-    title, content: feedContent, _id, date, searchText, fileList, location,
+    title, content: feedContent, _id, date, address, fileList, location, stars, feedKind,
+    hashTags,
   } = selectedFeed || {}
-  const startDate = formatDisplayDateTime(new Date(date ? date[0] : ''), 'yy년 MM월 dd일')
-  const endDate = formatDisplayDateTime(new Date(date ? date[1] : ''), 'yy년 MM월 dd일')
+  const startDate = formatDisplayDateTime(new Date(date ? date[0] : ''), 'yy.MM.dd')
+  const endDate = formatDisplayDateTime(new Date(date ? date[1] : ''), 'yy.MM.dd')
   const [selectedMarker, setSelectedMarker] = useState(null)
   const { lat, lng } = location || {}
-  const infoWindowLocation = { lat: lat || currentLocation?.lat, lng: lng || currentLocation?.lng }
+  const infoWindowLocation = {
+    lat: lat || currentLocation?.lat || 37.5334465,
+    lng: lng || currentLocation?.lng || 126.9013542,
+  }
   const isValidWindowLocation = Boolean(infoWindowLocation?.lat && infoWindowLocation?.lng)
   const mapRef = useRef<google.maps.Map | null>(null)
   const [mapWidth, setWidth] = useState<number>(100)
@@ -97,7 +107,7 @@ function Map({
   }
 
   useMount(() => {
-    if (!disableAutoLocation) {
+    if (!defaultLocation && !disableAutoLocation) {
       initLocation()
     }
   })
@@ -144,7 +154,7 @@ function Map({
         }, [width, height])}
         options={DEFAULT_MAP_OPTIONS}
       >
-        <OverlayText />
+        {isShowTitle && <OverlayText />}
         {markers.map((feed, index) => {
           const { fileList, id } = feed
           const hadFileList = Boolean(fileList && fileList.length > 0)
@@ -183,12 +193,37 @@ function Map({
                 />
               </ImageWrapper>
               <div>
-                {startDate === endDate ? startDate : `${startDate}/${endDate}`}
+                <LocationText>
+                  <IcoMarker /> <div>{address}</div>
+                </LocationText>
+                <div>
+                  {startDate === endDate ? startDate : `${startDate} ~ ${endDate}`}
+                </div>
               </div>
               <div>
-                <SearchText>
-                  <IcoMarker /> <div>{searchText}</div>
-                </SearchText>
+                <StarRating
+                  disabled
+                  gap={4}
+                  initialRating={stars}
+                  size={15}
+                />
+                {stars || 0} / {DEFAULT_TOTAL_STARS}
+                {getFeedKindTag(feedKind)}
+              </div>
+              <div>
+                {hashTags?.map((item, idx) => {
+                  return (
+                    <div key={idx}>
+                      <Link
+                        href={`https://www.youtube.com/results?search_query=${item}`}
+                      >
+                        <div>
+                          #{item}
+                        </div>
+                      </Link>
+                    </div>
+                  )
+                })}
               </div>
             </FeedInfoBox>
           </InfoWindow>
@@ -217,6 +252,8 @@ const FeedInfoBox = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: ${({ theme }) => theme.font[12].size};
+    line-height: ${({ theme }) => theme.font[12].lineHeight};
   }
 
   > div:first-of-type {
@@ -229,14 +266,38 @@ const FeedInfoBox = styled.div`
     line-height: ${({ theme }) => theme.font[14].lineHeight};
   }
 
-  > div:nth-of-type(4) { // 날짜
-    font-size: ${({ theme }) => theme.font[12].size};
-    line-height: ${({ theme }) => theme.font[12].lineHeight};
+  > div:nth-of-type(4) { // 위치 + 날짜
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
   }
 
-  > div:nth-of-type(5) { // 위치
+  > div:nth-of-type(5) { // star
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-top: 2px;
+  }
+
+  > div:nth-of-type(6) {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-wrap: wrap;
     font-size: ${({ theme }) => theme.font[12].size};
     line-height: ${({ theme }) => theme.font[12].lineHeight};
+    color: ${COLOR.primary.color.tmobi.blue[600]};
+    margin-top: 5px;
+
+    > div {// 해시 태그
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      background-color: ${COLOR.primary.color.tmobi.blue[100]};
+      border-radius: 10px;
+      padding: 3px 6px;
+    }
   }
 `
 
@@ -248,13 +309,22 @@ const ImageWrapper = styled.div`
   flex-wrap: wrap;
 `
 
-const SearchText = styled.div`
+const LocationText = styled.div`
   display: flex;
   gap: 2px;
   align-items: center;
   position: relative;
-
+  left: -1px;
   > div {
+    @media screen and (max-width: 375px) {
+      width: 130px;
+    }
+    @media screen and (max-width: 280px) {
+      width: 50px;
+    }
+    @media screen and (min-width: 400px) {
+      width: 150px;
+    }
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+import { FEED_KIND } from '@/feature/feed/constants/form'
 import { Location } from '@/utils/map/map'
 
 export interface Feed {
@@ -10,10 +11,11 @@ export interface Feed {
   content?: string,
   fileList?: string[] | null,
   imageDescriptions?: string[] | null,
-  searchText?: string | null,
+  address?: string | null,
   createdBy?: string
   hashTags?: string[] | null
   stars: number
+  feedKind: FEED_KIND
 }
 
 export const feedScheme = new mongoose.Schema({
@@ -26,7 +28,7 @@ export const feedScheme = new mongoose.Schema({
     type: [Date],
     required: [true, '날짜를 입력해주세요.'],
   },
-  searchText: {
+  address: {
     type: String,
     required: false,
   },
@@ -61,6 +63,10 @@ export const feedScheme = new mongoose.Schema({
   },
   stars: {
     type: Number,
+    required: true,
+  },
+  feedKind: {
+    type: String,
     required: true,
   },
 })

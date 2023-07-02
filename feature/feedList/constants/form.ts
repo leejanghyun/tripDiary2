@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash-es'
 import { ParsedUrlQuery } from 'querystring'
 
+import { FEED_KIND } from '@/feature/feed/constants/form'
 import { DataNode } from '@/hooks/ui/useTreeCheckbox'
 
 export const DEFAULT_PAGE = 1
@@ -26,10 +27,18 @@ export const sizeOptions = [
 
 export const enum FEEDLIST_FILTER_TYPE {
   MY = 'my',
+  CAFE = FEED_KIND.CAFE,
+  RESTAURANT = FEED_KIND.RESTAURANT,
+  SIGHTS = FEED_KIND.SIGHTS,
+  LODGMENT = FEED_KIND.LODGMENT,
 }
 
 export const filterOptions: DataNode[] = [
   { id: FEEDLIST_FILTER_TYPE.MY, label: '내 피드만', isChecked: false },
+  { id: FEED_KIND.CAFE, label: '카페', isChecked: false },
+  { id: FEED_KIND.RESTAURANT, label: '음식', isChecked: false },
+  { id: FEED_KIND.SIGHTS, label: '명소', isChecked: false },
+  { id: FEED_KIND.LODGMENT, label: '숙박', isChecked: false },
 ]
 
 export interface FeedListFormType {

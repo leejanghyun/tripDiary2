@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
   Button,
-  COLOR, DateRangePicker, IcoImage, Input, TextArea, toastError, toastSuccess,
+  COLOR, DateRangePicker, IcoImage, Input, SchemeType, Tabmenu, TextArea, toastError, toastSuccess,
 } from '@TMOBI-WEB/ads-ui'
 import { AxiosError } from 'axios'
 import { useAtom } from 'jotai'
@@ -34,7 +34,9 @@ import useMyFeed from '../shared/hooks/useMyFeed'
 import { AddressSearch } from './components/AddressSearch'
 import AlbumButton, { MAX_UPLOAD_SIZE } from './components/AlbumButton'
 import HashtagInput from './components/HashTag'
-import { CreateFeedFormType, FORM_FIELD, getCreateDefaultValue } from './constants/form'
+import {
+  CreateFeedFormType, FEED_KIND, FEED_KIND_DATA_SOURCES, FORM_FIELD, getCreateDefaultValue,
+} from './constants/form'
 
 type Props = {
   query?: ParsedUrlQuery
@@ -51,11 +53,12 @@ function FeedPage({ query }: Props) {
   const {
     watch, setValue, control, getValues, reset, handleSubmit,
   } = formMethods
-  const [searchText, hashTags, stars, location] = watch([
-    FORM_FIELD.SEARCH_TEXT,
+  const [address, hashTags, stars, location, feedKind] = watch([
+    FORM_FIELD.ADDRESS,
     FORM_FIELD.HAS_TAGS,
     FORM_FIELD.STARS,
     FORM_FIELD.LOCATION,
+    FORM_FIELD.FEED_KIND,
   ])
   const [meta, setMeta] = useAtom(feedMetaState)
   const imageFileList = useWatch({ control, name: FORM_FIELD.FILE_LIST })
@@ -63,6 +66,12 @@ function FeedPage({ query }: Props) {
   const queryClient = useQueryClient()
   const { data } = useMyFeed(id as string)
   const { content: feed } = data || {}
+  const schema: SchemeType<FEED_KIND | null>[] = FEED_KIND_DATA_SOURCES.map((item) => {
+    return {
+      design: 'Switch',
+      ...item,
+    }
+  })
 
   const { mutate: submitFeed, isLoading } = useMutation<boolean, AxiosError, Omit<Feed, '_id'> | Feed>(
     (data) => (isEdit ? putFeed(data as Feed) : postFeed(data)),
@@ -92,10 +101,11 @@ function FeedPage({ query }: Props) {
       fileList,
       imageDescriptions,
       location,
-      searchText,
+      address,
       title,
       stars,
       hashTags,
+      feedKind,
     } = feed
 
     const defaultValues = getCreateDefaultValue()
@@ -109,10 +119,11 @@ function FeedPage({ query }: Props) {
       [FORM_FIELD.FILE_LIST]: fileList,
       [FORM_FIELD.IMG_DESCRIPTION]: imageDescriptions,
       [FORM_FIELD.LOCATION]: location,
-      [FORM_FIELD.SEARCH_TEXT]: searchText,
+      [FORM_FIELD.ADDRESS]: address,
       [FORM_FIELD.TITLE]: title,
       [FORM_FIELD.HAS_TAGS]: hashTags,
       [FORM_FIELD.STARS]: stars,
+      [FORM_FIELD.FEED_KIND]: feedKind || FEED_KIND.ETC,
     })
   }, [isEdit, reset, setValue, feed])
 
@@ -141,10 +152,10 @@ function FeedPage({ query }: Props) {
 
     setValue(FORM_FIELD.LOCATION, location)
 
-    const placeName = await getPlaceName(location)
+    const address = await getPlaceName(location)
 
-    if (placeName) {
-      setValue(FORM_FIELD.SEARCH_TEXT, placeName)
+    if (address) {
+      setValue(FORM_FIELD.ADDRESS, address)
     }
   }
 
@@ -256,6 +267,16 @@ function FeedPage({ query }: Props) {
               />
               <div>평가하려면 별표 탭하기</div>
             </FirstLine>
+            <Line>
+              <Tabmenu
+                width={5}
+                selected={feedKind}
+                scheme={schema}
+                onChange={(value) => {
+                  setValue(FORM_FIELD.FEED_KIND, value as FEED_KIND)
+                }}
+              />
+            </Line>
             <DateRangePicker
               control={control}
               name={FORM_FIELD.DATE}
@@ -264,8 +285,8 @@ function FeedPage({ query }: Props) {
               }}
             />
             <AddressSearch
-              defaultValues={searchText}
-              name={FORM_FIELD.SEARCH_TEXT}
+              defaultValues={address}
+              name={FORM_FIELD.ADDRESS}
             />
             <MapWrapper>
               <Map

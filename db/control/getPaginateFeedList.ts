@@ -1,5 +1,6 @@
 import mongoose, { PaginateModel, PaginateResult } from 'mongoose'
 
+import { FEED_KIND } from '@/feature/feed/constants/form'
 import { FEEDLIST_FILTER_TYPE, FEEDLIST_SORT_TYPE } from '@/feature/feedList/constants/form'
 
 import dbConnect from '../dbConnect'
@@ -30,16 +31,42 @@ const getSortType = (sortType?: FEEDLIST_SORT_TYPE | null) => {
   return { sort: { createdAt: 1 } }
 }
 
-const getFilter = (userId: string, filter?: FEEDLIST_FILTER_TYPE[] | null) => {
-  const res = {
-    userId,
-  }
+const getFilter = (userId: string, filter?: (FEEDLIST_FILTER_TYPE | FEED_KIND)[] | null) => {
+  const item = []
 
   if (filter?.includes(FEEDLIST_FILTER_TYPE.MY)) {
-    return res
+    item.push({ 'feed.createdBy': { $regex: userId } })
   }
 
-  return undefined
+  const feedKindItem = []
+
+  if (filter?.includes(FEED_KIND.CAFE)) {
+    feedKindItem.push(FEED_KIND.CAFE)
+  }
+
+  if (filter?.includes(FEED_KIND.LODGMENT)) {
+    feedKindItem.push(FEED_KIND.LODGMENT)
+  }
+
+  if (filter?.includes(FEED_KIND.RESTAURANT)) {
+    feedKindItem.push(FEED_KIND.RESTAURANT)
+  }
+
+  if (filter?.includes(FEED_KIND.SIGHTS)) {
+    feedKindItem.push(FEED_KIND.SIGHTS)
+  }
+
+  if (feedKindItem?.length) {
+    item.push({ 'feed.feedKind': { $in: feedKindItem } })
+  }
+
+  if (!item?.length) {
+    return undefined
+  }
+
+  return {
+    $or: item,
+  }
 }
 
 const getSearchKeyword = (keyword: string) => {
@@ -71,6 +98,8 @@ export async function getPaginateFeedList(userId: string, options: Options): Pro
       limit,
       ...(sort && getSortType(sort as FEEDLIST_SORT_TYPE)),
     }
+
+    console.log(getFilter(userId, filter))
 
     const paginationResult = await (FeedListModel as PaginateModel<FeedSchemeType>)
       .paginate({

@@ -40,13 +40,13 @@ export function AddressSearch({
   const { length: AddressLen } = displayAddressList
   const element = useRef<HTMLDivElement>(null)
   const { current: contentRef } = element
-  const { [FORM_FIELD.SEARCH_TEXT]: searchText } = getValues()
+  const { [FORM_FIELD.ADDRESS]: address } = getValues()
 
   /**
    * DefaultValue 변경시 호출
    */
   useEffect(() => {
-    setValue(FORM_FIELD.SEARCH_TEXT, defaultValues)
+    setValue(FORM_FIELD.ADDRESS, defaultValues)
     setSelectedAddress(defaultValues)
   }, [defaultValues, setValue])
 
@@ -57,7 +57,7 @@ export function AddressSearch({
     setSelectedAddress(address)
     setOpen(false)
     clearErrors(name)
-    setValue(FORM_FIELD.SEARCH_TEXT, address) // Input 값 갱신
+    setValue(FORM_FIELD.ADDRESS, address) // Input 값 갱신
     setValue(FORM_FIELD.LOCATION, { lat, lng }) // 위치 값 갱신
   }
 
@@ -96,12 +96,12 @@ export function AddressSearch({
   }, [formState, trigger, name, clearErrors])
 
   const handleClickOutSide = useCallback(async () => {
-    if (searchText !== selectedAddress) {
+    if (address !== selectedAddress) {
       setError(name, { message: '정확한 주소를 입력해주세요.' })
     }
 
     setOpen(false)
-  }, [setOpen, name, selectedAddress, setError, searchText])
+  }, [setOpen, name, selectedAddress, setError, address])
 
   return (
     <PopoverRoot
@@ -121,11 +121,11 @@ export function AddressSearch({
               key, keyCode, which, target,
             } = e
             const isEnter = key === 'Enter' || keyCode === 13 || which === 13
-            const searchText = (target as HTMLInputElement).value
+            const address = (target as HTMLInputElement).value
 
             if (isEnter) {
               e.preventDefault()
-              setTimeout(() => handleSearch(searchText), 0)
+              setTimeout(() => handleSearch(address), 0)
             }
           }}
           rules={{
@@ -173,7 +173,7 @@ export function AddressSearch({
             <EmptyBlock>
               {isLoading ? <strong>해당 주소를 검색중 입니다...</strong> : (
                 <>
-                  <strong>‘{searchText}’에 대한 검색결과가 없습니다.</strong>
+                  <strong>‘{address}’에 대한 검색결과가 없습니다.</strong>
                   <div>
                     정확한 주소가 맞는지 확인해주세요.
                   </div>

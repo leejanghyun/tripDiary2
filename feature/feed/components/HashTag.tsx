@@ -57,10 +57,12 @@ function HashtagInput({ defaultValue, onChange }: Props) {
         placeholder="최대 글자수 15자"
         onKeyDown={(e) => {
           const inputValue = (e.target as HTMLInputElement).value.trim()
+          const target = tags.find((item) => item === inputValue)
+          const isEnter = e.key === 'Enter' && inputValue !== ''
 
-          if (e.key === 'Enter' && inputValue !== '') {
+          if (isEnter && !target) {
             e.preventDefault()
-
+            e.stopPropagation()
             const value = inputValue.toLowerCase()
 
             addTag(value)

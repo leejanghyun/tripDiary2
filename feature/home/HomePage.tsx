@@ -69,6 +69,7 @@ function HomePage({ query }: Props) {
       isFullSize
     >
       <Map
+        isShowTitle
         zoom={defaultLocation ? DEFAULT_ENLARGE_ZOOM_LEVEL : DEFAULT_ZOOM_LEVEL}
         defaultLocation={defaultLocation}
         feeds={content}

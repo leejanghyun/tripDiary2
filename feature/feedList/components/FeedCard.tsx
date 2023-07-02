@@ -12,6 +12,7 @@ import { globalState } from '@/atoms/globalState'
 import CustomImage from '@/components/CustomImage'
 import { DEFAULT_TOTAL_STARS, StarRating } from '@/components/StarRating'
 import { Feed } from '@/db/scheme/'
+import { getFeedKindTag } from '@/feature/feed/constants/form'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
 import { ReactComponent as IconShare } from '@/images/ico_share.svg'
 import { ReactComponent as IconMore } from '@/images/ico_three_dot.svg'
@@ -23,7 +24,10 @@ interface Props extends Feed {
 }
 
 function FeedCard({
-  _id, fileList, content, title, date, searchText, imageDescriptions, createdBy, stars, location,
+  _id,
+  fileList,
+  content,
+  title, date, address, imageDescriptions, createdBy, stars, location, feedKind,
   hashTags = [],
   onDelete,
 }: Props) {
@@ -94,7 +98,7 @@ function FeedCard({
         <LocationText
           onClick={handleLocationClick}
         >
-          <IcoMarker /><div>{searchText}</div>
+          <IcoMarker /><div>{address}</div>
         </LocationText>
         <div>
           {startDate === endDate ? `${startDate}` : `${startDate}/${endDate}`}
@@ -110,15 +114,16 @@ function FeedCard({
               size={15}
             />
             {stars || 0} / {DEFAULT_TOTAL_STARS}
+            {getFeedKindTag(feedKind)}
           </div>
           <div>
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${searchText}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${address}`}
             >
               <IconShare />
             </a>
             <a
-              href={`https://www.youtube.com/results?search_query=${searchText}`}
+              href={`https://www.youtube.com/results?search_query=${address}`}
             >
               <IcoYoutube />
             </a>
