@@ -99,8 +99,6 @@ export async function getPaginateFeedList(userId: string, options: Options): Pro
       ...(sort && getSortType(sort as FEEDLIST_SORT_TYPE)),
     }
 
-    console.log(getFilter(userId, filter))
-
     const paginationResult = await (FeedListModel as PaginateModel<FeedSchemeType>)
       .paginate({
         ...getFilter(userId, filter),

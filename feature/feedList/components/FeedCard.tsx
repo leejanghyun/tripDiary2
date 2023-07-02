@@ -6,13 +6,14 @@ import { useAtomValue } from 'jotai'
 import _ from 'lodash-es'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 import { globalState } from '@/atoms/globalState'
 import CustomImage from '@/components/CustomImage'
 import { DEFAULT_TOTAL_STARS, StarRating } from '@/components/StarRating'
 import { Feed } from '@/db/scheme/'
 import { getFeedKindTag } from '@/feature/feed/constants/form'
+import { ReactComponent as IcoHeart } from '@/images/ico_heart.svg'
 import { ReactComponent as IcoMarker } from '@/images/ico_marker.svg'
 import { ReactComponent as IconShare } from '@/images/ico_share.svg'
 import { ReactComponent as IconMore } from '@/images/ico_three_dot.svg'
@@ -21,15 +22,17 @@ import { formatDisplayDateTime } from '@/utils'
 
 interface Props extends Feed {
   onDelete: (id: string) => void
+  onBookMark: (id: string, isLink: boolean) => void
 }
 
 function FeedCard({
   _id,
   fileList,
   content,
-  title, date, address, imageDescriptions, createdBy, stars, location, feedKind,
+  title, date, address, imageDescriptions, createdBy, stars, location, feedKind, bookmarks,
   hashTags = [],
   onDelete,
+  onBookMark,
 }: Props) {
   const startDate = formatDisplayDateTime(new Date(date[0]), 'yy년 MM월 dd일')
   const endDate = formatDisplayDateTime(new Date(date[1]), 'yy년 MM월 dd일')
@@ -37,6 +40,7 @@ function FeedCard({
   const global = useAtomValue(globalState)
   const { userId } = global || {}
   const isMyFeed = userId === createdBy
+  const [isBookmark, setBookmark] = useState(Boolean((bookmarks || []).find((bookmark) => bookmark === userId)))
 
   const handleLocationClick = useCallback(() => {
     const { lat, lng } = location || {}
@@ -127,6 +131,15 @@ function FeedCard({
             >
               <IcoYoutube />
             </a>
+            <div>
+              <IcoHeart
+                fill={isBookmark ? 'red' : 'none'}
+                onClick={() => {
+                  setBookmark(!isBookmark)
+                  onBookMark(_id, !isBookmark)
+                }}
+              />
+            </div>
           </div>
         </div>
         <div>
@@ -150,7 +163,7 @@ function FeedCard({
 }
 
 const Wrapper = styled.div`
-  padding: 15px 20px 8px;
+  padding: 10px 20px 8px;
   margin: 0 0 10px 0;
   border-top: 1px solid ${COLOR.gray.color.gray[300]};
   border-bottom: 1px solid ${COLOR.gray.color.gray[300]};
@@ -281,7 +294,7 @@ const TextBlock = styled.div`
     overflow: hidden;
     width: 100%;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Specify the desired number of lines */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
     color: ${COLOR.gray.color.gray[600]};

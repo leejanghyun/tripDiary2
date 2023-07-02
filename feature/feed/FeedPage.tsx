@@ -16,7 +16,7 @@ import {
 } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
-import { postFeed, putFeed } from '@/api/'
+import { deleteFeed, postFeed, putFeed } from '@/api/'
 import { Container } from '@/components/Container'
 import FrameLayout from '@/components/FrameLayout'
 import { Map } from '@/components/Map'
@@ -87,6 +87,19 @@ function FeedPage({ query }: Props) {
     },
   )
 
+  const { mutate: deleteUserFeed } = useMutation<boolean, AxiosError, string>(
+    (id: string) => (deleteFeed(id)),
+    {
+      onSuccess: () => {
+        toastSuccess('피드를 삭제 했습니다.')
+        router.push('/feed-list')
+      },
+      onError: () => {
+        toastError('피드 삭제에 실패 하셨습니다.')
+      },
+    },
+  )
+
   /**
    * 초기화
    */
@@ -136,11 +149,13 @@ function FeedPage({ query }: Props) {
     }
 
     if (isEdit) {
-      submitFeed({ ...data, location, _id: id as string })
+      submitFeed({
+        ...data, location, _id: id as string, bookmarks: feed?.bookmarks as string[] || [],
+      })
       return
     }
 
-    submitFeed({ ...data, location })
+    submitFeed({ ...data, location, bookmarks: [] })
   }
 
   const initLocation = async () => {
@@ -247,6 +262,16 @@ function FeedPage({ query }: Props) {
           menuId={MENU_ID.ADD_FEED}
           right={(
             <RightSide>
+              {isEdit && (
+                <Button
+                  palette="red-stroke"
+                  type="button"
+                  size="small"
+                  onClick={() => { deleteUserFeed(id as string) }}
+                >
+                  삭제
+                </Button>
+              )}
               <Button
                 type="submit"
                 size="small"

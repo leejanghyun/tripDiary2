@@ -19,6 +19,7 @@ export async function addToFeedList(userId: string, item: Feed): Promise<boolean
       userId,
       feed: {
         ...item,
+        bookmarks: [],
         createdBy: userId,
         hashTags: isInvalidHashTags ? adjusthashTags : item?.hashTags || null,
       },

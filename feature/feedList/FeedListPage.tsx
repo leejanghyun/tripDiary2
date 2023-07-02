@@ -4,6 +4,7 @@ import {
   Button, COLOR, DropdownMenu, Input, toastError, toastSuccess,
 } from '@TMOBI-WEB/ads-ui'
 import { AxiosError } from 'axios'
+import { useAtomValue } from 'jotai'
 import { PaginateResult } from 'mongoose'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
@@ -14,6 +15,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
 import { deleteFeed } from '@/api'
+import { AddFeedBookmarkRequest, putFeedBookmark } from '@/api/putFeedBookmark'
+import { globalState } from '@/atoms/globalState'
 import FrameLayout from '@/components/FrameLayout'
 import { MENU_ID } from '@/components/Menu'
 import { KEYS } from '@/constants'
@@ -47,6 +50,8 @@ export type SearchParams = {
 }
 
 function FeedListPage({ query }: Props) {
+  const global = useAtomValue(globalState)
+  const { userId } = global || {}
   const { updateQuery, removeQuery } = useQueryStringController()
   const defaultValues = getDefaultValue(query)
   const formMethods = useForm<FeedListFormType>({
@@ -92,6 +97,19 @@ function FeedListPage({ query }: Props) {
       },
     },
   )
+
+  const { mutate: linkBookmark } = useMutation<boolean, AxiosError, AddFeedBookmarkRequest>(
+    (data) => putFeedBookmark(data),
+    {
+      onError: () => {
+        toastError('북마크 실패')
+      },
+    },
+  )
+
+  const handleBookmark = useCallback((feedId: string, isLink: boolean) => {
+    linkBookmark({ feedId, userId, isLink })
+  }, [userId, linkBookmark])
 
   const handleClickMore = useCallback(() => {
     setValue(FORM_FIELD.PAGE, page + 1)
@@ -242,6 +260,7 @@ function FeedListPage({ query }: Props) {
           return (
             <FeedCard
               onDelete={deleteUserFeed}
+              onBookMark={handleBookmark}
               key={idx}
               {...feed}
             />

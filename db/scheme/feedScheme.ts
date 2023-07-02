@@ -16,6 +16,7 @@ export interface Feed {
   hashTags?: string[] | null
   stars: number
   feedKind: FEED_KIND
+  bookmarks: string[]
 }
 
 export const feedScheme = new mongoose.Schema({
@@ -67,6 +68,10 @@ export const feedScheme = new mongoose.Schema({
   },
   feedKind: {
     type: String,
+    required: true,
+  },
+  bookmarks: {
+    type: Array<String>,
     required: true,
   },
 })
