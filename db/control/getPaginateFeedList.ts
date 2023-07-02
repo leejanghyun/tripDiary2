@@ -38,6 +38,10 @@ const getFilter = (userId: string, filter?: (FEEDLIST_FILTER_TYPE | FEED_KIND)[]
     item.push({ 'feed.createdBy': { $regex: userId } })
   }
 
+  if (filter?.includes(FEEDLIST_FILTER_TYPE.MY_BOOKMARK)) {
+    item.push({ 'feed.bookmarks': { $in: userId } })
+  }
+
   const feedKindItem = []
 
   if (filter?.includes(FEED_KIND.CAFE)) {

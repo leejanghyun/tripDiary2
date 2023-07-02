@@ -27,6 +27,7 @@ export const sizeOptions = [
 
 export const enum FEEDLIST_FILTER_TYPE {
   MY = 'my',
+  MY_BOOKMARK = 'myBookmark',
   CAFE = 'cafe',
   RESTAURANT = 'restaurant',
   SIGHTS = 'sights',
@@ -35,6 +36,7 @@ export const enum FEEDLIST_FILTER_TYPE {
 
 export const filterOptions: DataNode[] = [
   { id: FEEDLIST_FILTER_TYPE.MY, label: '내 피드만', isChecked: false },
+  { id: FEEDLIST_FILTER_TYPE.MY_BOOKMARK, label: '내가 찜한 피드', isChecked: false },
   { id: FEED_KIND.CAFE, label: '카페', isChecked: false },
   { id: FEED_KIND.RESTAURANT, label: '음식', isChecked: false },
   { id: FEED_KIND.SIGHTS, label: '명소', isChecked: false },
