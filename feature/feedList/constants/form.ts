@@ -27,10 +27,10 @@ export const sizeOptions = [
 
 export const enum FEEDLIST_FILTER_TYPE {
   MY = 'my',
-  CAFE = FEED_KIND.CAFE,
-  RESTAURANT = FEED_KIND.RESTAURANT,
-  SIGHTS = FEED_KIND.SIGHTS,
-  LODGMENT = FEED_KIND.LODGMENT,
+  CAFE = 'cafe',
+  RESTAURANT = 'restaurant',
+  SIGHTS = 'sights',
+  LODGMENT = 'lodgment',
 }
 
 export const filterOptions: DataNode[] = [
