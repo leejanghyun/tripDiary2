@@ -13,8 +13,8 @@ export type GetFeedListResponse = {
 }
 
 export type GetFeedListRequest = {
-  page: number,
-  limit: number,
+  page?: number,
+  limit?: number,
   sort?: FEEDLIST_SORT_TYPE | null
   filter?: string | null
   searchText?: string | null

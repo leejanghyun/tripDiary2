@@ -6,20 +6,30 @@ import { useCallback } from 'react'
 
 import FrameLayout from '@/components/FrameLayout'
 import { MENU_ID } from '@/components/Menu'
-import { ReactComponent as IconAlbum } from '@/images/ico_album_sample.svg'
+import { ReactComponent as IconAlbum } from '@/images/ico_albums.svg'
 import { ReactComponent as IconCollection } from '@/images/ico_collection.svg'
+import { ReactComponent as IcoHeart } from '@/images/ico_heart.svg'
 import { ReactComponent as RightArrowIcon } from '@/images/icon_right_arrow.svg'
 
+import { FEEDLIST_FILTER_TYPE } from '../feedList/constants/form'
+import useFeedList from '../shared/hooks/useFeedList'
 import useMyFeeds from '../shared/hooks/useMyFeeds'
 
 function MyPage() {
   const { data } = useMyFeeds()
+  const { data: myBookmarkData } = useFeedList({ filter: `${FEEDLIST_FILTER_TYPE.MY_BOOKMARK as string}` })
+  const { content: bookmarkContent } = myBookmarkData || {}
+  const { totalDocs: totalBookMarks } = bookmarkContent || {}
   const { content: feed } = data || {}
   const { length } = feed || {}
   const router = useRouter()
 
   const handleMyFeedList = useCallback(() => {
     router.push('/feed-list?filter=["my"]')
+  }, [router])
+
+  const handleBookmarks = useCallback(() => {
+    router.push('/feed-list?filter=["myBookmark"]')
   }, [router])
 
   return (
@@ -35,7 +45,7 @@ function MyPage() {
               <IconAlbum />
             </Circle>
             <div>
-              내가 피드
+              생성한 피드
               <BlueText>
                 {`${length || 0}`}
               </BlueText>
@@ -52,7 +62,7 @@ function MyPage() {
               <IconCollection />
             </Circle>
             <div>
-              내가 스토리
+              생성한 스토리
               <BlueText>
                 {`${0}`}
               </BlueText>
@@ -61,6 +71,25 @@ function MyPage() {
           </div>
           <div>
             <RightArrowIcon onClick={() => alert('cpmming soon...')} />
+          </div>
+        </Box>
+        <Box>
+          <div>
+            <Circle color="red">
+              <IcoHeart
+                fill="red"
+              />
+            </Circle>
+            <div>
+              찜한 피드
+              <BlueText>
+                {`${totalBookMarks || 0}`}
+              </BlueText>
+              개
+            </div>
+          </div>
+          <div>
+            <RightArrowIcon onClick={handleBookmarks} />
           </div>
         </Box>
       </BoxWrapper>
@@ -78,12 +107,12 @@ const BlueText = styled.div`
   color: ${COLOR.primary.color.tmobi.blue[600]};
 `
 
-const Circle = styled.div<{ color: 'blue' | 'orange' }>`
+const Circle = styled.div<{ color: 'blue' | 'orange' | 'red' }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 
   ${({ color }) => {
@@ -91,6 +120,10 @@ const Circle = styled.div<{ color: 'blue' | 'orange' }>`
       case 'blue':
         return css`
           background-color: ${COLOR.primary.color.tmobi.blue[200]};
+        `
+      case 'red':
+        return css`
+          background-color: ${COLOR.seconary.color.tmobi.pink[200]};
         `
       default:
         return css`
@@ -109,7 +142,7 @@ const Box = styled.div`
   background: ${COLOR.gray.color.wb[0]};
   border-radius: 10px;
   margin: 0 auto;
-  height: 100px;
+  height: 70px;
   padding: 10px 15px;
   border: 1px solid ${COLOR.gray.color.gray[200]}
   font-size: ${({ theme }) => theme.font[18].size};

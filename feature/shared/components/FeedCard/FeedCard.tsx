@@ -69,12 +69,18 @@ function FeedCard({
     <Wrapper
       isFullWidth={isFullWidth}
       key={_id}
-      onClick={() => onClick?.(_id)}
     >
       <div>
         <TextBlock>
           <div>
-            <div>{title}</div>
+            <div
+              role="button"
+              tabIndex={-1}
+              onKeyDown={() => {}}
+              onClick={() => onClick?.(_id)}
+            >
+              {title}
+            </div>
             {isMyFeed && !disableEditDropDown && (
             <div>
               <DropdownMenu
@@ -106,7 +112,13 @@ function FeedCard({
             </div>
             )}
           </div>
-          <div>{content}</div>
+          <div
+            role="button"
+            tabIndex={-1}
+            onKeyDown={() => {}}
+            onClick={() => onClick?.(_id)}
+          >{content}
+          </div>
         </TextBlock>
         <ImageWrapper>
           <CustomImage
