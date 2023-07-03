@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
   COLOR, DropdownMenu,
@@ -21,16 +22,30 @@ import { ReactComponent as IcoYoutube } from '@/images/icon_youtube.svg'
 import { formatDisplayDateTime } from '@/utils'
 
 interface Props extends Feed {
-  onDelete: (id: string) => void
-  onBookMark: (id: string, isLink: boolean) => void
+  isFullWidth?: boolean
+  disableEditDropDown?: boolean
+  onDelete?: (id: string) => void
+  onBookMark?: (id: string, isLink: boolean) => void
+  onClick: (id: string) => void
 }
 
 function FeedCard({
+  isFullWidth = false,
   _id,
+  disableEditDropDown,
   fileList,
   content,
-  title, date, address, imageDescriptions, createdBy, stars, location, feedKind, bookmarks,
+  title,
+  feedKind,
+  date,
+  bookmarks,
+  imageDescriptions,
+  createdBy,
+  stars,
+  address,
+  location,
   hashTags = [],
+  onClick,
   onDelete,
   onBookMark,
 }: Props) {
@@ -52,13 +67,15 @@ function FeedCard({
 
   return (
     <Wrapper
+      isFullWidth={isFullWidth}
       key={_id}
+      onClick={() => onClick?.(_id)}
     >
       <div>
         <TextBlock>
           <div>
             <div>{title}</div>
-            {isMyFeed && (
+            {isMyFeed && !disableEditDropDown && (
             <div>
               <DropdownMenu
                 trigger={(
@@ -78,7 +95,7 @@ function FeedCard({
                   {
                     text: '삭제',
                     onClick: () => {
-                      onDelete(_id)
+                      onDelete?.(_id)
                     },
                   },
                 ]}
@@ -136,7 +153,7 @@ function FeedCard({
                 fill={isBookmark ? 'red' : 'none'}
                 onClick={() => {
                   setBookmark(!isBookmark)
-                  onBookMark(_id, !isBookmark)
+                  onBookMark?.(_id, !isBookmark)
                 }}
               />
             </div>
@@ -162,12 +179,20 @@ function FeedCard({
   )
 }
 
-const Wrapper = styled.div`
-  padding: 10px 20px 8px;
-  margin: 0 0 10px 0;
-  border-top: 1px solid ${COLOR.gray.color.gray[300]};
-  border-bottom: 1px solid ${COLOR.gray.color.gray[300]};
-  background: ${COLOR.gray.color.wb[0]}
+const Wrapper = styled.div<{ isFullWidth: boolean }>`
+  background: ${COLOR.gray.color.wb[0]};
+
+   ${({ isFullWidth }) => {
+    return isFullWidth
+      ? css`
+          margin: 0;
+          padding: 0;
+        `
+      : css`
+          padding: 15px 20px 8px;
+          margin: 0 0 10px 0;
+        `
+  }}
 `
 
 const ImageWrapper = styled.div`

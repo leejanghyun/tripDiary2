@@ -1,2 +1,2 @@
-export { default as FeedPage } from './FeedPage'
-export * from './FeedPage'
+export { default as FeedPage } from './FeedAddPage'
+export * from './FeedAddPage'

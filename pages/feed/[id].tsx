@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from 'next'
 import { getSession } from 'next-auth/react'
 
-import FeedPage from '@/feature/feed/FeedAddPage'
+import FeedPage from '@/feature/feed/FeedPage'
 
 const pageInitialized = async ({ query, req }: GetServerSidePropsContext) => {
   const sessions = await getSession({ req })

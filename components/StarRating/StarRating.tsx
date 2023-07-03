@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 
 interface StarRatingProps {
   totalStars?: number;
-  size?: number
-  gap?: number
+  size?: number;
+  gap?: number;
   initialRating?: number;
-  disabled?: boolean
+  disabled?: boolean;
   onChange?: (rating: number) => void;
 }
 
@@ -14,7 +14,12 @@ export const DEFAULT_TOTAL_STARS = 5
 const DEFAULT_STAR_INIT = 0
 
 function StarRating({
-  totalStars = DEFAULT_TOTAL_STARS, gap, initialRating = DEFAULT_STAR_INIT, size = 24, disabled = false, onChange,
+  totalStars = DEFAULT_TOTAL_STARS,
+  gap,
+  initialRating = DEFAULT_STAR_INIT,
+  size = 24,
+  disabled = false,
+  onChange,
 }: StarRatingProps) {
   const [rating, setRating] = useState(initialRating)
 
@@ -31,12 +36,11 @@ function StarRating({
   }
 
   return (
-    <StarRatingBlock
-      gap={gap}
-    >
+    <StarRatingBlock gap={gap}>
       {[...Array(totalStars)].map((_, index) => (
         <Star
           size={size}
+          disabled={disabled}
           key={index}
           filled={index < rating}
           onClick={() => handleClick(index + 1)}
@@ -53,19 +57,26 @@ const StarRatingBlock = styled.div<{ gap?: number }>`
 
 interface StarProps {
   filled: boolean;
-  size?: number
-  onClick: () => void;
+  disabled: boolean;
+  size?: number;
+  onClick?: () => void
 }
 
-function Star({ filled, size, onClick }: StarProps) {
+function Star({
+  filled,
+  disabled,
+  size,
+  onClick,
+}: StarProps) {
   const starClassName = filled ? 'star filled' : 'star'
 
   return (
     <StarButton
+      disabled={disabled}
       type="button"
       className={starClassName}
-      onClick={onClick}
       size={size}
+      onClick={onClick}
     >
       &#9733;
     </StarButton>
@@ -73,18 +84,18 @@ function Star({ filled, size, onClick }: StarProps) {
 }
 
 const StarButton = styled.button<{ size?: number }>`
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   color: #aaa;
   transition: color 0.2s;
   font-size: ${({ size = 24 }) => `${size}px;`};
 
   &:hover {
-    color: #ffc107;
+    color: ${({ disabled }) => (disabled ? '#aaa' : '#ffc107')};
   }
 
   &.filled {
     color: #ffc107;
   }
-`
+}`
 
 export default StarRating

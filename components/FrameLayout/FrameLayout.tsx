@@ -18,7 +18,7 @@ import { TitleProps } from '../Header/Header'
 import { MENU_ID } from '../Menu/Menu'
 
 type Props = {
-  menuId: MENU_ID
+  menuId?: MENU_ID
   variant?: 'menu' | 'empty'
   isFullSize?: boolean
   background?: 'white' | 'gray'

@@ -23,16 +23,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const result = await getFeed(id as string, email as string)
+    const result = await getFeed(id as string)
 
     if (!result) {
-      res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feedList' })
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feed' })
       return
     }
 
     res.json({ status: StatusType.SUCCESS, content: result })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feedList' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feed' })
   }
 }
 

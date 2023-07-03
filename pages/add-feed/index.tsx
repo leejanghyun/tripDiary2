@@ -1,3 +1,3 @@
-import FeedPage from '@/feature/feed/FeedPage'
+import FeedAddPage from '@/feature/feed/FeedAddPage'
 
-export default FeedPage
+export default FeedAddPage

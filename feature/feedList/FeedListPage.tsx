@@ -7,6 +7,7 @@ import { AxiosError } from 'axios'
 import { useAtomValue } from 'jotai'
 import { PaginateResult } from 'mongoose'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import {
   useCallback, useEffect, useMemo, useState,
@@ -21,6 +22,7 @@ import FrameLayout from '@/components/FrameLayout'
 import { MENU_ID } from '@/components/Menu'
 import { KEYS } from '@/constants'
 import { Feed } from '@/db'
+import FeedCard from '@/feature/shared/components/FeedCard/FeedCard'
 import useQueryStringController from '@/hooks/useQueryStringController'
 import { ReactComponent as IconEmptyBox } from '@/images/ico_empty_box.svg'
 import { ReactComponent as AddButton } from '@/images/ico_item_add.svg'
@@ -29,7 +31,6 @@ import { ReactComponent as SortDescButton } from '@/images/icon_sort_desc.svg'
 
 import FilterSelect from '../../components/FilterSelect/FilterSelect'
 import useFeedList from '../shared/hooks/useFeedList'
-import FeedCard from './components/FeedCard'
 import {
   DEFAULT_PAGE,
   FEEDLIST_FILTER_TYPE,
@@ -67,6 +68,7 @@ function FeedListPage({ query }: Props) {
     [FORM_FIELD.SORT]: sort,
     [FORM_FIELD.FILTER]: filter,
   } = watch()
+  const router = useRouter()
 
   const isDesc = typeof sort === 'string' && sort.split('_')[1] === 'desc'
   const [keyword, setKeyword] = useState((query?.searchText as string) || '')
@@ -169,6 +171,10 @@ function FeedListPage({ query }: Props) {
     setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
   }
 
+  const handleFeedClick = useCallback((id: string) => {
+    router.push(`feed/${id}`)
+  }, [router])
+
   return (
     <FormProvider {...formMethods}>
       <FrameLayout
@@ -194,7 +200,7 @@ function FeedListPage({ query }: Props) {
                     />
                   )}
                 </button>
-                )}
+              )}
               data={sizeOptions.map((option) => {
                 const { text, value } = option
                 return {
@@ -242,46 +248,48 @@ function FeedListPage({ query }: Props) {
         )}
       >
         {isEmpty && (
-        <EmptyBox>
-          {isLoading ? '로딩중...' : (
-            <>
-              <IconEmptyBox />
-              <div>{isDefaultSearchParams ? '등록된 피드가 없음' : '검색된 피드가 없음'}</div>
-              <Link href="/add-feed">
-                <AddFeedButton>
-                  <AddButton />피드 등록 이동
-                </AddFeedButton>
-              </Link>
-            </>
-          )}
-        </EmptyBox>
+          <EmptyBox>
+            {isLoading ? '로딩중...' : (
+              <>
+                <IconEmptyBox />
+                <div>{isDefaultSearchParams ? '등록된 피드가 없음' : '검색된 피드가 없음'}</div>
+                <Link href="/add-feed">
+                  <AddFeedButton>
+                    <AddButton />피드 등록 이동
+                  </AddFeedButton>
+                </Link>
+              </>
+            )}
+          </EmptyBox>
         )}
         {feeds.map(((feed, idx) => {
           return (
             <FeedCard
+              isFullWidth={false}
               onDelete={deleteUserFeed}
               onBookMark={handleBookmark}
+              onClick={handleFeedClick}
               key={idx}
               {...feed}
             />
           )
         }))}
         {hasNextPage
-      && (
-        <ButtonWrapper>
-          <Button
-            palette="white-stroke"
-            type="button"
-            size="small"
-            disabled={isLoading}
-            loading={isLoading}
-            fullWidth
-            onClick={handleClickMore}
-          >
-            더보기
-          </Button>
-        </ButtonWrapper>
-      )}
+          && (
+            <ButtonWrapper>
+              <Button
+                palette="white-stroke"
+                type="button"
+                size="small"
+                disabled={isLoading}
+                loading={isLoading}
+                fullWidth
+                onClick={handleClickMore}
+              >
+                더보기
+              </Button>
+            </ButtonWrapper>
+          )}
       </FrameLayout>
     </FormProvider>
   )
