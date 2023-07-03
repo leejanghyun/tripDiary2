@@ -11,8 +11,8 @@ export const getMenuPath = (menuId: MENU_ID | null) => {
     path = '/add-feed'
   } else if (menuId === MENU_ID.FEED_LIST) {
     path = '/feed-list'
-  } else if (menuId === MENU_ID.ALARM) {
-    path = 'alarm'
+  } else if (menuId === MENU_ID.MY) {
+    path = '/my'
   }
 
   return path

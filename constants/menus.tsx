@@ -28,6 +28,6 @@ export const menus = [
   {
     IconInActive: <IconAlarm />,
     IconActive: <IconAlarmSolid />,
-    id: MENU_ID.ALARM,
+    id: MENU_ID.MY,
   },
 ] as unknown as MenuItem[]

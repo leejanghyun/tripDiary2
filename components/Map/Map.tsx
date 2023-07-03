@@ -10,10 +10,10 @@ import {
 } from 'react'
 
 import { Feed } from '@/db'
+import FeedCard from '@/feature/shared/components/FeedCard/FeedCard'
 import { useMount } from '@/hooks/useMount'
 import { getGoogleMapApi, getPosition, Location } from '@/utils/map'
 
-import FeedCard from '../../feature/shared/components/FeedCard/FeedCard'
 import OverlayText from './OverlayText'
 
 export const DEFAULT_ZOOM_LEVEL = 11

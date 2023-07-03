@@ -5,7 +5,7 @@ import {
 } from 'react'
 
 export const enum MENU_ID {
-  ALARM = 'alarm',
+  MY = 'my',
   FEED_LIST = 'feed-list',
   ADD_FEED = 'add-feed',
   MAIN = 'main',

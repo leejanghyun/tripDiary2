@@ -26,10 +26,9 @@ function FilterSelect({
 }: Props) {
   const { updateQuery, removeQuery } = useQueryStringController()
   const { setValue, watch } = useFormContext()
-  const { length: optionsLen } = options || []
   const filterList = watch(name)
   const [isOpen, setOpen] = useState(false)
-  const hasFilter = Boolean(filterList?.length < optionsLen)
+  const hasFilter = Boolean(filterList?.length)
 
   const getSelectedItems = useCallback(() => {
     const { [name]: items } = query || {}
@@ -49,6 +48,10 @@ function FilterSelect({
    */
   useEffect(() => {
     const queryFilterSelectIds: string[] = getSelectedItems()
+
+    if (queryFilterSelectIds?.length) {
+      setOpen(true)
+    }
 
     setValue(name, queryFilterSelectIds) // Query Params에 저장된 인벤토리 저장
   }, [setValue, getSelectedItems, name])
@@ -92,16 +95,19 @@ function FilterSelect({
   }, [updateQuery, removeQuery, name])
 
   return (
-    <PopoverRoot>
+    <PopoverRoot
+      open={isOpen}
+    >
       <TriggerButton
         data-filtered={hasFilter}
         onClick={() => setOpen(!isOpen)}
       >
-        <FilterSelectPopOverWrapper isOpen={isOpen}>
-          <IconsFilter fill={hasFilter ? COLOR.gray.color.gray[900] : COLOR.primary.color.tmobi.blue[600]} />
+        <FilterSelectPopOverWrapper>
+          <IconsFilter fill={!hasFilter ? COLOR.gray.color.gray[900] : COLOR.primary.color.tmobi.blue[600]} />
         </FilterSelectPopOverWrapper>
       </TriggerButton>
       <Content
+        onPointerDownOutside={() => setOpen(!isOpen)}
         sideOffset={0}
         alignOffset={0}
         align="end"
