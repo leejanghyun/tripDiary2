@@ -30,6 +30,8 @@ import { useMount } from '@/hooks/useMount'
 import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
 import { getPlaceName, getPosition, Location } from '@/utils/map'
 
+import { deleteUploadedFile } from '../../api/deleteUploadedFile'
+import { uploadFeedFile } from '../../api/uploadFeedFile'
 import useMyFeed from '../shared/hooks/useMyFeed'
 import { AddressSearch } from './components/AddressSearch'
 import AlbumButton, { MAX_UPLOAD_SIZE } from './components/AlbumButton'
@@ -183,14 +185,25 @@ function FeedPage({ query }: Props) {
   const uploadFile = useCallback((file: File) => {
     const reader = new FileReader()
 
-    reader.onload = () => {
-      const dataUrl = reader.result
+    reader.onload = async () => {
+      const body = new FormData()
+      const fileName = `multer/${Math.random().toString(36).substring(2, 11)}${file.name}`
+
+      body.append('image', file)
+      body.append('name', fileName)
+
+      const content = await uploadFeedFile(body)
+
+      if (!content) {
+        return
+      }
+
       const imageFileList = getValues(FORM_FIELD.FILE_LIST)
 
       if (!imageFileList) {
-        setValue(FORM_FIELD.FILE_LIST, [dataUrl as string])
+        setValue(FORM_FIELD.FILE_LIST, [content as string])
       } else {
-        setValue(FORM_FIELD.FILE_LIST, [...imageFileList, dataUrl as string])
+        setValue(FORM_FIELD.FILE_LIST, [...imageFileList, content as string])
       }
     }
 
@@ -234,13 +247,19 @@ function FeedPage({ query }: Props) {
     }
   }, [setMeta, meta, handleImageFileUpload])
 
-  const handleDeletePicture = useCallback((idx: number) => {
+  const handleDeletePicture = useCallback(async (idx: number) => {
     const {
       [FORM_FIELD.FILE_LIST]: imageFileList,
       [FORM_FIELD.IMG_DESCRIPTION]: imageDescriptions,
     } = getValues()
 
     if (!imageFileList) {
+      return
+    }
+
+    const res = await deleteUploadedFile(imageFileList[idx])
+
+    if (!res) {
       return
     }
 

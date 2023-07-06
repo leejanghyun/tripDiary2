@@ -11,6 +11,7 @@ export const API = {
   },
   EXTERNAL: {
     SEARCH_PLACE: '/api/external/search-place',
+    IMAGE_UPLOAD: '/api/external/image-upload',
   },
   PROXY: '/api/proxy',
   TRIP_DIARY: '/api/trip-diary',

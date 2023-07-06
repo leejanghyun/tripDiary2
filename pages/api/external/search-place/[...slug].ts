@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import httpProxyMiddleware from 'next-http-proxy-middleware'
 
-import { API } from '../../../../constants'
+import { API } from '@/constants'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

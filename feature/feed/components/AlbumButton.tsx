@@ -45,6 +45,7 @@ function AlbumButton({ isMaxUploaded, onUpload }: AlbumButtonProps) {
         disabled={isMaxUploaded}
         ref={fileInputRef}
         type="file"
+        name="image"
         multiple
         accept="image/*;capture=camera"
         onChange={onUploadImage}
