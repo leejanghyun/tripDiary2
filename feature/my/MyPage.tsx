@@ -6,14 +6,14 @@ import { useCallback } from 'react'
 
 import FrameLayout from '@/components/FrameLayout'
 import { MENU_ID } from '@/components/Menu'
+import useFeedList from '@/feature/shared/hooks/useFeedList'
+import useMyFeeds from '@/feature/shared/hooks/useMyFeeds'
 import { ReactComponent as IconAlbum } from '@/images/ico_albums.svg'
 import { ReactComponent as IconCollection } from '@/images/ico_collection.svg'
 import { ReactComponent as IcoHeart } from '@/images/ico_heart.svg'
 import { ReactComponent as RightArrowIcon } from '@/images/icon_right_arrow.svg'
 
 import { FEEDLIST_FILTER_TYPE } from '../feedList/constants/form'
-import useFeedList from '../shared/hooks/useFeedList'
-import useMyFeeds from '../shared/hooks/useMyFeeds'
 
 function MyPage() {
   const { data } = useMyFeeds()
@@ -30,6 +30,10 @@ function MyPage() {
 
   const handleBookmarks = useCallback(() => {
     router.push('/feed-list?filter=["myBookmark"]')
+  }, [router])
+
+  const handleMyStory = useCallback(() => {
+    router.push('/my-story')
   }, [router])
 
   return (
@@ -70,7 +74,7 @@ function MyPage() {
             </div>
           </div>
           <div>
-            <RightArrowIcon onClick={() => alert('cpmming soon...')} />
+            <RightArrowIcon onClick={handleMyStory} />
           </div>
         </Box>
         <Box>

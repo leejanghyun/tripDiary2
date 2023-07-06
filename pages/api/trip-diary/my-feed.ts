@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 
+import { getFeed } from '@/db/control/getFeed'
 import { Method, StatusType } from '@/utils'
-
-import { getFeed } from '../../../db/control/getFeed'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req
@@ -26,13 +25,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const result = await getFeed(id as string, email as string)
 
     if (!result) {
-      res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feedList' })
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: '내 피드 리스트 불러오기 실패' })
       return
     }
 
     res.json({ status: StatusType.SUCCESS, content: result })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Failed to fetch feedList' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: '내 피드 리스트 불러오기 실패' })
   }
 }
 

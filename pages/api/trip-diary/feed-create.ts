@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 
+import { addToFeedList } from '@/db/control/addFeedList'
 import { Method, StatusType } from '@/utils'
-
-import { addToFeedList } from '../../../db/control/addFeedList'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req

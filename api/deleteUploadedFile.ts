@@ -1,14 +1,16 @@
 import { API } from '@/constants'
-import { Method } from '@/utils'
+import { CommonResponse, Method, request } from '@/utils'
 
-export async function deleteUploadedFile(string: string) {
+export async function deleteUploadedFile(fileName: string) {
   try {
-    const response = await fetch(`${API.EXTERNAL.IMAGE_UPLOAD}/delete-image`, {
+    const response = await request<CommonResponse<string>>({
+      url: `${API.EXTERNAL.IMAGE_UPLOAD}/delete-image`,
       method: Method.POST,
-      body: string,
+      data: {
+        fileName,
+      },
     })
-    const res = await response.json()
-    const { content } = res || {}
+    const { content } = response || {}
 
     return content
   } catch (e) {

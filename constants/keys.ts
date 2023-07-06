@@ -23,4 +23,5 @@ export const KEYS = {
   MY_FEED: () => [...KEYS.ALL, 'myFeed'] as const,
   FEED: () => [...KEYS.ALL, 'feed'] as const,
   MY_FEEDS: () => [...KEYS.ALL, 'myFeeds'] as const,
+  MY_STORIES: () => [...KEYS.ALL, 'myStories'] as const,
 }

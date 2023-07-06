@@ -8,12 +8,19 @@ import { ReactComponent as IconMap } from '../images/ico_flag.svg'
 import { ReactComponent as IconMapSolid } from '../images/ico_flag_solid.svg'
 import { ReactComponent as IconFeedList } from '../images/ico_store.svg'
 import { ReactComponent as IconFeedListSolid } from '../images/ico_store_solid.svg'
+import { ReactComponent as IconStory } from '../images/ico_storybook.svg'
+import { ReactComponent as IconStorySolid } from '../images/ico_storybook_solid.svg'
 
 export const menus = [
   {
     IconInActive: <IconMap />,
     IconActive: <IconMapSolid />,
     id: MENU_ID.MAIN,
+  },
+  {
+    IconInActive: <IconStory />,
+    IconActive: <IconStorySolid />,
+    id: MENU_ID.MY_STORY,
   },
   {
     IconInActive: <IconAddFeed />,

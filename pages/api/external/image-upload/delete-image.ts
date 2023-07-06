@@ -19,15 +19,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ status: StatusType.ERROR, resultMsg: 'unknown User' })
   }
 
-  const imageUrl = body // 삭제할 이미지의 URL
+  const { fileName } = body || {} // 삭제할 이미지의 URL
 
-  const urlParts = imageUrl.split('/')
+  const urlParts = fileName.split('/')
   const fileKey = decodeURIComponent(urlParts[urlParts.length - 1])
 
   try {
     await deleteFile(fileKey)
 
-    return res.json({ status: StatusType.SUCCESS, resultMsg: 'S3 삭제 성공', content: imageUrl })
+    return res.json({ status: StatusType.SUCCESS, resultMsg: 'S3 삭제 성공', content: fileName })
   } catch (error) {
     return res.status(500).json({ status: StatusType.ERROR, resultMsg: 'S3 삭제 실패' })
   }

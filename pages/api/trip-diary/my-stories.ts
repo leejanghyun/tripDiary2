@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 
-import { getFeedList } from '@/db/control/getUserFeedList'
+import { getUserStoryList } from '@/db/control/getUserStoryList'
 import { Method, StatusType } from '@/utils'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -21,16 +21,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const feedsResult = await getFeedList(email)
+    const storiesResult = await getUserStoryList(email)
 
-    if (!feedsResult) {
-      res.status(500).json({ status: StatusType.ERROR, resultMsg: '피드 리스트 불러오기 실패' })
+    if (!storiesResult) {
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: '스토리 리스트 불러오기 실패' })
       return
     }
 
-    res.json({ status: StatusType.SUCCESS, content: feedsResult })
+    res.json({ status: StatusType.SUCCESS, content: storiesResult })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, resultMsg: '피드 리스트 불러오기 실패' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: '스토리 리스트 불러오기 실패' })
   }
 }
 

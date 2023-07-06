@@ -45,9 +45,10 @@ export type ErrorResponseDataType = {
   email?: string;
 }
 
-export type CommonResponse = {
+export type CommonResponse<T = any> = {
   status: StatusType;
   resultMsg?: string;
+  content: T
 }
 
 export const enum AxiosStatus {

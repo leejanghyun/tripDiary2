@@ -1,14 +1,15 @@
 import { API } from '@/constants'
-import { Method } from '@/utils'
+import { CommonResponse, Method, request } from '@/utils'
 
 export async function uploadFeedFile(body: FormData) {
   try {
-    const response = await fetch(`${API.EXTERNAL.IMAGE_UPLOAD}/image`, {
+    const response = await request<CommonResponse<string>>({
+      url: `${API.EXTERNAL.IMAGE_UPLOAD}/image`,
       method: Method.POST,
-      body,
+      data: body,
     })
-    const res = await response.json()
-    const { content } = res || {}
+
+    const { content } = response || {}
 
     return content
   } catch (e) {

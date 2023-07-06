@@ -8,6 +8,7 @@ export const enum MENU_ID {
   MY = 'my',
   FEED_LIST = 'feed-list',
   ADD_FEED = 'add-feed',
+  MY_STORY = 'my-story',
   MAIN = 'main',
 }
 
