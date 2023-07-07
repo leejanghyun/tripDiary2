@@ -105,8 +105,8 @@ const Title = styled.div`
 const Content = styled.div`
   display: flex;
   overflow-x: hidden;
-  overflow-y: auto;
-  height: 200px;
+  overflow-y: hidden;
+  height: 70%;
   flex-direction: column;
   gap: 10px;
   width: 100%;

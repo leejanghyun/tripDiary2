@@ -14,7 +14,12 @@ function Video({ imageUrls }: VideoProps) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length)
+      setCurrentImageIndex((prevIndex) => {
+        const nextIndex = prevIndex + 1
+        return nextIndex >= imageUrls.length ? prevIndex : nextIndex
+      })
+
+      // setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length) []
     }, 2000)
 
     return () => clearTimeout(timer)
