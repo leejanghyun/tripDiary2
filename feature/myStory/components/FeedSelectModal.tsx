@@ -133,7 +133,7 @@ const FeedsContent = styled.div`
   display: flex;
   overflow-x: hidden;
   overflow-y: auto;
-  height: 75%;
+  height: 80%;
   flex-direction: column;
   gap: 10px;
   width: 100%;
@@ -142,6 +142,7 @@ const FeedsContent = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  padding-top: 10px;
   width: 100%;
   gap: 10px;
 `
