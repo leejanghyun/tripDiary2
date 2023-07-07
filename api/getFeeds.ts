@@ -14,7 +14,6 @@ export type GetFeedsRequest = {
 }
 
 export function getFeeds(ids: string[]) {
-  console.log(ids)
   return request<GetFeedsResponse>({
     url: `${API.TRIP_DIARY}/feeds`,
     method: Method.GET,
