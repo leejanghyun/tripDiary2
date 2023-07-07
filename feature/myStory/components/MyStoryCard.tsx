@@ -40,8 +40,10 @@ function MyStoryCard({ title, feeds }: Props) {
 
 const Wrapper = styled.div<{ isFullWidth?: boolean, background?: string }>`
   border-radius: 12px;
-  height: 200px;
+  height: 100%;
   max-height: 400px;
+  margin-bottom: 50px;
+  padding-bottom: 50px;
 
   ${({ background }) => {
     return css`
@@ -67,9 +69,8 @@ const Wrapper = styled.div<{ isFullWidth?: boolean, background?: string }>`
     display: flex;
     justify-content: space-between;
     color: ${COLOR.gray.color.gray[900]};
-    font-size: ${({ theme }) => theme.font[20].size};
-    line-height: ${({ theme }) => theme.font[20].lineHeight};
-    height: 10%;
+    font-size: ${({ theme }) => theme.font[18].size};
+    line-height: ${({ theme }) => theme.font[18].lineHeight};
   }
 
   > div:nth-of-type(2) {
@@ -78,9 +79,10 @@ const Wrapper = styled.div<{ isFullWidth?: boolean, background?: string }>`
     justify-content: center;
     align-items: center;
     color: ${COLOR.gray.color.gray[600]};
-    font-size: ${({ theme }) => theme.font[16].size};
-    line-height: ${({ theme }) => theme.font[16].lineHeight};
-    height: 80%;
+    font-size: ${({ theme }) => theme.font[14].size};
+    position: relative;
+    top: -5px;
+    line-height: ${({ theme }) => theme.font[14].lineHeight};
   }
 `
 
