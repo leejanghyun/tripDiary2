@@ -110,6 +110,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  padding: 0 20px;
   width: 100%;
   height: 100%;
   color: ${COLOR.gray.color.gray[900]};

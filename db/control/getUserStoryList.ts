@@ -13,7 +13,7 @@ export async function getUserStoryList(userId: string): Promise<Response[]> {
 
     const results = await StoryListModel.find({ userId })
 
-    return results.map((item) => item.feed)
+    return results.map((item) => item.story)
   } catch (error) {
     return []
   }

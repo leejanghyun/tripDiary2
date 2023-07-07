@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { COLOR } from '@TMOBI-WEB/ads-ui'
 import { ReactNode } from 'react'
 
-import { ReactComponent as IconStar } from '../../images/ico_star_char.svg'
+import { ReactComponent as IconStar } from '@/images/ico_star_char.svg'
 
 type PageTitleProps = {
   title: ReactNode

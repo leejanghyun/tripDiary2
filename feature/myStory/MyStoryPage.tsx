@@ -11,16 +11,17 @@ import { Container } from '@/components/Container'
 import FrameLayout from '@/components/FrameLayout'
 import { MENU_ID } from '@/components/Menu'
 import { KEYS } from '@/constants'
+import { Story } from '@/db'
 
 import useMyStories from '../shared/hooks/useMyStories'
 import FeedSelectModal from './components/FeedSelectModal'
+import MyStoryCard from './components/MyStoryCard'
 
 function MyStoryPage() {
   const [isOpenFeedModal, setOpenFeedModal] = useState(false)
   const { data } = useMyStories()
+  const { content } = data || {}
   const queryClient = useQueryClient()
-
-  console.log(data)
 
   const { mutate: submitStory, isLoading } = useMutation<boolean, AxiosError, string>(
     (data) => (postStory(data)),
@@ -69,7 +70,18 @@ function MyStoryPage() {
         </RightSide>
           )}
     >
-      <Container />
+      <Container>
+        {(content || []).map((item: Story) => {
+          const { title, _id } = item || {}
+
+          return (
+            <MyStoryCard
+              key={_id}
+              title={title}
+            />
+          )
+        })}
+      </Container>
       <FeedSelectModal
         isOpen={isOpenFeedModal}
         onCancel={handleMakeStoryCancel}

@@ -5,7 +5,7 @@ import { KEYS } from '@/constants/'
 
 function useMyStories() {
   return useQuery<GetMyStoriesResponse>(
-    [KEYS.MY_FEEDS()],
+    [KEYS.MY_STORIES()],
     () => getMyStories(),
     {
       cacheTime: 0,

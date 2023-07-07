@@ -18,4 +18,4 @@ export const storyListScheme = new mongoose.Schema<{ story: Omit<Story, '_id'>, 
 
 storyListScheme.plugin(mongoosePaginate)
 
-export default mongoose.models.feedlists || mongoose.model('storylists', storyListScheme)
+export default mongoose.models.storylists || mongoose.model('storylists', storyListScheme)
