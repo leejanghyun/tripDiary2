@@ -14,12 +14,15 @@ import { ReactComponent as IcoHeart } from '@/images/ico_heart.svg'
 import { ReactComponent as RightArrowIcon } from '@/images/icon_right_arrow.svg'
 
 import { FEEDLIST_FILTER_TYPE } from '../feedList/constants/form'
+import useMyStories from '../shared/hooks/useMyStories'
 
 function MyPage() {
   const { data } = useMyFeeds()
   const { data: myBookmarkData } = useFeedList({ filter: `${FEEDLIST_FILTER_TYPE.MY_BOOKMARK as string}` })
+  const { data: myStories } = useMyStories()
   const { content: bookmarkContent } = myBookmarkData || {}
   const { totalDocs: totalBookMarks } = bookmarkContent || {}
+  const { content: myStoriesContent } = myStories || {}
   const { content: feed } = data || {}
   const { length } = feed || {}
   const router = useRouter()
@@ -33,7 +36,7 @@ function MyPage() {
   }, [router])
 
   const handleMyStory = useCallback(() => {
-    router.push('/my-story')
+    router.push('/my-stories')
   }, [router])
 
   return (
@@ -68,7 +71,7 @@ function MyPage() {
             <div>
               생성한 스토리
               <BlueText>
-                {`${0}`}
+                {`${myStoriesContent?.length || 0}`}
               </BlueText>
               개
             </div>

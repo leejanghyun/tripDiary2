@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 
-import { deleteFeed } from '@/db/control/deleteFeed'
+import { deleteStory } from '@/db/control/deleteStory'
 import { Method, StatusType } from '@/utils'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -28,16 +28,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const isSuccess = await deleteFeed(email, id as string)
+    const isSuccess = await deleteStory(email, id as string)
 
     if (!isSuccess) {
-      res.status(500).json({ status: StatusType.ERROR, resultMsg: '피드 삭제 실패' })
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: '스토리 삭제 실패' })
       return
     }
 
     res.json({ status: StatusType.SUCCESS, resultMsg: '성공적으로 삭제' })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, resultMsg: '피드 삭제 실패' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: '스토리 삭제 실패' })
   }
 }
 

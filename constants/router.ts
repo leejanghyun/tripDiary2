@@ -13,8 +13,8 @@ export const getMenuPath = (menuId: MENU_ID | null) => {
     path = '/feed-list'
   } else if (menuId === MENU_ID.MY) {
     path = '/my'
-  } else if (menuId === MENU_ID.MY_STORY) {
-    path = '/my-story'
+  } else if (menuId === MENU_ID.MY_STORIES) {
+    path = '/my-stories'
   }
 
   return path

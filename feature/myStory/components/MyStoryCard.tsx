@@ -1,20 +1,28 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { COLOR } from '@TMOBI-WEB/ads-ui'
+import { COLOR, DropdownMenu } from '@TMOBI-WEB/ads-ui'
+import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 
 import bg1 from '@/images/ico_bg_1.svg'
 import bg2 from '@/images/ico_bg_2.svg'
 import bg3 from '@/images/ico_bg_3.svg'
 import bg4 from '@/images/ico_bg_4.svg'
 import { ReactComponent as EmptyBox } from '@/images/ico_empty_box.svg'
+import { ReactComponent as IconMore } from '@/images/ico_three_dot.svg'
 
 type Props = {
+  id?: string
   title?: string
   feeds?: string[]
+  onDelete?: (id: string) => void
 }
 
-function MyStoryCard({ title, feeds }: Props) {
+function MyStoryCard({
+  id, title, feeds, onDelete,
+}: Props) {
   const isEmpty = !(feeds && feeds?.length)
+  const router = useRouter()
 
   const getRandomBackgroundItem = () => {
     const items: string[] = [bg1, bg2, bg3, bg4]
@@ -23,10 +31,48 @@ function MyStoryCard({ title, feeds }: Props) {
     return items[randomIndex]
   }
 
+  const dropDownMenu = useMemo(() => {
+    const res = {
+      text: '삭제',
+      onClick: () => {
+        onDelete?.(id as string)
+      },
+    }
+
+    if (isEmpty) {
+      return [res]
+    }
+
+    return [
+      {
+        text: '편집',
+        onClick: () => {
+          router.push(`/edit/${id}`)
+        },
+      },
+      res,
+    ]
+  }, [isEmpty, id, onDelete, router])
+
   return (
     <Wrapper background={isEmpty ? getRandomBackgroundItem() : ''}>
       <div>
         {title}
+        <div>
+          <DropdownMenu
+            trigger={(
+              <button
+                type="button"
+              >
+                <IconMore />
+              </button>
+                )}
+            data={dropDownMenu}
+            sideOffset={8}
+            side="bottom"
+            align="end"
+          />
+        </div>
       </div>
       {isEmpty && (
       <div>

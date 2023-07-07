@@ -83,9 +83,6 @@ function FeedPage({ query }: Props) {
         toastSuccess(`피드를 성공적으로 ${isEdit ? '수정' : '등록'}했습니다.`)
         router.push('/feed-list')
       },
-      onError: () => {
-        toastError(`피드  ${isEdit ? '수정' : '등록'}에 실패 하셨습니다.`)
-      },
     },
   )
 
@@ -95,9 +92,6 @@ function FeedPage({ query }: Props) {
       onSuccess: () => {
         toastSuccess('피드를 삭제 했습니다.')
         router.push('/feed-list')
-      },
-      onError: () => {
-        toastError('피드 삭제에 실패 하셨습니다.')
       },
     },
   )

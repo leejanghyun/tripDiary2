@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
-  Button, COLOR, DropdownMenu, Input, toastError, toastSuccess,
+  Button, COLOR, DropdownMenu, Input, toastSuccess,
 } from '@TMOBI-WEB/ads-ui'
 import { AxiosError } from 'axios'
 import { useAtomValue } from 'jotai'
@@ -18,6 +18,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import { deleteFeed } from '@/api'
 import { AddFeedBookmarkRequest, putFeedBookmark } from '@/api/putFeedBookmark'
 import { globalState } from '@/atoms/globalState'
+import FilterSelect from '@/components/FilterSelect/FilterSelect'
 import FrameLayout from '@/components/FrameLayout'
 import { MENU_ID } from '@/components/Menu'
 import { KEYS } from '@/constants'
@@ -29,7 +30,6 @@ import { ReactComponent as AddButton } from '@/images/ico_item_add.svg'
 import { ReactComponent as SortAscButton } from '@/images/icon_sort_asc.svg'
 import { ReactComponent as SortDescButton } from '@/images/icon_sort_desc.svg'
 
-import FilterSelect from '../../components/FilterSelect/FilterSelect'
 import useFeedList from '../shared/hooks/useFeedList'
 import {
   DEFAULT_PAGE,
@@ -94,19 +94,11 @@ function FeedListPage({ query }: Props) {
         setFeeds([])
         queryClient.refetchQueries([KEYS.FEED_LIST(), searchParams])
       },
-      onError: () => {
-        toastError('피드 삭제에 실패 하셨습니다.')
-      },
     },
   )
 
   const { mutate: linkBookmark } = useMutation<boolean, AxiosError, AddFeedBookmarkRequest>(
     (data) => putFeedBookmark(data),
-    {
-      onError: () => {
-        toastError('북마크 실패')
-      },
-    },
   )
 
   const handleBookmark = useCallback((feedId: string, isLink: boolean) => {
