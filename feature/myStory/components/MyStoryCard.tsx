@@ -16,7 +16,7 @@ type Props = {
   title?: string
   feeds?: string[]
   onDelete?: (id: string) => void
-  onClick?: (id: string) => void
+  onClick?: (id: string, isEmpty?: boolean) => void
 }
 
 function MyStoryCard({
@@ -33,34 +33,28 @@ function MyStoryCard({
   }
 
   const dropDownMenu = useMemo(() => {
-    const res = {
-      text: '삭제',
-      onClick: (e: Event) => {
-        e.preventDefault()
-        onDelete?.(id as string)
-      },
-    }
-
-    if (isEmpty) {
-      return [res]
-    }
-
     return [
       {
         text: '편집',
         onClick: (e: Event) => {
           e.preventDefault()
-          router.push(`/edit/story/${id}`)
+          router.push(`/story/${id}`)
         },
       },
-      res,
+      {
+        text: '삭제',
+        onClick: (e: Event) => {
+          e.preventDefault()
+          onDelete?.(id as string)
+        },
+      },
     ]
-  }, [isEmpty, id, onDelete, router])
+  }, [id, onDelete, router])
 
   return (
     <Wrapper
       background={isEmpty ? getRandomBackgroundItem() : ''}
-      onClick={() => onClick?.(id as string)}
+      onClick={() => onClick?.(id as string, isEmpty)}
     >
       <div>
         {title}

@@ -3,118 +3,100 @@ import styled from '@emotion/styled'
 import {
   Button,
   COLOR,
-  Dialog, Input,
+  Dialog,
 } from '@TMOBI-WEB/ads-ui'
 import { useCallback, useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+
+import useMyFeeds from '@/feature/shared/hooks/useMyFeeds'
+
+import FeedCard from '../../shared/components/FeedCard/FeedCard'
 
 type Props = {
+  feedList: string[]
   isOpen: boolean
   onCancel: () => void
-  onMakeStory: (storyName: string) => void
+  onFeedAdd: () => void
 }
 
-export const enum FORM_FIELD {
-  TITLE = 'title',
-}
-
-export interface FormType {
-  [FORM_FIELD.TITLE]: string
-}
-
-export const getCreateDefaultValue = () => {
-  return {
-    [FORM_FIELD.TITLE]: '',
-  }
-}
-
-function FeedSelectModal({ isOpen, onCancel, onMakeStory }: Props) {
+function FeedSelectModal({
+  feedList, isOpen, onCancel, onFeedAdd,
+}: Props) {
   const [isOpenFeedModal, setOpenFeedModal] = useState(isOpen)
-  const defaultValues = getCreateDefaultValue()
-  const formMethods = useForm<FormType>({
-    defaultValues,
-    mode: 'onBlur',
-  })
-  const {
-    control, setValue, getValues, watch,
-  } = formMethods
-  const title = watch(FORM_FIELD.TITLE)
+  const { data } = useMyFeeds()
+  const { content } = data || {}
+
+  console.log(feedList, content)
 
   useEffect(() => {
     setOpenFeedModal(isOpen)
   }, [isOpen])
 
   const handleCancelClick = useCallback(() => {
-    setValue(FORM_FIELD.TITLE, '')
-
     onCancel()
-  }, [setValue, onCancel])
+  }, [onCancel])
 
-  const handleMakeClick = useCallback(() => {
-    const { [FORM_FIELD.TITLE]: title } = getValues()
-
-    setValue(FORM_FIELD.TITLE, '')
-
-    onMakeStory(title)
-  }, [setValue, getValues, onMakeStory])
+  const handleAddClick = useCallback(() => {
+    onFeedAdd()
+  }, [onFeedAdd])
 
   return (
-    <FormProvider {...formMethods}>
-      <Dialog
-        open={isOpenFeedModal}
-        styles={DialogStyles}
-      >
-        <Container>
-          <div>
-            <div>
-              스토리 생성
-            </div>
-            <Input
-              control={control}
-              name={FORM_FIELD.TITLE}
-              maxLength={100}
-              label="제목 입력"
-              placeholder="스토리 제목을 입력하세요."
-              rules={{
-                required: true,
-              }}
-            />
-            <ButtonWrapper>
-              <Button
-                palette="white"
-                type="button"
-                size="small"
-                onClick={handleCancelClick}
-              >
-                취소
-              </Button>
-              <Button
-                palette="blue"
-                type="button"
-                size="small"
-                onClick={handleMakeClick}
-                disabled={!title}
-              >
-                생성하기
-              </Button>
-            </ButtonWrapper>
-          </div>
-        </Container>
-      </Dialog>
-    </FormProvider>
+    <Dialog
+      open={isOpenFeedModal}
+      styles={DialogStyles}
+    >
+      <Container>
+        <Title>
+          피드 선택
+        </Title>
+        <FeedsContent>
+          {(content || []).map((feed) => (
+            <CardWrapper
+              key={feed._id}
+            >
+              <FeedCard
+                disableEditDropDown
+                hideBottom
+                {...feed}
+              />
+            </CardWrapper>
+          ))}
+        </FeedsContent>
+        <ButtonWrapper>
+          <Button
+            palette="white"
+            type="button"
+            size="small"
+            onClick={handleCancelClick}
+          >
+            취소
+          </Button>
+          <Button
+            palette="blue"
+            type="button"
+            size="small"
+            onClick={handleAddClick}
+          >
+            추가
+          </Button>
+        </ButtonWrapper>
+      </Container>
+    </Dialog>
   )
 }
 
+const CardWrapper = styled.div`
+  display: flex;
+`
+
 const DialogStyles = css`
-  width: 80% !important;
-  height: 30%;
+  width: 90%;
+  height: 90%;
 `
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: center;
   padding: 0 20px;
   width: 100%;
   height: 100%;
@@ -122,17 +104,29 @@ const Container = styled.div`
   font-weight: 500;
   font-size: ${({ theme }) => theme.font[18].size};
   line-height: ${({ theme }) => theme.font[18].lineHeight};
+`
 
-  > div {
-    display: flex;
-    gap: 15px;
-    flex-direction: column;
-  }
+const Title = styled.div`
+  display: flex;
+  width: 100%;
+  padding-top: 20px;
+  height: 10%;
+`
+
+const FeedsContent = styled.div`
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 75%;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
 `
 
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  width: 100%;
   gap: 10px;
 `
 

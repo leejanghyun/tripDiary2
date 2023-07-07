@@ -16,8 +16,8 @@ import { KEYS } from '@/constants'
 import { Story } from '@/db'
 import useMyStories from '@/feature/shared/hooks/useMyStories'
 
-import FeedSelectModal from './components/FeedSelectModal'
 import MyStoryCard from './components/MyStoryCard'
+import FeedSelectModal from './components/StoryMakeModal'
 
 function MyStoryPage() {
   const [isOpenFeedModal, setOpenFeedModal] = useState(false)
@@ -68,11 +68,14 @@ function MyStoryPage() {
     setOpenFeedModal(true)
   }, [])
 
-  const handleStoryClick = useCallback((id: string) => {
+  const handleStoryClick = useCallback((id: string, isEmpty?: boolean) => {
     if (!id) {
       throw new Error('스토리 아이디가 없습니다.')
     }
-    router.push(`story/${id}`)
+
+    if (isEmpty) {
+      router.push(`story/${id}`)
+    }
   }, [router])
 
   const handleMakeStory = useCallback((storyName: string) => {

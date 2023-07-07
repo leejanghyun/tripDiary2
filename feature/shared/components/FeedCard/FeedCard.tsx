@@ -23,6 +23,7 @@ import { formatDisplayDateTime } from '@/utils'
 
 interface Props extends Feed {
   isFullWidth?: boolean
+  hideBottom?: boolean
   disableEditDropDown?: boolean
   onDelete?: (id: string) => void
   onBookMark?: (id: string, isLink: boolean) => void
@@ -33,6 +34,7 @@ function FeedCard({
   isFullWidth = false,
   _id,
   disableEditDropDown,
+  hideBottom = false,
   fileList,
   content,
   title,
@@ -138,6 +140,7 @@ function FeedCard({
           {startDate === endDate ? `${startDate}` : `${startDate}/${endDate}`}
         </div>
       </SubInfoWrapper>
+      {!hideBottom && (
       <FooterWrapper>
         <div>
           <div>
@@ -188,12 +191,14 @@ function FeedCard({
           })}
         </div>
       </FooterWrapper>
+      )}
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div<{ isFullWidth: boolean }>`
   background: ${COLOR.gray.color.wb[0]};
+  width: 100%;
 
    ${({ isFullWidth }) => {
     return isFullWidth
