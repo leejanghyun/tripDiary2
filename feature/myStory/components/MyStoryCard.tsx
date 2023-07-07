@@ -48,7 +48,7 @@ function MyStoryCard({
     return [
       {
         text: '편집',
-        onClick: (e) => {
+        onClick: (e: Event) => {
           e.preventDefault()
           router.push(`/edit/story/${id}`)
         },
