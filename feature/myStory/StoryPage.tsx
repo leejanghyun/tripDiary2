@@ -6,26 +6,22 @@ import { ParsedUrlQuery } from 'querystring'
 import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
+import { getFeeds } from '@/api/getFeeds'
 import FrameLayout from '@/components/FrameLayout'
 import useStory from '@/feature/shared/hooks/useStory'
 import { ReactComponent as EmptyBox } from '@/images/ico_empty_box.svg'
 
 import FeedSelectModal from './components/FeedSelectModal'
+import { FORM_FIELD, FormType } from './constants/form'
 
 type Props = {
   query?: ParsedUrlQuery
-}
-export const enum FORM_FIELD {
-  TITLE = 'title',
-}
-
-export interface FormType {
-  [FORM_FIELD.TITLE]: string
 }
 
 export const getCreateDefaultValue = () => {
   return {
     [FORM_FIELD.TITLE]: '',
+    [FORM_FIELD.SELECTED_FEEDS]: [],
   }
 }
 
@@ -37,17 +33,32 @@ function StoryPage({ query }: Props) {
     mode: 'onBlur',
   })
   const {
-    control, setValue,
+    control, setValue, watch,
   } = formMethods
   const { data } = useStory(id as string)
   const [isOpenFeedSelectModal, setOpenFeedSelectModal] = useState(false)
   const { content: story } = data || {}
   const { title, feedList = [] } = story || {}
   const isEmpty = !feedList || feedList.length === 0
+  const selectedFeeds = watch(FORM_FIELD.SELECTED_FEEDS)
+  console.log(selectedFeeds)
+
+  const initFeedList = useCallback(async (ids: string[]) => {
+    if (ids && ids.length > 0) {
+      const res = await getFeeds(ids)
+      const { content } = res || {}
+
+      setValue(FORM_FIELD.SELECTED_FEEDS, content || [])
+    }
+  }, [setValue])
 
   useEffect(() => {
     setValue(FORM_FIELD.TITLE, title || '')
-  }, [title, setValue])
+
+    if (feedList) {
+      initFeedList(feedList)
+    }
+  }, [title, setValue, feedList, initFeedList])
 
   const handleSelectFeedCancel = useCallback(() => {
     setOpenFeedSelectModal(false)
@@ -108,7 +119,6 @@ function StoryPage({ query }: Props) {
         </Container>
       </FrameLayout>
       <FeedSelectModal
-        feedList={feedList || []}
         isOpen={isOpenFeedSelectModal}
         onCancel={handleSelectFeedCancel}
         onFeedAdd={handleFeedAdd}
