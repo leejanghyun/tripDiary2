@@ -71,6 +71,7 @@ const Wrapper = styled.div<{ isFullWidth?: boolean, background?: string }>`
     color: ${COLOR.gray.color.gray[900]};
     font-size: ${({ theme }) => theme.font[18].size};
     line-height: ${({ theme }) => theme.font[18].lineHeight};
+    font-weight: 500;
   }
 
   > div:nth-of-type(2) {
@@ -79,10 +80,11 @@ const Wrapper = styled.div<{ isFullWidth?: boolean, background?: string }>`
     justify-content: center;
     align-items: center;
     color: ${COLOR.gray.color.gray[600]};
-    font-size: ${({ theme }) => theme.font[14].size};
+    font-size: ${({ theme }) => theme.font[16].size};
     position: relative;
     top: -5px;
-    line-height: ${({ theme }) => theme.font[14].lineHeight};
+    line-height: ${({ theme }) => theme.font[16].lineHeight};
+    font-weight: 500;
   }
 `
 
