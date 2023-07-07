@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { COLOR, DropdownMenu } from '@TMOBI-WEB/ads-ui'
+import { COLOR, DropdownMenu, DropDownMenuDataType } from '@TMOBI-WEB/ads-ui'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
@@ -16,10 +16,11 @@ type Props = {
   title?: string
   feeds?: string[]
   onDelete?: (id: string) => void
+  onClick?: (id: string) => void
 }
 
 function MyStoryCard({
-  id, title, feeds, onDelete,
+  id, title, feeds, onDelete, onClick,
 }: Props) {
   const isEmpty = !(feeds && feeds?.length)
   const router = useRouter()
@@ -34,7 +35,8 @@ function MyStoryCard({
   const dropDownMenu = useMemo(() => {
     const res = {
       text: '삭제',
-      onClick: () => {
+      onClick: (e: Event) => {
+        e.preventDefault()
         onDelete?.(id as string)
       },
     }
@@ -46,8 +48,9 @@ function MyStoryCard({
     return [
       {
         text: '편집',
-        onClick: () => {
-          router.push(`/edit/${id}`)
+        onClick: (e) => {
+          e.preventDefault()
+          router.push(`/edit/story/${id}`)
         },
       },
       res,
@@ -55,7 +58,10 @@ function MyStoryCard({
   }, [isEmpty, id, onDelete, router])
 
   return (
-    <Wrapper background={isEmpty ? getRandomBackgroundItem() : ''}>
+    <Wrapper
+      background={isEmpty ? getRandomBackgroundItem() : ''}
+      onClick={() => onClick?.(id as string)}
+    >
       <div>
         {title}
         <div>
@@ -67,7 +73,7 @@ function MyStoryCard({
                 <IconMore />
               </button>
                 )}
-            data={dropDownMenu}
+            data={dropDownMenu as DropDownMenuDataType[]}
             sideOffset={8}
             side="bottom"
             align="end"

@@ -13,9 +13,9 @@ import FrameLayout from '@/components/FrameLayout'
 import { Map } from '@/components/Map'
 import StarRating from '@/components/StarRating/StarRating'
 import { UploadImage } from '@/components/UploadImage'
+import { formatDisplayDateTime } from '@/utils'
 import { Location } from '@/utils/map'
 
-import { formatDisplayDateTime } from '../../utils'
 import useFeed from '../shared/hooks/useFeed'
 import { getFeedKindTag } from './constants/form'
 
@@ -35,7 +35,7 @@ function FeedPage({ query }: Props) {
   const endDate = date ? formatDisplayDateTime(new Date(date[1]), 'yy년 MM월 dd일') : '-'
 
   const handleEdit = useCallback(() => {
-    router.push(`/edit/${id}`)
+    router.push(`/edit/feed/${id}`)
   }, [router, id])
 
   return (

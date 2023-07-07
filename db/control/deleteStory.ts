@@ -1,11 +1,6 @@
 import dbConnect from '../dbConnect'
-import { Story, StoryListModel } from '../scheme'
-
-type StorySchemeType = {
-  _id: string
-  userId: string
-  story: Story
-}
+import { StoryListModel } from '../scheme'
+import { StorySchemeType } from './getUserStoryList'
 
 export async function deleteStory(userId: string, _id: string): Promise<boolean> {
   try {

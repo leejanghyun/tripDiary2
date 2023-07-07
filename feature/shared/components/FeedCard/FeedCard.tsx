@@ -26,7 +26,7 @@ interface Props extends Feed {
   disableEditDropDown?: boolean
   onDelete?: (id: string) => void
   onBookMark?: (id: string, isLink: boolean) => void
-  onClick: (id: string) => void
+  onClick?: (id: string) => void
 }
 
 function FeedCard({
@@ -71,14 +71,9 @@ function FeedCard({
       key={_id}
     >
       <div>
-        <TextBlock>
+        <TextBlock onClick={() => onClick?.(_id)}>
           <div>
-            <div
-              role="button"
-              tabIndex={-1}
-              onKeyDown={() => {}}
-              onClick={() => onClick?.(_id)}
-            >
+            <div>
               {title}
             </div>
             {isMyFeed && !disableEditDropDown && (
@@ -93,9 +88,15 @@ function FeedCard({
                 )}
                 data={[
                   {
+                    text: '이동',
+                    onClick: () => {
+                      router.push(`/feed/${_id}`)
+                    },
+                  },
+                  {
                     text: '편집',
                     onClick: () => {
-                      router.push(`/edit/${_id}`)
+                      router.push(`/edit/feed/${_id}`)
                     },
                   },
                   {

@@ -1,6 +1,12 @@
 import dbConnect from '../dbConnect'
 import { Story, StoryListModel } from '../scheme'
 
+export type StorySchemeType = {
+  _id: string
+  userId: string
+  story: Story
+}
+
 type Response = {
   _id: string;
   storyList: Story[]

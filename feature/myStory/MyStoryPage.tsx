@@ -3,6 +3,7 @@ import {
   Button, toastSuccess,
 } from '@TMOBI-WEB/ads-ui'
 import { AxiosError } from 'axios'
+import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -24,6 +25,7 @@ function MyStoryPage() {
   const { data } = useMyStories()
   const { content } = data || {}
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   /**
    * 전체 스토리 카드 리스트
@@ -65,6 +67,13 @@ function MyStoryPage() {
   const handleMakeStoryClick = useCallback(() => {
     setOpenFeedModal(true)
   }, [])
+
+  const handleStoryClick = useCallback((id: string) => {
+    if (!id) {
+      throw new Error('스토리 아이디가 없습니다.')
+    }
+    router.push(`story/${id}`)
+  }, [router])
 
   const handleMakeStory = useCallback((storyName: string) => {
     setOpenFeedModal(false)
@@ -110,6 +119,7 @@ function MyStoryPage() {
               id={_id}
               title={title}
               onDelete={handleStoryDelete}
+              onClick={handleStoryClick}
             />
           )
         })}

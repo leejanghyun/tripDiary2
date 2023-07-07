@@ -77,20 +77,20 @@ function FeedSelectModal({ isOpen, onCancel, onMakeStory }: Props) {
             />
             <ButtonWrapper>
               <Button
-                palette="blue"
-                type="button"
-                size="small"
-                onClick={handleMakeClick}
-              >
-                생성하기
-              </Button>
-              <Button
                 palette="white"
                 type="button"
                 size="small"
                 onClick={handleCancelClick}
               >
                 취소
+              </Button>
+              <Button
+                palette="blue"
+                type="button"
+                size="small"
+                onClick={handleMakeClick}
+              >
+                생성하기
               </Button>
             </ButtonWrapper>
           </div>

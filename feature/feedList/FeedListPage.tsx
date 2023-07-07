@@ -7,7 +7,6 @@ import { AxiosError } from 'axios'
 import { useAtomValue } from 'jotai'
 import { PaginateResult } from 'mongoose'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import {
   useCallback, useEffect, useMemo, useState,
@@ -68,7 +67,6 @@ function FeedListPage({ query }: Props) {
     [FORM_FIELD.SORT]: sort,
     [FORM_FIELD.FILTER]: filter,
   } = watch()
-  const router = useRouter()
 
   const isDesc = typeof sort === 'string' && sort.split('_')[1] === 'desc'
   const [keyword, setKeyword] = useState((query?.searchText as string) || '')
@@ -163,10 +161,6 @@ function FeedListPage({ query }: Props) {
     setValue(FORM_FIELD.PAGE, DEFAULT_PAGE)
   }
 
-  const handleFeedClick = useCallback((id: string) => {
-    router.push(`feed/${id}`)
-  }, [router])
-
   return (
     <FormProvider {...formMethods}>
       <FrameLayout
@@ -260,7 +254,6 @@ function FeedListPage({ query }: Props) {
               isFullWidth={false}
               onDelete={deleteUserFeed}
               onBookMark={handleBookmark}
-              onClick={handleFeedClick}
               key={idx}
               {...feed}
             />
