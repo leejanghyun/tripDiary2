@@ -21,7 +21,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await updateFeed(email, body)
+    const isSuccess = await updateFeed(email, body)
+
+    if (!isSuccess) {
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: '수정 실패' })
+      return
+    }
 
     res.json({ status: StatusType.SUCCESS, resultMsg: '성공적으로 수정' })
   } catch (e) {

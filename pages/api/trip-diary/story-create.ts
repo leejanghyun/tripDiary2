@@ -28,11 +28,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return
     }
 
-    await addStoryList(email, body)
+    const isSuccess = await addStoryList(email, body)
+
+    if (!isSuccess) {
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Story 등록 실패' })
+      return
+    }
 
     res.json({ status: StatusType.SUCCESS, resultMsg: 'Story 등록 Success' })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Story 등록 Fail' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Story 등록 실채' })
   }
 }
 

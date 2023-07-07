@@ -23,11 +23,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const { userId, feedId } = body as Omit<AddFeedBookmarkRequest, 'isLink'>
-    await unlinkFeedBookmark(feedId, userId)
+
+    const isSuccess = await unlinkFeedBookmark(feedId, userId)
+
+    if (!isSuccess) {
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: '북마크 해제 실패' })
+      return
+    }
 
     res.json({ status: StatusType.SUCCESS, resultMsg: '성공적으로 북마크' })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, resultMsg: '북마크 실패' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: '북마크 해제 실패' })
   }
 }
 

@@ -5,7 +5,7 @@ import { KEYS } from '@/constants/'
 
 function useFeed(id: string) {
   return useQuery<GetFeedResponse>(
-    [KEYS.MY_FEED()],
+    [KEYS.FEED(), id],
     () => getFeed(id),
     {
       enabled: Boolean(id),

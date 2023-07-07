@@ -21,7 +21,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await addToFeedList(email, body)
+    const isSuccess = await addToFeedList(email, body)
+
+    if (!isSuccess) {
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: '등록 실패' })
+      return
+    }
 
     res.json({ status: StatusType.SUCCESS, resultMsg: '성공적으로 등록' })
   } catch (e) {

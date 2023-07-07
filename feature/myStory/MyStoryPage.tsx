@@ -39,7 +39,7 @@ function MyStoryPage() {
       })
     }
 
-    setStories((prevItems) => [...prevItems, ...res])
+    setStories(res)
   }, [content])
 
   const { mutate: submitStory, isLoading } = useMutation<boolean, AxiosError, string>(
