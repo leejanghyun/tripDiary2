@@ -9,6 +9,7 @@ export const API = {
   },
   PREFIX_URL: {
   },
+  IMAGE: '/api/image',
   EXTERNAL: {
     SEARCH_PLACE: '/api/external/search-place',
     IMAGE_UPLOAD: '/api/external/image-upload',

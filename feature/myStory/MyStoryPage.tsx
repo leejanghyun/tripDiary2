@@ -18,10 +18,13 @@ import useMyStories from '@/feature/shared/hooks/useMyStories'
 
 import MyStoryCard from './components/MyStoryCard'
 import FeedSelectModal from './components/StoryMakeModal'
+import VideoViewModal from './components/VideoViewModal'
 
 function MyStoryPage() {
   const [isOpenFeedModal, setOpenFeedModal] = useState(false)
+  const [isOpenVideoModal, setOpenVideoModal] = useState(false)
   const [stories, setStories] = useState<Story[]>([])
+  const [selectedStory, setSelectedStory] = useState<Story | null>(null)
   const { data } = useMyStories()
   const { content } = data || {}
   const queryClient = useQueryClient()
@@ -75,8 +78,18 @@ function MyStoryPage() {
 
     if (isEmpty) {
       router.push(`story/${id}`)
+      return
     }
-  }, [router])
+
+    const targetStory = stories.find((story) => story._id === id)
+
+    if (!targetStory) {
+      return
+    }
+
+    setSelectedStory(targetStory)
+    setOpenVideoModal(true)
+  }, [router, stories])
 
   const handleMakeStory = useCallback((storyName: string) => {
     setOpenFeedModal(false)
@@ -85,7 +98,7 @@ function MyStoryPage() {
   }, [submitStory])
 
   const handleMakeStoryCancel = useCallback(() => {
-    setOpenFeedModal(false)
+    setOpenVideoModal(false)
   }, [])
 
   const handleStoryDelete = useCallback((id: string) => {
@@ -128,10 +141,18 @@ function MyStoryPage() {
           )
         })}
       </Container>
+      {/** Feed 생성 모달 */}
       <FeedSelectModal
         isOpen={isOpenFeedModal}
         onCancel={handleMakeStoryCancel}
         onMakeStory={handleMakeStory}
+      />
+
+      {/** Video 모달 */}
+      <VideoViewModal
+        isOpen={isOpenVideoModal}
+        onCancel={handleMakeStoryCancel}
+        story={selectedStory}
       />
     </FrameLayout>
   )

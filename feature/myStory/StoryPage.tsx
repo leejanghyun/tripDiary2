@@ -186,6 +186,7 @@ function StoryPage({ query }: Props) {
                 </RemoveButtonStyles>
                 <FeedCard
                   disableEditDropDown
+                  hideBottom
                   {...feed}
                 />
               </FeedWrapper>

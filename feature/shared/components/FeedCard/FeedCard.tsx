@@ -235,7 +235,7 @@ const FooterWrapper = styled.div`
       display: flex;
       align-items: center;
       position: relative;
-      gap: 4px;
+      gap: 12px;
       padding-left: 3px;
       font-size: ${({ theme }) => theme.font[12].size};
       line-height: ${({ theme }) => theme.font[12].lineHeight};
