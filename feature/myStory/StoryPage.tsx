@@ -5,7 +5,9 @@ import {
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
-import { useCallback, useEffect, useState } from 'react'
+import {
+  useCallback, useEffect, useMemo, useState,
+} from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -114,6 +116,17 @@ function StoryPage({ query }: Props) {
     setValue(FORM_FIELD.SELECTED_FEEDS, selectedFeeds.filter((_, i) => i !== idx))
   }, [setValue, selectedFeeds])
 
+  const filteredSelectedFeeds = useMemo(() => {
+    const sortedData = selectedFeeds.sort((prev, next) => {
+      const prevDate = new Date(prev.date[1])
+      const nextDate = new Date(next.date[1])
+
+      return nextDate.getTime() - prevDate.getTime()
+    })
+
+    return sortedData
+  }, [selectedFeeds])
+
   return (
     <FormProvider {...formMethods}>
       <FrameLayout
@@ -161,7 +174,7 @@ function StoryPage({ query }: Props) {
             등록된 피드가 없습니다.
           </EmptyBoxWrapper>
           )}
-          {selectedFeeds.map((feed: Feed, idx: number) => {
+          {filteredSelectedFeeds.map((feed: Feed, idx: number) => {
             return (
               <FeedWrapper
                 key={`${idx}`}

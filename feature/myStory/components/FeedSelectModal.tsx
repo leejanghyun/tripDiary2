@@ -6,8 +6,9 @@ import {
   COLOR,
   Dialog,
 } from '@TMOBI-WEB/ads-ui'
+import dayjs from 'dayjs'
 import {
-  ChangeEvent, useCallback, useEffect, useMemo, useState,
+  ChangeEvent, Fragment, useCallback, useEffect, useMemo, useState,
 } from 'react'
 
 import { Feed } from '@/db'
@@ -44,7 +45,28 @@ function FeedSelectModal({
   }, [newSelectedFeeds, onFeedAdd])
 
   const filteredContent = useMemo(() => {
-    return content.filter((item: Feed) => !selectedIds.includes(item._id))
+    const sortedData = content.sort((prev, next) => {
+      const prevDate = new Date(prev.date[1])
+      const nextDate = new Date(next.date[1])
+
+      return nextDate.getTime() - prevDate.getTime()
+    })
+    const DATE_ARR: string[] = []
+    const filteredData = sortedData.filter((item: Feed) => !selectedIds.includes(item._id))
+
+    return filteredData.map((item) => {
+      const { date } = item || {}
+      const lastDate = date?.[1] || ''
+      const koDate = dayjs(lastDate).locale('ko')
+      const formattedDate = koDate.format('YYYY년 MM월 DD일')
+      const target = DATE_ARR.find((date) => date === formattedDate)
+
+      if (!target) {
+        DATE_ARR.push(formattedDate)
+      }
+
+      return { ...item, firstOfDate: !target ? formattedDate : '' }
+    })
   }, [content, selectedIds])
 
   const handleCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, idx: number) => {
@@ -73,26 +95,28 @@ function FeedSelectModal({
         </Title>
         <FeedsContent>
           {(filteredContent || []).map((feed, idx) => {
-            const { title, ...rest } = feed || {}
+            const { title, firstOfDate, ...rest } = feed || {}
+
             return (
-              <CardWrapper
-                key={feed._id}
-              >
-                <Checkbox
-                  label={title}
-                  onChange={(e) => handleCheckboxChange(e, idx)}
-                  styles={css`
-                    padding-left: 0px;
-                  `}
-                />
-                <FeedCard
-                  isFullWidth
-                  title=""
-                  disableEditDropDown
-                  hideBottom
-                  {...rest}
-                />
-              </CardWrapper>
+              <Fragment key={idx}>
+                {firstOfDate && <DateBlock>{firstOfDate}</DateBlock>}
+                <CardWrapper key={feed._id}>
+                  <Checkbox
+                    label={title}
+                    onChange={(e) => handleCheckboxChange(e, idx)}
+                    styles={css`
+                      padding-left: 0px;
+                    `}
+                  />
+                  <FeedCard
+                    isFullWidth
+                    title=""
+                    disableEditDropDown
+                    hideBottom
+                    {...rest}
+                  />
+                </CardWrapper>
+              </Fragment>
             )
           })}
         </FeedsContent>
@@ -118,6 +142,13 @@ function FeedSelectModal({
     </Dialog>
   )
 }
+
+const DateBlock = styled.div`
+  color: ${COLOR.gray.color.gray[600]};
+  font-size: ${({ theme }) => theme.font[18].size};
+  line-height: ${({ theme }) => theme.font[18].lineHeight};
+  padding-bottom: 10px;
+`
 
 const CardWrapper = styled.div`
   display: flex;
