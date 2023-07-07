@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
   Button,
+  Checkbox,
   COLOR,
   Dialog,
 } from '@TMOBI-WEB/ads-ui'
@@ -49,17 +50,28 @@ function FeedSelectModal({
           피드 선택
         </Title>
         <FeedsContent>
-          {(content || []).map((feed) => (
-            <CardWrapper
-              key={feed._id}
-            >
-              <FeedCard
-                disableEditDropDown
-                hideBottom
-                {...feed}
-              />
-            </CardWrapper>
-          ))}
+          {(content || []).map((feed) => {
+            const { title, ...rest } = feed || {}
+            return (
+              <CardWrapper
+                key={feed._id}
+              >
+                <Checkbox
+                  label={title}
+                  styles={css`
+                    padding-left: 0px;
+                  `}
+                />
+                <FeedCard
+                  isFullWidth
+                  title=""
+                  disableEditDropDown
+                  hideBottom
+                  {...rest}
+                />
+              </CardWrapper>
+            )
+          })}
         </FeedsContent>
         <ButtonWrapper>
           <Button
@@ -86,6 +98,10 @@ function FeedSelectModal({
 
 const CardWrapper = styled.div`
   display: flex;
+  align-items: flex-start;;
+  flex-direction: column;
+  padding-bottom: 10px;
+  border-bottom: 1px solid ${COLOR.gray.color.gray[300]};
 `
 
 const DialogStyles = css`
