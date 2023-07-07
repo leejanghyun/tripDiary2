@@ -18,11 +18,6 @@ export const menus = [
     id: MENU_ID.MAIN,
   },
   {
-    IconInActive: <IconStory />,
-    IconActive: <IconStorySolid />,
-    id: MENU_ID.MY_STORY,
-  },
-  {
     IconInActive: <IconAddFeed />,
     IconActive: <IconAddFeedSolid />,
     id: MENU_ID.ADD_FEED,
@@ -31,6 +26,11 @@ export const menus = [
     IconInActive: <IconFeedList />,
     IconActive: <IconFeedListSolid />,
     id: MENU_ID.FEED_LIST,
+  },
+  {
+    IconInActive: <IconStory />,
+    IconActive: <IconStorySolid />,
+    id: MENU_ID.MY_STORIES,
   },
   {
     IconInActive: <IconAlarm />,
