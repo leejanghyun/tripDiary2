@@ -36,8 +36,9 @@ function FeedSelectModal({ isOpen, onCancel, onMakeStory }: Props) {
     mode: 'onBlur',
   })
   const {
-    control, setValue, getValues,
+    control, setValue, getValues, watch,
   } = formMethods
+  const title = watch(FORM_FIELD.TITLE)
 
   useEffect(() => {
     setOpenFeedModal(isOpen)
@@ -74,6 +75,9 @@ function FeedSelectModal({ isOpen, onCancel, onMakeStory }: Props) {
               maxLength={100}
               label="제목 입력"
               placeholder="스토리 제목을 입력하세요."
+              rules={{
+                required: true,
+              }}
             />
             <ButtonWrapper>
               <Button
@@ -89,6 +93,7 @@ function FeedSelectModal({ isOpen, onCancel, onMakeStory }: Props) {
                 type="button"
                 size="small"
                 onClick={handleMakeClick}
+                disabled={!title}
               >
                 생성하기
               </Button>
