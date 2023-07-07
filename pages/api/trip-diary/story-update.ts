@@ -1,17 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 
-import { getFeed } from '@/db/control/getFeed'
+import { updateStory } from '@/db/control/updateStory'
 import { Method, StatusType } from '@/utils'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { method, query } = req
-  const { id } = query || {}
+  const { method, body } = req
   const sessions = await getSession({ req })
   const { user } = sessions || {}
   const { email = 'jangheon.lee012@gmail.com' } = user || { email: 'jangheon.lee012@gmail.com' }
 
-  if (method !== Method.GET) {
+  if (method !== Method.PUT) {
     res.status(500).json({ status: StatusType.ERROR, resultMsg: 'Invalid Method' })
     return
   }
@@ -22,16 +21,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const result = await getFeed(id as string)
+    const isSuccess = await updateStory(email, body)
 
-    if (!result) {
-      res.status(500).json({ status: StatusType.ERROR, resultMsg: '피드 불러오기 실패' })
+    if (!isSuccess) {
+      res.status(500).json({ status: StatusType.ERROR, resultMsg: '스토리 수정 실패' })
       return
     }
 
-    res.json({ status: StatusType.SUCCESS, content: result })
+    res.json({ status: StatusType.SUCCESS, resultMsg: '스토리 수정 성공' })
   } catch (e) {
-    res.status(500).json({ status: StatusType.ERROR, resultMsg: '피드 불러오기 실패' })
+    res.status(500).json({ status: StatusType.ERROR, resultMsg: '스토리 수정 실패' })
   }
 }
 

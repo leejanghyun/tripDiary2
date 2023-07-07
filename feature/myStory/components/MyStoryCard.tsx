@@ -4,6 +4,7 @@ import { COLOR, DropdownMenu, DropDownMenuDataType } from '@TMOBI-WEB/ads-ui'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
+import useFeed from '@/feature/shared/hooks/useFeed'
 import bg1 from '@/images/ico_bg_1.svg'
 import bg2 from '@/images/ico_bg_2.svg'
 import bg3 from '@/images/ico_bg_3.svg'
@@ -14,16 +15,21 @@ import { ReactComponent as IconMore } from '@/images/ico_three_dot.svg'
 type Props = {
   id?: string
   title?: string
-  feeds?: string[]
+  feedList?: string[]
   onDelete?: (id: string) => void
   onClick?: (id: string, isEmpty?: boolean) => void
 }
 
 function MyStoryCard({
-  id, title, feeds, onDelete, onClick,
+  id, title, feedList, onDelete, onClick,
 }: Props) {
-  const isEmpty = !(feeds && feeds?.length)
+  const [firstFeed] = feedList || []
+  const isEmpty = !firstFeed
   const router = useRouter()
+  const { data } = useFeed(firstFeed as string)
+  const { content } = data || {}
+  const { fileList } = content || {}
+  const [firstFile] = fileList || []
 
   const getRandomBackgroundItem = () => {
     const items: string[] = [bg1, bg2, bg3, bg4]
@@ -53,7 +59,7 @@ function MyStoryCard({
 
   return (
     <Wrapper
-      background={isEmpty ? getRandomBackgroundItem() : ''}
+      background={isEmpty ? getRandomBackgroundItem() : firstFile}
       onClick={() => onClick?.(id as string, isEmpty)}
     >
       <div>
@@ -86,15 +92,12 @@ function MyStoryCard({
 
 const Wrapper = styled.div<{ isFullWidth?: boolean, background?: string }>`
   border-radius: 12px;
-  height: 100%;
-  max-height: 400px;
-  margin-bottom: 50px;
-  padding-bottom: 50px;
+  height: 300px;
 
   ${({ background }) => {
     return css`
       background-image: url(${background});
-      background-size: 100% auto;
+      background-size: cover;
       background-repeat: no-repeat;
     `
   }}
@@ -127,10 +130,9 @@ const Wrapper = styled.div<{ isFullWidth?: boolean, background?: string }>`
     align-items: center;
     color: ${COLOR.gray.color.gray[600]};
     font-size: ${({ theme }) => theme.font[16].size};
-    position: relative;
-    top: -5px;
     line-height: ${({ theme }) => theme.font[16].lineHeight};
     font-weight: 500;
+    padding-top: 50px;
   }
 `
 

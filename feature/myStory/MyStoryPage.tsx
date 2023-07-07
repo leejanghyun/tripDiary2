@@ -114,12 +114,13 @@ function MyStoryPage() {
     >
       <Container>
         {(stories || []).map((item: Story) => {
-          const { title, _id } = item || {}
+          const { title, _id, feedList } = item || {}
 
           return (
             <MyStoryCard
               key={_id}
               id={_id}
+              feedList={feedList || []}
               title={title}
               onDelete={handleStoryDelete}
               onClick={handleStoryClick}

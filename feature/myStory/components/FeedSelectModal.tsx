@@ -7,32 +7,28 @@ import {
   Dialog,
 } from '@TMOBI-WEB/ads-ui'
 import {
-  ChangeEvent, useCallback, useEffect, useState,
+  ChangeEvent, useCallback, useEffect, useMemo, useState,
 } from 'react'
-import { useFormContext } from 'react-hook-form'
 
 import { Feed } from '@/db'
 import FeedCard from '@/feature/shared/components/FeedCard/FeedCard'
 import useMyFeeds from '@/feature/shared/hooks/useMyFeeds'
 
-import { FORM_FIELD } from '../constants/form'
-
 type Props = {
   isOpen: boolean
+  selectedFeeds: Feed[]
   onCancel: () => void
-  onFeedAdd: () => void
+  onFeedAdd: (newItems: Feed[]) => void
 }
 
 function FeedSelectModal({
-  isOpen, onCancel, onFeedAdd,
+  isOpen, selectedFeeds, onCancel, onFeedAdd,
 }: Props) {
-  const { setValue, watch, getValues } = useFormContext()
-  const [isOpenFeedModal, setOpenFeedModal] = useState(isOpen)
   const { data } = useMyFeeds()
   const { content = [] } = data || {}
-  const selectedFeeds = watch(FORM_FIELD.SELECTED_FEEDS)
-
-  console.log(selectedFeeds)
+  const selectedIds = selectedFeeds.map((item) => item?._id)
+  const [isOpenFeedModal, setOpenFeedModal] = useState(isOpen)
+  const [newSelectedFeeds, setNewSelectedFeeds] = useState<Feed[]>([])
 
   useEffect(() => {
     setOpenFeedModal(isOpen)
@@ -43,25 +39,28 @@ function FeedSelectModal({
   }, [onCancel])
 
   const handleAddClick = useCallback(() => {
-    onFeedAdd()
-  }, [onFeedAdd])
+    setNewSelectedFeeds([])
+    onFeedAdd(newSelectedFeeds)
+  }, [newSelectedFeeds, onFeedAdd])
+
+  const filteredContent = useMemo(() => {
+    return content.filter((item: Feed) => !selectedIds.includes(item._id))
+  }, [content, selectedIds])
 
   const handleCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, idx: number) => {
     const isChecked = (e.target as HTMLInputElement).checked
-
-    const { [FORM_FIELD.SELECTED_FEEDS]: selectedFeeds } = getValues()
-    const target = selectedFeeds.find((item: Feed) => item._id === content[idx]._id)
+    const target = newSelectedFeeds.find((item: Feed) => item._id === filteredContent[idx]._id)
 
     if (isChecked && !target) {
-      const newItem = [...selectedFeeds, content[idx]]
+      const newItem = [...newSelectedFeeds, filteredContent[idx]]
 
-      setValue(FORM_FIELD.SELECTED_FEEDS, newItem)
+      setNewSelectedFeeds(newItem)
     } else if (!isChecked && target) {
-      const newItem = selectedFeeds.filter((item: Feed) => item._id !== content[idx]._id)
+      const newItem = newSelectedFeeds.filter((item: Feed) => item._id !== filteredContent[idx]._id)
 
-      setValue(FORM_FIELD.SELECTED_FEEDS, newItem)
+      setNewSelectedFeeds(newItem)
     }
-  }, [setValue, content, getValues])
+  }, [filteredContent, newSelectedFeeds])
 
   return (
     <Dialog
@@ -73,14 +72,13 @@ function FeedSelectModal({
           피드 선택
         </Title>
         <FeedsContent>
-          {(content || []).map((feed, idx) => {
+          {(filteredContent || []).map((feed, idx) => {
             const { title, ...rest } = feed || {}
             return (
               <CardWrapper
                 key={feed._id}
               >
                 <Checkbox
-                 // disabled={Boolean(selectedIds.find((item) => item === rest?._id))}
                   label={title}
                   onChange={(e) => handleCheckboxChange(e, idx)}
                   styles={css`
