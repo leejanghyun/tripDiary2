@@ -27,11 +27,11 @@ import { KEYS } from '@/constants'
 import { Feed } from '@/db'
 import { feedMetaState } from '@/feature/shared/atoms/feedMetaState'
 import { useMount } from '@/hooks/useMount'
-import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
 import { getPlaceName, getPosition, Location } from '@/utils/map'
 
 import { deleteUploadedFile } from '../../api/deleteUploadedFile'
 import { uploadFeedFile } from '../../api/uploadFeedFile'
+import { RemoveButton } from '../../components/RemoveButton/RemoveButton'
 import useMyFeed from '../shared/hooks/useMyFeed'
 import { AddressSearch } from './components/AddressSearch'
 import AlbumButton, { MAX_UPLOAD_SIZE } from './components/AlbumButton'
@@ -146,7 +146,10 @@ function FeedPage({ query }: Props) {
 
     if (isEdit) {
       submitFeed({
-        ...data, location, _id: id as string, bookmarks: feed?.bookmarks as string[] || [],
+        ...data,
+        location,
+        _id: id as string,
+        bookmarks: feed?.bookmarks as string[] || [],
       })
       return
     }
@@ -370,11 +373,9 @@ function FeedPage({ query }: Props) {
                 <CustomImage
                   key={`img-${idx}`}
                 >
-                  <RemoveButtonStyles
+                  <RemoveButton
                     onClick={() => handleDeletePicture(idx)}
-                  >
-                    <DeleteItem />
-                  </RemoveButtonStyles>
+                  />
                   <UploadImage
                     src={file}
                   />
@@ -443,20 +444,6 @@ const NotiInfoBlock = styled.div`
 const CustomImage = styled.div`
   position: relative;
   width: 100%;
-`
-
-const RemoveButtonStyles = styled.div`
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  top: 10px;
-  right: 10px;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-  border-width: 0px;
 `
 
 const ImageFileWrapper = styled.div`

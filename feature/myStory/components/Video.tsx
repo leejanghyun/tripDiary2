@@ -3,27 +3,14 @@ import styled from '@emotion/styled'
 import { useEffect, useRef, useState } from 'react'
 
 interface VideoProps {
+  currentImageIndex: number
   imageUrls: string[];
 }
 
-function Video({ imageUrls }: VideoProps) {
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
+function Video({ currentImageIndex, imageUrls }: VideoProps) {
   const [prevImageIndex, setPrevImageIndex] = useState<number>(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [audioSrc, setAudioSrc] = useState<string>('')
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentImageIndex((prevIndex) => {
-        const nextIndex = prevIndex + 1
-        return nextIndex >= imageUrls.length ? prevIndex : nextIndex
-      })
-
-      // setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length) []
-    }, 2000)
-
-    return () => clearTimeout(timer)
-  }, [currentImageIndex, imageUrls])
 
   const getRandomAudioItem = () => {
     const items: string[] = ['/audio/1.mp3', '/audio/2.mp3', '/audio/3.mp3', '/audio/4.mp3']
@@ -91,7 +78,8 @@ const Image = styled.img<{ current: boolean; prev: boolean }>`
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
+  background-color: rgba(255, 255, 255, 0.6);
+  height: 100%;
   opacity: ${(props) => (props.current || props.prev ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
   z-index: ${(props) => (props.current ? 2 : 1)};
