@@ -78,8 +78,7 @@ const Image = styled.img<{ current: boolean; prev: boolean }>`
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.6);
-  height: 100%;
+  height: 95%;
   opacity: ${(props) => (props.current || props.prev ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
   z-index: ${(props) => (props.current ? 2 : 1)};

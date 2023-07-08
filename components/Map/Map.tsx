@@ -9,12 +9,11 @@ import {
   useEffect, useMemo, useRef, useState,
 } from 'react'
 
+import OverlayText from '@/components/Map/OverlayText'
 import { Feed } from '@/db'
 import FeedCard from '@/feature/shared/components/FeedCard/FeedCard'
 import { useMount } from '@/hooks/useMount'
 import { getGoogleMapApi, getPosition, Location } from '@/utils/map'
-
-import OverlayText from './OverlayText'
 
 export const DEFAULT_ZOOM_LEVEL = 11
 const ICON_SIZE = {
@@ -121,6 +120,10 @@ function Map({
     }
   }, [])
 
+  const handleMapClick = useCallback(() => {
+    setSelectedMarker(null)
+  }, [])
+
   return (
     <LoadScript
       googleMapsApiKey={apiKey as string}
@@ -128,7 +131,7 @@ function Map({
     >
       <GoogleMap
         onLoad={handleMapLoad}
-        onClick={() => setSelectedMarker(null)}
+        onClick={handleMapClick}
         center={currentLocation as Location}
         zoom={zoom || 0}
         mapContainerStyle={useMemo(() => {

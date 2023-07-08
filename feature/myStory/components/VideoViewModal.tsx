@@ -60,8 +60,8 @@ function VideoViewModal({
             const [startDate, endDate] = date
             const formatStartDate = formatDate(startDate, DATE_FORMAT)
             const formatEndDate = formatDate(endDate, DATE_FORMAT)
-            const target = formatStartDate === formatEndDate ? formatDate(startDate, DATE_FORMAT)
-              : `${formatDate(startDate, DATE_FORMAT)} ~ ${formatDate(endDate, DATE_FORMAT)}`
+            const target = formatStartDate === formatEndDate ? formatStartDate
+              : `${formatStartDate} ~ ${formatEndDate}`
 
             dates.push(target)
             titles.push(title)
@@ -94,7 +94,7 @@ function VideoViewModal({
   }
 
   return (
-    <FullDialog>
+    <FullDialog onClick={onCancel}>
       <RemoveButton
         variant="naked"
         onClick={onCancel}

@@ -17,9 +17,9 @@ import FrameLayout from '@/components/FrameLayout'
 import { KEYS } from '@/constants'
 import { Feed, Story } from '@/db'
 import useStory from '@/feature/shared/hooks/useStory'
-import { ReactComponent as DeleteItem } from '@/images/ico_20_delete.svg'
 import { ReactComponent as EmptyBox } from '@/images/ico_empty_box.svg'
 
+import { RemoveButton } from '../../components/RemoveButton/RemoveButton'
 import FeedCard from '../shared/components/FeedCard/FeedCard'
 import FeedSelectModal from './components/FeedSelectModal'
 import { FORM_FIELD, FormType } from './constants/form'
@@ -179,11 +179,7 @@ function StoryPage({ query }: Props) {
               <FeedWrapper
                 key={`${idx}`}
               >
-                <RemoveButtonStyles
-                  onClick={() => handleDeleteFeed(idx)}
-                >
-                  <DeleteItem />
-                </RemoveButtonStyles>
+                <RemoveButton onClick={() => handleDeleteFeed(idx)} />
                 <FeedCard
                   disableEditDropDown
                   hideBottom
@@ -207,20 +203,6 @@ function StoryPage({ query }: Props) {
 const FeedWrapper = styled.div`
   position: relative;
   width: 100%;
-`
-
-const RemoveButtonStyles = styled.div`
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  top: 10px;
-  right: 10px;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-  border-width: 0px;
 `
 
 const RightSide = styled.div`
