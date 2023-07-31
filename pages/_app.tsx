@@ -35,6 +35,8 @@ export default function ManagersApp({
   const session = ((pageProps as AppProps['pageProps'] & PageComponentProps).session
   || (Component as AppProps['Component'] & PageComponentProps).session)
 
+  console.log('develop')
+
   return (
     <>
       <DefaultHead
